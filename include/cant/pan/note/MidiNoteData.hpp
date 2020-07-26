@@ -11,9 +11,9 @@
 
 #include <fmt/format.h>
 
-#include <cant/pan/Time.hpp>
+#include <cant/pan/common/Time.hpp>
 
-#include <cant/pan/types.hpp>
+#include <cant/pan/common/types.hpp>
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
 namespace cant::midi {

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <cant/formatting.hpp>
+#include <cant/common/formatting.hpp>
 
-#include <cant/pan/types.hpp>
+#include <cant/pan/common/types.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 

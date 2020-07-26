@@ -8,7 +8,7 @@
 #pragma once
 
 
-#include <cant/pan/types.hpp>
+#include <cant/pan/common/types.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 
 namespace cant::midi

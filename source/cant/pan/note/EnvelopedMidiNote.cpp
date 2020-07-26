@@ -2,12 +2,12 @@
 // Created by binabik on 30/05/2020.
 //
 
-#include <cant/formatting.hpp>
+#include <cant/common/formatting.hpp>
 
 #include <cant/pan/note/EnvelopedMidiNote.hpp>
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
-#include <cant/pan/PantoufleException.hpp>
+#include <cant/pan/common/PantoufleException.hpp>
 
 namespace cant::midi
 {

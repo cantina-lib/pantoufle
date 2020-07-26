@@ -4,7 +4,7 @@
 
 #include <cant/pan/Pantoufle.hpp>
 
-#include <cant/pan/PantoufleException.hpp>
+#include <cant/pan/common/PantoufleException.hpp>
 
 namespace cant::midi
 {

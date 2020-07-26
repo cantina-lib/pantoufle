@@ -8,13 +8,13 @@
 #pragma once
 
 
-#include <cant/formatting.hpp>
+#include <cant/common/formatting.hpp>
 
-#include <cant/memory.hpp>
-#include <cant/types.hpp>
-#include <cant/macro.hpp>
+#include <cant/common/memory.hpp>
+#include <cant/common/types.hpp>
+#include <cant/common/macro.hpp>
 
-#include <cant/pan/PantoufleException.hpp>
+#include <cant/pan/common/PantoufleException.hpp>
 
 #include <cant/pan/note/MidiNote.hpp>
 #include <cant/pan/note/RawMidiNote.hpp>

@@ -2,7 +2,7 @@
 // Created by piptouque on 28/04/2020.
 //
 
-#include <cant/pan/PantoufleException.hpp>
+#include <cant/pan/common/PantoufleException.hpp>
 
 #include <cant/pan/note/MidiNote.hpp>
 

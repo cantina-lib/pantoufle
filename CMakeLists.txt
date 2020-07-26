@@ -6,11 +6,11 @@ project(pantoufle)
 set(PANTOUFLE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/source)
 set(PANTOUFLE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
-set(GIT_SUBMODULE_DIR ${PROJECT_SOURCE_DIR}/submodules)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(CANTINA_COMMON_DIR ${GIT_SUBMODULE_DIR}/cantina_common)
+set(CANTINA_COMMON_DIR ${PROJECT_SOURCE_DIR}/cantina_common)
+
 add_subdirectory(${CANTINA_COMMON_DIR})
 
 include_directories(

@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <cant/pan/types.hpp>
-#include <cant/pan/Time.hpp>
+#include <cant/pan/common/types.hpp>
+#include <cant/pan/common/Time.hpp>
 
 #include <cant/pan/processor/processor.hpp>
 

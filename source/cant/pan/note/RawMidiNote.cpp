@@ -4,9 +4,9 @@
 
 #include <cant/pan/note/RawMidiNote.hpp>
 
-#include <cant/pan/PantoufleException.hpp>
+#include <cant/pan/common/PantoufleException.hpp>
 
-#include <cant/formatting.hpp>
+#include <cant/common/formatting.hpp>
 
 
 namespace cant::midi

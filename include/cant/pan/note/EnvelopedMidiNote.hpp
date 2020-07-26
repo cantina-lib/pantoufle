@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <cant/formatting.hpp>
+#include <cant/common/formatting.hpp>
 
-#include <cant/types.hpp>
+#include <cant/common/types.hpp>
 #include <cant/pan/note/DecoratedMidiNote.hpp>
 
 namespace cant::midi

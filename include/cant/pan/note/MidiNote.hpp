@@ -10,10 +10,10 @@
 #include <iostream>
 #include <string>
 
-#include <cant/pan/types.hpp>
-#include <cant/pan/Cloneable.hpp>
-#include <cant/pan/PantoufleException.hpp>
-#include <cant/CantinaException.hpp>
+#include <cant/pan/common/types.hpp>
+#include <cant/pan/common/Cloneable.hpp>
+#include <cant/pan/common/PantoufleException.hpp>
+#include <cant/common/CantinaException.hpp>
 
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
