@@ -10,12 +10,17 @@ set(PANTOUFLE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(CMAKE_CXX_STANDARD 20)
 
 set(CANTINA_COMMON_DIR ${PROJECT_SOURCE_DIR}/cantina_common)
-
 add_subdirectory(${CANTINA_COMMON_DIR})
 
-include_directories(
+set(PANTOUFLE_INCLUDE_DIRS
         ${PANTOUFLE_INCLUDE_DIR}
-        ${CANTINA_COMMON_DIR}/include
+        ${CANTINA_COMMON_INCLUDE_DIRS}
+        CACHE INTERNAL
+        "List of include directories for Pantoufle"
+        )
+
+include_directories(
+        ${PANTOUFLE_INCLUDE_DIRS}
 )
 
 # flags
