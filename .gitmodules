@@ -1,0 +1,3 @@
+[submodule "submodules/cantina_common"]
+	path = submodules/cantina_common
+	url = https://github.com/piptouque/cantina_common.git
