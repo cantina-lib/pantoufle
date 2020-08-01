@@ -15,13 +15,8 @@ namespace cant::pan
     {
     private:
         FlatToneEnvelope() = default;
-    private: // private inheritance, called in MidiEnvelope
-        void IMPL_update(const EnvelopedMidiNote* note) override;
-        void IMPL_reset() override;
-    protected:
-        CANT_NODISCARD UPtr<ToneEnvelope> IMPL_clone() const override;
-        CANT_NODISCARD tone_m getToneProcessed(const EnvelopedMidiNote* note) const override;
     public:
+        void apply(time_m tCurrent, MidiNoteInternal& note) const override;
 
         static UPtr<ToneEnvelope> make();
     };

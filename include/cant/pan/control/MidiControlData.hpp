@@ -18,18 +18,20 @@ namespace cant::pan
     class MidiControlData : MidiControlCompatible
     {
     private:
+        byte_m _channel;
         byte_m _controllerId;
         byte_m _value;
     public:
-        MidiControlData(const byte_m controllerId, const byte_m value)
-        : _controllerId(controllerId), _value(value)
+        MidiControlData(byte_m channel, byte_m controllerId, byte_m value);
+
+        CANT_CONSTEXPR MidiControlData()
+        : _channel(), _controllerId(), _value()
         {
 
         }
-
-        CANT_CONSTEXPR MidiControlData() : _controllerId(), _value() {}
         CANT_CONSTEXPR MidiControlData(const MidiControlData&) = default;
 
+        CANT_NODISCARD byte_m getChannel() const override { return _channel; }
         CANT_NODISCARD byte_m getControllerId() const override { return _controllerId; }
         CANT_NODISCARD byte_m getValue() const override { return _value; }
 
@@ -42,7 +44,9 @@ namespace cant::pan
 
     using MidiControlInputData = MidiControlData;
     using MidiControlInput = MidiControlInputData;
-    /* has no meaning right now */
+
+    using MidiControlInternal = MidiControlInput;
+    /* has had no meaning so far */
     // using MidiControlOutputData = MidiControlData;
 
 }

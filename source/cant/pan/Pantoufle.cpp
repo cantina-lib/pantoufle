@@ -9,11 +9,11 @@
 namespace cant::pan
 {
     Pantoufle::
-    Pantoufle(const sizeint numberVoices, const byte_m chanId)
+    Pantoufle(const size_m numberVoices, const byte_m chanId)
     : _ctrlChain(numberVoices),
       _envlpLayer(numberVoices, chanId),
       _rawNoteInput(numberVoices),
-      _rawNotes(numberVoices),
+      _processedNoteInternal(numberVoices),
       _processedNoteOutput(numberVoices),
       _rawControlInput()
     {
@@ -23,20 +23,6 @@ namespace cant::pan
     Pantoufle::
     getProcessedOutputData() const
     {
-        sizeint i = 0;
-        for (auto& output : _processedNoteOutput)
-        {
-            const auto& note = _envlpLayer.getProcessed(i);
-            if (MidiNote::isNoteSet(note))
-            {
-                output = note->getOutput();
-            }
-            else
-            {
-                output = MidiNoteOutput();
-            }
-            ++i;
-        }
         return _processedNoteOutput;
     }
 
@@ -44,48 +30,33 @@ namespace cant::pan
     Pantoufle::
     update()
     {
-        CANT_MAYBEUNUSED const auto& input = _rawNoteInput.front();
-        const UPtr<MidiNote> raw =  RawMidiNote::make(input);
-        CANT_MAYBEUNUSED const auto& controlled = _ctrlChain.getProcessed(0);
-        CANT_MAYBEUNUSED const auto& enveloped = _envlpLayer.getProcessed(0);
-        // std::cout << "input: " << input << std::endl;
-        // std::cout << "raw: " << raw << std::endl;
-        // std::cout << "controlled: " << controlled << std::endl;
-        // std::cout << "enveloped" << _envlpLayer.getProcessed(0) << std::endl;
-        updateRawNotes();
-        updateControlChain();
-        updateEnvelopes();
+        const time_m tCurrent = getCurrentTime();
+        updateRawNoteInput(tCurrent);
+        updateControlChain(tCurrent);
+        updateEnvelopeLayer(tCurrent);
     }
 
     void
     Pantoufle::
-    updateRawNotes()
+    updateRawNoteInput(const time_m tCurrent)
     {
-        for (auto& note : _rawNotes)
+        for (auto& input : _rawNoteInput)
         {
-            if (MidiNote::isNoteSet(note))
-            {
-                note->update(getCurrentTime());
-            }
+            input.update(tCurrent);
         }
-
     }
 
     void
     Pantoufle::
-    updateControlChain()
+    updateControlChain(const time_m tCurrent)
     {
-        PANTOUFLE_TRY_RETHROW({
-            _ctrlChain.update(getCurrentTime());
-        })
+        _ctrlChain.update(tCurrent);
     }
 
     void Pantoufle::
-    updateEnvelopes()
+    updateEnvelopeLayer(const time_m tCurrent)
     {
-        PANTOUFLE_TRY_RETHROW({
-             _envlpLayer.update(getCurrentTime());
-        })
+         _envlpLayer.update(tCurrent);
     }
 
     time_m
@@ -95,7 +66,7 @@ namespace cant::pan
         return Time::getCurrentTime();
     }
 
-    sizeint
+    size_m
     Pantoufle::
     getNumberVoices() const
     {
@@ -130,53 +101,56 @@ namespace cant::pan
 
     void
     Pantoufle::
-    receiveRawNoteData(const sizeint iVoice, const MidiNoteInputData& noteData)
+    receiveRawNoteData(const size_m iVoice, const MidiNoteInputData& inputData)
     {
-        _rawNoteInput.at(iVoice).update(noteData, getCurrentTime());
-        _rawNotes.at(iVoice) = RawMidiNote::make(_rawNoteInput.at(iVoice));
-        PANTOUFLE_TRY_RETHROW({
-             /* updating controls (and thus everything else) */
-             process(iVoice);
-        })
+        MidiNoteInput& input = _rawNoteInput.at(iVoice);
+        input.update(inputData, getCurrentTime());
+        process(iVoice);
     }
 
     void
     Pantoufle::
-    process(const sizeint iVoice)
+    process(const size_m iVoice)
     {
+        const MidiNoteInput& input = _rawNoteInput.at(iVoice);
+        MidiNoteInternal& internal = _processedNoteInternal.at(iVoice);
+        MidiNoteOutput& output = _processedNoteOutput.at(iVoice);
+        internal.update(input);
+        /* updating controllers and envelope layer */
         processControllerChainVoice(iVoice);
         processEnvelopeLayerVoice(iVoice);
+        /* */
+        output.update(internal);
     }
 
     void
     Pantoufle::
-    processControllerChainVoice(const sizeint iVoice)
+    processControllerChainVoice(const size_m iVoice)
     {
-        _ctrlChain.processVoice(iVoice, _rawNotes.at(iVoice));
+        _ctrlChain.processVoice(iVoice, _processedNoteInternal.at(iVoice));
     }
 
     void
     Pantoufle::
     processControllerChainControl(const MidiControlInput& input)
     {
-        _ctrlChain.processControl(input, _rawNotes);
+        _ctrlChain.processControl(input);
         /*
          * then we need to update the envelopes,
          * because the input (here ControlledNotes)
          * have changed.
          */
-        for (sizeint i = 0; i < getNumberVoices(); ++i)
+        for (size_m i = 0; i < getNumberVoices(); ++i)
         {
-            // process(i);
+            process(i);
         }
     }
 
     void
     Pantoufle::
-    processEnvelopeLayerVoice(const sizeint iVoice)
+    processEnvelopeLayerVoice(const size_m iVoice)
     {
-        _envlpLayer.processVoice(iVoice, _ctrlChain.getProcessed(iVoice));
-        _processedNoteOutput.at(iVoice) = _envlpLayer.getProcessed(iVoice)->getOutput();
+        _envlpLayer.processVoice(iVoice, _processedNoteInternal.at(iVoice));
     }
 
 
@@ -188,7 +162,7 @@ namespace cant::pan
          * we do not throw if the controller is not recognised.
          * only ignore it.
          */
-        const sizeint controllerId = controlData.getControllerId();
+        const size_m controllerId = controlData.getControllerId();
         auto it = _rawControlInput.find(controllerId);
         if (it == _rawControlInput.end())
         {
@@ -197,11 +171,12 @@ namespace cant::pan
              */
             return;
         }
-        _rawControlInput.at(controllerId) = MidiControlInput(controlData);
+        MidiControlInternal& control = _rawControlInput.at(controllerId);
+        control = MidiControlInput(controlData);
         /*
          * processing all the notes again
          */
-        processControllerChainControl(_rawControlInput.at(controllerId));
+        processControllerChainControl(control);
         /*
          * No need to compute everything again,
          * the notes have access to their control and can

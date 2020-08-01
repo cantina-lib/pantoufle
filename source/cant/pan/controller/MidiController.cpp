@@ -3,51 +3,41 @@
 //
 
 #include <cant/pan/controller/MidiController.hpp>
-#include <cant/pan/note/ControlledMidiNote.hpp>
+
 
 namespace cant::pan
 {
     MidiController::
-    MidiController(const sizeint numberVoices, const byte_m channel, const byte_m id)
-            : MidiProcessorMemoryProxy(numberVoices),
-            _channel(channel),
-            _controllerId(id),
-            _control(MidiControl::makeShared())
+    MidiController(const size_m numberVoices, const byte_m channel, const byte_m id)
+    : MidiProcessorMemory(numberVoices),
+    _channel(channel),
+    _controllerId(id),
+    _control()
     {
-        /*
-         * allocateProcessed can't be called here -> virtual
-         * must be called in child classes
-         */
+
     }
 
     void
     MidiController::
-    allocateProcessed()
+    processVoice(const size_m iVoice, MidiNoteInternal &internal)
     {
-        for(auto& note: _processed)
-        {
-            note = allocateNote(getControlWeak());
-        }
+        beforeNoteChange(iVoice, internal);
+        IMPL_processVoice(iVoice, internal);
+        updateVoice(iVoice, internal);
     }
 
-    bool
+    void
     MidiController::
-    isSet() const
+    updateVoice(const size_m iVoice, const MidiNoteInternal &note)
     {
-        return isControlSet();
+        _memory.at(iVoice) = note;
     }
 
-    bool
-    MidiController::
-    isControlSet() const
-    {
-        return MidiControl::isControlSet(_control);
-    }
     bool
     MidiController::
     isControllerSet(const MidiController* controller)
     {
-        return static_cast<bool>(controller) && controller->isSet();
+        return static_cast<bool>(controller);
     }
 
     bool
@@ -60,50 +50,12 @@ namespace cant::pan
 
     void
     MidiController::
-    receiveControl(const MidiControlInput& input)
+    receiveControl(const MidiControlInternal& control)
     {
-        if (!isControlSet() && !isSet())
-        {
-           throw PANTOUFLE_EXCEPTION("Controller not set.");
-        }
-        MidiControl::update(_control, input);
-        notifyProcessedOnChange();
+        _control = control;
+        beforeControlChange(control);
     }
 
-    void
-    MidiController::
-    notifyProcessedOnChange()
-    {
-        for (auto& note : _processed)
-        {
-            if (MidiNote::isNoteSet(note))
-            {
-                note->onControlChange();
-            }
-        }
-    }
-
-    const ShPtr<MidiControl>&
-    MidiController::
-    getControlShared() const
-    {
-        if (!isSet())
-        {
-            throw PANTOUFLE_EXCEPTION("Controller not set.");
-        }
-        return _control;
-    }
-
-    WPtr<MidiControl>
-    MidiController::
-    getControlWeak() const
-    {
-        if (!isSet())
-        {
-            throw PANTOUFLE_EXCEPTION("Controller not set.");
-        }
-        return _control;
-    }
 
     std::ostream&
     operator<<(std::ostream& out, const MidiController* controller)
@@ -114,7 +66,7 @@ namespace cant::pan
             return out << "!NOTSET";
         }
         out << '#' << (int) controller->getControllerId() << " : ";
-        out << controller->getControlShared();
+        out << controller->getControl();
         return out;
     }
 
@@ -124,37 +76,5 @@ namespace cant::pan
         return out << controller.get();
     }
 
-    void
-    MidiController::
-    processVoiceChained(const sizeint iVoice, const UPtr<MidiController> &source)
-    {
-        /*
-         * TODO: if process was a template, we wouldn't have to clone the note!
-         */
-        const auto& in = source->_processed.at(iVoice);
-        if (MidiNote::isNoteSet(in))
-        {
-            PANTOUFLE_TRY_RETHROW({
-                processVoice(iVoice, in->clone());
-             })
-        }
-    }
-
-    void
-    MidiController::
-    processVoice(const sizeint iVoice, const UPtr<MidiNote> &in)
-    {
-        if (!MidiNote::isNoteSet(in))
-        {
-           throw PANTOUFLE_EXCEPTION("Received note not set");
-        }
-
-        // std::cout << "ctr: " << in << std::endl;
-        auto& out = _processed.at(iVoice);
-        PANTOUFLE_TRY_RETHROW({
-             out->updateElseSet(in);
-         })
-        // std::cout << "out: " << out << std::endl;
-    }
 }
 

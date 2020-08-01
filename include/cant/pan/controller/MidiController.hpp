@@ -13,57 +13,53 @@
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
-#include <cant/pan/control/MidiControl.hpp>
-#include <cant/pan/note/ControlledMidiNote.hpp>
-
-#include <cant/pan/stream/MidiStream.hpp>
+#include <cant/pan/control/MidiControlData.hpp>
+#include <cant/pan/note/MidiNoteData.hpp>
 
 
 namespace cant::pan
 {
 
     /**
-     * IMPORTANT
-     * MidiController should never reallocate _control
-     * because ControlledMidiNotes will have weak ref to it
-     * We should reset the underlying pointer instead
+     * MidiController should not grant unguarded access
+     * to its Processor _memory to child classes.
+     * It updates it, but can give a read-only ref
      **/
-    class MidiController : public MidiProcessorMemoryProxy<ControlledMidiNote>
+    class MidiController : protected MidiProcessorMemory
     {
     private:
         byte_m _channel;
-        const byte_m _controllerId; // todo: should be static? Damper -> 110 (ex)... NAH
-        ShPtr<MidiControl> _control;
-
+        const byte_m _controllerId;
+        MidiControlInternal _control;
     private:
-        CANT_NODISCARD virtual UPtr<ControlledMidiNote> allocateNote(const WPtr <MidiControl> &control) const = 0;
-
+        // event functions
+        virtual void beforeControlChange(const MidiControlInternal& incoming) = 0;
+        /**
+         * State changes in the controller as side-effects should be called here.
+         * Controller will not be allowed to mutate in IMPL_processVoice,
+         * but will be automatically updated in update.
+         **/
+        virtual void beforeNoteChange(size_m iVoice, const MidiNoteInternal& incoming) = 0;
+        // to be implemented
+        virtual void IMPL_processVoice(size_m iVoice, MidiNoteInternal& incoming) const = 0;
     private:
-        CANT_NODISCARD const ShPtr<MidiControl>& getControlShared() const;
-        CANT_NODISCARD WPtr<MidiControl> getControlWeak() const;
-
         CANT_NODISCARD static bool isControllerSet(const MidiController* controller);
 
-        void notifyProcessedOnChange();
+        void updateVoice(size_m iVoice, const MidiNoteInternal& note);
     protected:
-        void allocateProcessed();
+        CANT_EXPLICIT MidiController(size_m numberVoices, byte_m channel, byte_m controllerId);
 
-        CANT_NODISCARD bool isSet() const;
-        CANT_NODISCARD bool isControlSet() const;
-
-
-        CANT_EXPLICIT MidiController(sizeint numberVoices, byte_m channel, byte_m controllerId);
+        CANT_NODISCARD const MidiNoteInternal& getMemory(size_m iVoice) const { return _memory.at(iVoice); }
     public:
-        void processVoice(sizeint iVoice, const UPtr<MidiNote>& in) final;
+        void processVoice(size_m iVoice, MidiNoteInternal& internal) final;
 
         CANT_NODISCARD static bool isControllerSet(const UPtr<MidiController>& controller);
-
-
         CANT_NODISCARD byte_m getControllerId() const { return _controllerId; }
-        void receiveControl(const MidiControlInput& input);
+        CANT_NODISCARD const MidiControlInternal& getControl() const { return _control; }
 
+        void update(time_m tCurrent) override = 0;
 
-        void processVoiceChained(sizeint iVoice, const UPtr<MidiController> &source);
+        void receiveControl(const MidiControlInternal& control);
 
 
         friend std::ostream& operator<<(std::ostream& out, const MidiController* controller);

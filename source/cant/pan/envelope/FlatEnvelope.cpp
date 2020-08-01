@@ -14,34 +14,12 @@ namespace cant::pan
         return UPtr<ToneEnvelope>(new FlatToneEnvelope());
     }
 
-    UPtr<ToneEnvelope>
-    FlatToneEnvelope::
-    IMPL_clone() const
-    {
-        return UPtr<ToneEnvelope>(new FlatToneEnvelope(*this));
-    }
 
     void
     FlatToneEnvelope::
-    IMPL_update(const EnvelopedMidiNote *note)
+    apply(time_m tCurrent, MidiNoteInternal &note) const
     {
-
-    }
-
-    void
-    FlatToneEnvelope::
-    IMPL_reset()
-    {
-
-    }
-
-    tone_m
-    FlatToneEnvelope::
-    getToneProcessed(const EnvelopedMidiNote* note) const
-    {
-        PANTOUFLE_TRY_RETHROW({
-            return note->getBaseTone();
-        })
+        /* nothing to doooo */
     }
 }
 

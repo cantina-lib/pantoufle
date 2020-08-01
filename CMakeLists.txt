@@ -32,19 +32,12 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/Pantoufle.cpp
         ### note
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNoteData.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNote.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/RawMidiNote.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/DecoratedMidiNote.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/LazyMidiNote.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/EnvelopedMidiNote.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/ControlledMidiNote.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/DampMidiNote.cpp
         ### env
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/MidiEnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSREnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/FlatEnvelope.cpp
         ### control
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/control/MidiControl.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/control/MidiControlData.cpp
         ### processor
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiControllerChain.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiEnvelopeLayer.cpp
@@ -73,21 +66,11 @@ set(PANTOUFLE_FILES
         ### control
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlCompatible.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControl.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlData.hpp
-        ### stream
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/stream/MidiStream.hpp
         ### note
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/note.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/RawMidiNote.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/DecoratedMidiNote.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/LazyMidiNote.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/EnvelopedMidiNote.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/ControlledMidiNote.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/DampMidiNote.hpp
         )
 
 

@@ -15,11 +15,21 @@ namespace cant::pan
     class MidiDamper final : public MidiController
     {
     private:
-            CANT_NODISCARD UPtr <ControlledMidiNote> allocateNote(const WPtr <MidiControl> &control) const override;
+        bool _flagShouldHold;
     private:
-        MidiDamper(sizeint numberVoices, byte_m channelId, byte_m controllerId);
+        void beforeControlChange(const MidiControlInternal& incoming) override;
+        void beforeNoteChange(size_m iVoice, const MidiNoteInternal& incoming) override;
+    private:
+        MidiDamper(size_m numberVoices, byte_m channelId, byte_m controllerId);
+
+        CANT_NODISCARD bool isOn() const;
+        CANT_NODISCARD static bool isOn(const MidiControlInternal& control);
     public:
-        static UPtr<MidiController> make(sizeint numberVoices, byte_m channelId, byte_m controllerId);
+        void IMPL_processVoice(size_m iVoice, MidiNoteInternal& note) const override;
+
+        void update(time_m tCurrent) override;
+
+        static UPtr<MidiController> make(size_m numberVoices, byte_m channelId, byte_m controllerId);
     };
 }
 

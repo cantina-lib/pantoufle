@@ -8,13 +8,6 @@
 #pragma once
 
 #include "MidiNoteData.hpp"
-
-#include "MidiNote.hpp"
-
-#include "RawMidiNote.hpp"
-#include "DecoratedMidiNote.hpp"
-#include "LazyMidiNote.hpp"
-#include "EnvelopedMidiNote.hpp"
-#include "DampMidiNote.hpp"
+#include "MidiNoteCompatible.hpp"
 
 #endif //CANTINA_NOTE_HPP

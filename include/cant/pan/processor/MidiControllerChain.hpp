@@ -11,11 +11,8 @@
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
-#include <cant/pan/note/ControlledMidiNote.hpp>
-#include <cant/pan/control/MidiControl.hpp>
+#include <cant/pan/control/MidiControlData.hpp>
 #include <cant/pan/controller/MidiController.hpp>
-
-#include <cant/pan/stream/MidiStream.hpp>
 
 namespace cant::pan
 {
@@ -23,19 +20,22 @@ namespace cant::pan
     {
     private:
         UMap<byte_m, MidiController> _controllers;
-    private:
-        void processVoiceChained(sizeint iVoice, const UPtr <MidiNote> &in);
-        CANT_NODISCARD const UPtr<MidiNote>& getProcessedVoiceChained(sizeint iVoice) const;
-
-        void allocatedProcessed();
     public:
-        void processVoice(sizeint iVoice, const UPtr<MidiNote>& in) override;
+        void processVoice(size_m iVoice, MidiNoteInternal& in) override;
 
-        CANT_EXPLICIT MidiControllerChain(sizeint numberVoices);
+        CANT_EXPLICIT MidiControllerChain(size_m numberVoices);
 
         void setController(UPtr<MidiController> controller);
-        void processControl(const MidiControlInput& input, const UStream<MidiNote>& inStream);
+        void processControl(const MidiControlInput& input);
 
+        // will notes need updating in processors?
+        // updateMidiNoteStream(_memory, tCurrent);
+
+        /*
+         * I mean, we could have a mechanic like,
+         * a control's value can decrease as time passes.
+         * whatever.
+         */
         void update(time_m tCurrent) override;
 
     };

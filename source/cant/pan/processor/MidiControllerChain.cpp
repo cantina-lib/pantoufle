@@ -4,31 +4,18 @@
 
 #include <cant/pan/processor/MidiControllerChain.hpp>
 
-#include <cant/pan/note/LazyMidiNote.hpp>
-
 namespace cant::pan
 {
     MidiControllerChain::
-    MidiControllerChain(const sizeint numberVoices)
+    MidiControllerChain(const size_m numberVoices)
     : MidiProcessorMemory(numberVoices), _controllers()
     {
-        allocatedProcessed();
+
     }
 
     void
     MidiControllerChain::
-    allocatedProcessed()
-    {
-        for (auto& note : _processed)
-        {
-            note = LazyMidiNote::make();
-        }
-    }
-
-
-    void
-    MidiControllerChain::
-    processControl(const MidiControlInput& input, const UStream<MidiNote>& inStream)
+    processControl(const MidiControlInput& input)
     {
         auto it = _controllers.find(input.getControllerId());
         if (it == _controllers.end() || !it->second)
@@ -44,76 +31,31 @@ namespace cant::pan
 
     void
     MidiControllerChain::
+    processVoice(const size_m iVoice, MidiNoteInternal &in)
+    {
+        for(auto& [id, controller] : _controllers)
+        {
+            controller->processVoice(iVoice, in);
+        }
+    }
+
+    void
+    MidiControllerChain::
     update(const time_m tCurrent)
     {
-        MidiProcessorMemory::update(tCurrent);
-        for (auto& controller : _controllers)
-        {
-            controller.second->update(tCurrent);
-        }
+        // will notes need updating in processors?
+        // updateMidiNoteStream(_memory, tCurrent);
+
+        /*
+         * I mean, we could have a mechanic like,
+         * a control's value can decrease as time passes.
+         * whatever.
+         */
     }
 
-    void
-    MidiControllerChain::
-    processVoice(sizeint iVoice, const UPtr<MidiNote> &in)
-    {
-        if (!MidiNote::isNoteSet(in))
-        {
-            throw PANTOUFLE_EXCEPTION("Received note not set.");
-        }
-        auto& lastProcessedNote = _processed.at(iVoice);
-        const bool shouldChainProcess = !_controllers.empty();
-        if (shouldChainProcess)
-        {
-            auto it = _controllers.begin();
-            /* */
-            it->second->processVoice(iVoice, in->clone());
-            processVoiceChained(iVoice, it->second->getProcessed(iVoice));
-        }
-        const auto& res = shouldChainProcess ? getProcessedVoiceChained(iVoice) : in;
-        /* now copying result into processed */
-        PANTOUFLE_TRY_RETHROW({
-            MidiNote::clone(lastProcessedNote, res);
-        })
-    }
-
-    void
-    MidiControllerChain::
-    processVoiceChained(sizeint iVoice, const UPtr <MidiNote> &in)
-    {
-        if (!MidiNote::isNoteSet(in))
-        {
-            throw PANTOUFLE_EXCEPTION("Input note not set.");
-        }
-        auto it = _controllers.begin();
-        const auto& end = _controllers.cend();
-        ++it;
-        /* */
-        for (; it != end && std::next(it) != end; ++it)
-        {
-            /* if a controller is not set, we skip it */
-            const auto &source = it->second;
-            auto &dest = std::next(it)->second;
-            PANTOUFLE_TRY_RETHROW({
-                 dest->processVoiceChained(iVoice, source);
-            })
-        }
-    }
-
-    const UPtr<MidiNote>&
-    MidiControllerChain::
-    getProcessedVoiceChained(sizeint iVoice) const
-    {
-       if (_controllers.empty())
-       {
-           throw PANTOUFLE_EXCEPTION("Controller chain empty.");
-       }
-       return _controllers.crbegin()->second->getProcessed(iVoice);
-    }
-
-    void
-    MidiControllerChain::
-    setController(UPtr<MidiController> controller)
+void
+MidiControllerChain::
+setController(UPtr<MidiController> controller)
     {
         const byte_m id = controller->getControllerId();
         auto entry = std::pair<byte_m, UPtr<MidiController>>(id, std::move(controller));

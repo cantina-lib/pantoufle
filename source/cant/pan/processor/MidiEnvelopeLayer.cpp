@@ -9,33 +9,25 @@
 namespace cant::pan
 {
     MidiEnvelopeLayer::
-    MidiEnvelopeLayer(const sizeint numberVoices, const byte_m chanId)
-    : MidiProcessorMemory(numberVoices)
+    MidiEnvelopeLayer(const size_m numberVoices, const byte_m channel)
+    : MidiProcessorMemory(numberVoices),
+    _toneEnvelope(FlatToneEnvelope::make()),
+    _velocityEnvelope(ADSREnvelope::make())
     {
-        allocateProcessed(FlatToneEnvelope::make(), ADSREnvelope::make());
+
     }
 
     void
     MidiEnvelopeLayer::
-    allocateProcessed(const UPtr<ToneEnvelope>& toneEnvelope, const UPtr<VelocityEnvelope>& velocityEnvelope)
+    update(time_m tCurrent)
     {
-        for(auto& envNote : _processed)
-        {
-            envNote = UPtr<EnvelopedMidiNote>(new EnvelopedMidiNote(toneEnvelope, velocityEnvelope));
-        }
+        _tCurrent = tCurrent;
     }
 
     void
     MidiEnvelopeLayer::
-    processVoice(const sizeint iVoice, const UPtr<MidiNote>& note)
+    processVoice(const size_m iVoice, MidiNoteInternal& note)
     {
-        if(!MidiNote::isNoteSet(note))
-        {
-            throw PANTOUFLE_EXCEPTION("Received note not set.");
-        }
-        auto& envNote = _processed.at(iVoice);
-        PANTOUFLE_TRY_RETHROW({
-             envNote->updateElseSet(note);
-        })
+
     }
 }
