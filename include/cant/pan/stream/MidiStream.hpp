@@ -23,7 +23,7 @@
 
 
 
-namespace cant::midi
+namespace cant::pan
 {
     /* todo: create wrapper class to handle exceptions and transformations. */
     class MidiController;

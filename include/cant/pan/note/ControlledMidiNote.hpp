@@ -11,7 +11,7 @@
 
 #include <cant/pan/control/MidiControl.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     class MidiController;
     class ControlledMidiNote : public DecoratedMidiNote

@@ -11,7 +11,7 @@
 #include <cant/pan/common/types.hpp>
 #include <cant/pan/note/ControlledMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
      class DampMidiNote final : public ControlledMidiNote
      {

@@ -14,7 +14,7 @@
 #include <cant/pan/common/types.hpp>
 #include <cant/pan/common/Cloneable.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     class MidiControl

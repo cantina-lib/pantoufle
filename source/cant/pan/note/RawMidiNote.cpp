@@ -9,7 +9,7 @@
 #include <cant/common/formatting.hpp>
 
 
-namespace cant::midi
+namespace cant::pan
 {
 
     RawMidiNote::

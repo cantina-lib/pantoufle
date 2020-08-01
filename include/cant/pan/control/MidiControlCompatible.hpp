@@ -9,7 +9,7 @@
 
 #include <cant/pan/control/MidiControlCompatible.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     class MidiControlCompatible
     {

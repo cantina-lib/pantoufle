@@ -6,10 +6,10 @@
 
 #include <cant/pan/common/PantoufleException.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
-    MidiMachine::
-    MidiMachine(const sizeint numberVoices, const byte_m chanId)
+    Pantoufle::
+    Pantoufle(const sizeint numberVoices, const byte_m chanId)
     : _ctrlChain(numberVoices),
       _envlpLayer(numberVoices, chanId),
       _rawNoteInput(numberVoices),
@@ -20,7 +20,7 @@ namespace cant::midi
     }
 
     const Stream<MidiNoteOutput>&
-    MidiMachine::
+    Pantoufle::
     getProcessedOutputData() const
     {
         sizeint i = 0;
@@ -41,7 +41,7 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     update()
     {
         CANT_MAYBEUNUSED const auto& input = _rawNoteInput.front();
@@ -58,7 +58,7 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     updateRawNotes()
     {
         for (auto& note : _rawNotes)
@@ -72,7 +72,7 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     updateControlChain()
     {
         PANTOUFLE_TRY_RETHROW({
@@ -80,7 +80,7 @@ namespace cant::midi
         })
     }
 
-    void MidiMachine::
+    void Pantoufle::
     updateEnvelopes()
     {
         PANTOUFLE_TRY_RETHROW({
@@ -89,21 +89,21 @@ namespace cant::midi
     }
 
     time_m
-    MidiMachine::
+    Pantoufle::
     getCurrentTime()
     {
         return Time::getCurrentTime();
     }
 
     sizeint
-    MidiMachine::
+    Pantoufle::
     getNumberVoices() const
     {
         return _rawNoteInput.size();
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     setController(UPtr<MidiController> controller)
     {
         const byte_m id = controller->getControllerId();
@@ -114,7 +114,7 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     allocateControl(const byte_m controllerId)
     {
         auto it = _rawControlInput.find(controllerId);
@@ -129,7 +129,7 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     receiveRawNoteData(const sizeint iVoice, const MidiNoteInputData& noteData)
     {
         _rawNoteInput.at(iVoice).update(noteData, getCurrentTime());
@@ -141,7 +141,7 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     process(const sizeint iVoice)
     {
         processControllerChainVoice(iVoice);
@@ -149,14 +149,14 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     processControllerChainVoice(const sizeint iVoice)
     {
         _ctrlChain.processVoice(iVoice, _rawNotes.at(iVoice));
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     processControllerChainControl(const MidiControlInput& input)
     {
         _ctrlChain.processControl(input, _rawNotes);
@@ -172,7 +172,7 @@ namespace cant::midi
     }
 
     void
-    MidiMachine::
+    Pantoufle::
     processEnvelopeLayerVoice(const sizeint iVoice)
     {
         _envlpLayer.processVoice(iVoice, _ctrlChain.getProcessed(iVoice));
@@ -181,7 +181,7 @@ namespace cant::midi
 
 
     void
-    MidiMachine::
+    Pantoufle::
     receiveRawControlData(const MidiControlInputData &controlData)
     {
         /*

@@ -5,7 +5,7 @@
 #include <cant/pan/controller/MidiController.hpp>
 #include <cant/pan/note/ControlledMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     MidiController::
     MidiController(const sizeint numberVoices, const byte_m channel, const byte_m id)

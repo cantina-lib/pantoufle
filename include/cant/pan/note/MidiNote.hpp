@@ -20,7 +20,7 @@
 #include <cant/pan/note/MidiNoteData.hpp>
 
 
-namespace cant::midi
+namespace cant::pan
 {
     class RawMidiNote;
     class DecoratedMidiNote;
@@ -109,7 +109,7 @@ namespace cant::midi
         CANT_NODISCARD time_m getTone() const override = 0;
         CANT_NODISCARD byte_m getChannel() const override = 0;
 
-        /* this should be the only output point from MidiMachine */
+        /* this should be the only output point from Pantoufle */
         CANT_NODISCARD MidiNoteOutput getOutput() const;
 
         friend std::ostream& operator<<(std::ostream& out, const MidiNote* note);

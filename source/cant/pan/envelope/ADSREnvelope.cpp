@@ -7,7 +7,7 @@
 #include <sstream>
 #include <fmt/format.h>
 
-namespace cant::midi
+namespace cant::pan
 {
     UPtr<VelocityEnvelope>
     ADSREnvelope::

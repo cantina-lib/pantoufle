@@ -8,7 +8,7 @@
 
 #include <cant/pan/note/RawMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     MidiNoteOutput

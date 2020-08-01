@@ -12,7 +12,7 @@
 #include <cant/common/types.hpp>
 #include <cant/pan/note/DecoratedMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     template<typename T>
     class MidiEnvelope;

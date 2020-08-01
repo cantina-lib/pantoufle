@@ -6,7 +6,7 @@
 
 #include <sstream>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     ControlledMidiNote::

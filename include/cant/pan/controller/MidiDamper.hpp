@@ -10,7 +10,7 @@
 #include <cant/pan/controller/MidiController.hpp>
 
 
-namespace cant::midi
+namespace cant::pan
 {
     class MidiDamper final : public MidiController
     {

@@ -4,7 +4,7 @@
 
 #include <cant/pan/note/MidiNoteData.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     BaseMidiNoteData::BaseMidiNoteData(byte_m channel)

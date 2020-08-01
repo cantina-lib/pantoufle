@@ -4,7 +4,7 @@
 
 #include <cant/pan/note/DecoratedMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     DecoratedMidiNote::
     DecoratedMidiNote(const UPtr<MidiNote>& base)

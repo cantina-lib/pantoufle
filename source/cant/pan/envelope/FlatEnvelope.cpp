@@ -4,7 +4,7 @@
 
 #include <cant/pan/envelope/FlatEnvelope.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     UPtr<ToneEnvelope>

@@ -11,7 +11,7 @@
 
 #include <cant/pan/note/DecoratedMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     /**
      * A kind of MidiNote which entirely delegqtes its behaviour to its base

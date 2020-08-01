@@ -4,7 +4,7 @@
 
 #include <cant/pan/note/LazyMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     UPtr<MidiNote>

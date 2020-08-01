@@ -4,7 +4,7 @@
 
 #include <cant/pan/control/MidiControl.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     ShPtr <MidiControl>
     MidiControl::

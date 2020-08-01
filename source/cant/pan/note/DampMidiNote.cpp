@@ -4,7 +4,7 @@
 
 #include <cant/pan/note/DampMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     DampMidiNote::
@@ -54,7 +54,7 @@ namespace cant::midi
     {
         if (!isSet())
         {
-            throw PANTOUFLE_EXCEPTION("Damp midi note not set.");
+            throw PANTOUFLE_EXCEPTION("Damp pan note not set.");
         }
         _flagShouldHold &= isOn();
     }

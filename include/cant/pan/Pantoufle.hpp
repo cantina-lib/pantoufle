@@ -17,9 +17,9 @@
 
 #include <cant/pan/stream/MidiStream.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
-    class MidiMachine
+    class Pantoufle
     {
     private:
         MidiControllerChain _ctrlChain;
@@ -47,7 +47,7 @@ namespace cant::midi
 
         static time_m getCurrentTime();
     public:
-        MidiMachine(sizeint numberVoices, byte_m chanId);
+        Pantoufle(sizeint numberVoices, byte_m chanId);
 
         CANT_NODISCARD sizeint getNumberVoices() const;
 

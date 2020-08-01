@@ -17,7 +17,7 @@
 
 #include <cant/pan/stream/MidiStream.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     class MidiControllerChain final : public MidiProcessorMemory
     {

@@ -6,7 +6,7 @@
 
 #include <cant/pan/note/LazyMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     MidiControllerChain::
     MidiControllerChain(const sizeint numberVoices)

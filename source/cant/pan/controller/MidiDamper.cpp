@@ -6,7 +6,7 @@
 
 #include <cant/pan/note/DampMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     UPtr<MidiController>
     MidiDamper::

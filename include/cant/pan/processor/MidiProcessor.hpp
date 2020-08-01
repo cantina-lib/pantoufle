@@ -10,7 +10,7 @@
 #include <cant/pan/stream/MidiStream.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     class MidiProcessor
     {

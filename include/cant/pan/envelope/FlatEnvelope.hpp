@@ -9,7 +9,7 @@
 
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     class FlatToneEnvelope final : protected ToneEnvelope
     {

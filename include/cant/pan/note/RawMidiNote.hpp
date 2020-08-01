@@ -12,7 +12,7 @@
 #include <cant/pan/note/MidiNoteData.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
 

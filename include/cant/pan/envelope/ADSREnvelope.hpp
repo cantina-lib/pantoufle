@@ -14,7 +14,7 @@
 
 #include <cant/pan/note/EnvelopedMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     enum ADSRStateType { eAttack=0, eDecay=2, eSustain=1, eRelease=3, eNotPlaying=4 };
 

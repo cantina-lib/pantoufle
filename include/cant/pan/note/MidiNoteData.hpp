@@ -16,7 +16,7 @@
 #include <cant/pan/common/types.hpp>
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
-namespace cant::midi {
+namespace cant::pan {
 
     class BaseMidiNoteData : MidiNoteCompatible
     {

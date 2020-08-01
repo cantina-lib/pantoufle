@@ -16,7 +16,7 @@
 
 
 
-namespace cant::midi
+namespace cant::pan
 {
     class MidiEnvelopeLayer: public MidiProcessorMemory
     {

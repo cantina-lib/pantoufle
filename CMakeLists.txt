@@ -87,10 +87,11 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/LazyMidiNote.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/EnvelopedMidiNote.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/ControlledMidiNote.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/DampMidiNote.hpp )
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/DampMidiNote.hpp
+        )
 
 
 add_library(pantoufle ${PANTOUFLE_FILES})
 
-target_link_libraries(pantoufle cantina_common)
+set(PANTOUFLE_LIBRARIES pantoufle ${CANTINA_COMMON_LIBRARIES} PARENT_SCOPE)
 

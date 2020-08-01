@@ -9,7 +9,7 @@
 
 #include <cant/pan/common/PantoufleException.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
     UPtr<MidiNote>
     EnvelopedMidiNote::

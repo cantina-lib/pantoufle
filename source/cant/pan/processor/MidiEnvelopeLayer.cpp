@@ -6,7 +6,7 @@
 
 #include <fmt/format.h>
 
-namespace cant::midi
+namespace cant::pan
 {
     MidiEnvelopeLayer::
     MidiEnvelopeLayer(const sizeint numberVoices, const byte_m chanId)

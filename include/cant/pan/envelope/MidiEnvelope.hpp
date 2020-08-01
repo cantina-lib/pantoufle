@@ -19,7 +19,7 @@
 
 #include <cant/pan/note/EnvelopedMidiNote.hpp>
 
-namespace cant::midi
+namespace cant::pan
 {
 
     template <typename T>
