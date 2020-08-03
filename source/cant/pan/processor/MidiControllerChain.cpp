@@ -15,7 +15,7 @@ namespace cant::pan
 
     void
     MidiControllerChain::
-    processControl(const MidiControlInput& input)
+    processControl(const MidiControlInternal& input)
     {
         auto it = _controllers.find(input.getControllerId());
         if (it == _controllers.end() || !it->second)
@@ -49,13 +49,17 @@ namespace cant::pan
         /*
          * I mean, we could have a mechanic like,
          * a control's value can decrease as time passes.
-         * whatever.
+         * Wait, there *are* controller like that..
          */
+        for (auto& [id, controller] : _controllers)
+        {
+            controller->update(tCurrent);
+        }
     }
 
-void
-MidiControllerChain::
-setController(UPtr<MidiController> controller)
+    void
+    MidiControllerChain::
+    setController(UPtr<MidiController> controller)
     {
         const byte_m id = controller->getControllerId();
         auto entry = std::pair<byte_m, UPtr<MidiController>>(id, std::move(controller));

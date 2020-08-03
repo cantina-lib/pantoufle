@@ -32,6 +32,7 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/Pantoufle.cpp
         ### note
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNoteData.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNote.cpp
         ### env
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/MidiEnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSREnvelope.cpp
@@ -49,6 +50,11 @@ set(PANTOUFLE_FILES
         ## headers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/Pantoufle.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/pan.hpp
+        ### note
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/note.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.hpp
         ### env
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/envelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/MidiEnvelope.hpp
@@ -67,10 +73,6 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlData.hpp
-        ### note
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/note.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
         )
 
 

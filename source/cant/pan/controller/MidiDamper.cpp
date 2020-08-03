@@ -9,11 +9,10 @@ namespace cant::pan
     MidiDamper::
     MidiDamper(const size_m numberVoices, const byte_m channelId, const byte_m controllerId)
     : MidiController(numberVoices, channelId, controllerId),
-    _flagShouldHold(false)
+      _shouldHoldNotes(numberVoices, false)
     {
 
     }
-
 
     bool
     MidiDamper::
@@ -31,28 +30,44 @@ namespace cant::pan
 
     void
     MidiDamper::
-    beforeControlChange(const MidiControlInternal& incoming)
+    beforeControlProcess(const MidiControlInternal& incomingControl)
     {
         /*
          * Control is not yet updated,
          * so we compare with the incoming control.
          */
-        _flagShouldHold &= isOn(incoming);
+        for (auto& shouldHold : _shouldHoldNotes)
+        {
+            shouldHold = static_cast<byte_m>(
+                    static_cast<bool>(shouldHold)
+                    && isOn(incomingControl)
+                    );
+        }
     }
 
     void
     MidiDamper::
-    beforeNoteChange(const size_m iVoice, const MidiNoteInternal& incoming)
+    beforeNoteProcess(const size_m iVoice, const MidiNoteInternal& incomingNote)
     {
-        _flagShouldHold = isOn() && (getMemory(iVoice).isPlaying() || incoming.isPlaying());
+        _shouldHoldNotes.at(iVoice) = static_cast<byte_m>(
+                isOn()
+                && (getMemory(iVoice).isPlaying() || incomingNote.isPlaying())
+                );
     }
 
     void
     MidiDamper::
     IMPL_processVoice(const size_m iVoice, MidiNoteInternal &note) const
     {
-        note.setChanged(note.justChanged() || _flagShouldHold);
-        note.setPlaying(note.isPlaying() || _flagShouldHold);
+        const bool shouldHold = static_cast<bool>(_shouldHoldNotes.at(iVoice));
+        note.setPlaying(note.isPlaying() || shouldHold);
+        /*
+         * After setting the playing state to it
+         * the note can be compared to the last processed one (memory)
+         * to decide whether it has changed.
+         * It's pretty overkill, but it gets the work done.
+         */
+        note.setChangedPlaying(note.isPlaying() != getMemory(iVoice).isPlaying());
     }
 
     void

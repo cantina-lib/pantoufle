@@ -11,16 +11,26 @@ namespace cant::pan
 {
     UPtr<VelocityEnvelope>
     ADSREnvelope::
-    make(const ADSREnvelope::ArrayLength &lengths, const ADSREnvelope::ArrayVelocityRatios &velocities)
+    make(
+            const size_m numberVoices,
+            const ADSRState::ArrayLengths &lengths,
+            const ADSRState::ArrayVelocityRatios &velocities
+            )
     {
-        return UPtr<VelocityEnvelope>(new ADSREnvelope(lengths, velocities));
+        return UPtr<VelocityEnvelope>(new ADSREnvelope(numberVoices, lengths, velocities));
     }
 
     ADSREnvelope::
-    ADSREnvelope(const ArrayLength& lengths, const ArrayVelocityRatios& velocities)
-    : VelocityEnvelope(),
+    ADSREnvelope(
+            const size_m numberVoices,
+            const ADSRState::ArrayLengths& lengths,
+            const ADSRState::ArrayVelocityRatios& velocities
+            )
+
+    : VelocityEnvelope(numberVoices),
     _lengths(lengths),
-      _velocityRatios(velocities)
+     _velocityRatios(velocities),
+    _states(numberVoices)
     {
         checkLengths(lengths);
         setCallbacks();
@@ -28,12 +38,12 @@ namespace cant::pan
 
     void
     ADSREnvelope::
-    checkLengths(const ArrayLength &lengths)
+    checkLengths(const ADSRState::ArrayLengths &lengths)
     {
         if (
-                (lengths.at(eAttack) < static_cast<time_m>(0.))
-                ||(lengths.at(eDecay) < static_cast<time_m>(0.))
-                || (lengths.at(eRelease) < static_cast<time_m>(0.))
+                (lengths.at(ADSRState::eAttack) < static_cast<time_m>(0.))
+                ||(lengths.at(ADSRState::eDecay) < static_cast<time_m>(0.))
+                || (lengths.at(ADSRState::eRelease) < static_cast<time_m>(0.))
                 )
         {
             /* todo: better message */
@@ -56,103 +66,237 @@ namespace cant::pan
     ADSREnvelope::
     setCallbacks()
     {
-        _callbacks.at(eAttack) =
+        _callbacks.at(ADSRState::eAttack) =
                 [this](const time_m t) -> float_m
                 {
-                    return getBarycentre(t / _lengths.at(eAttack), static_cast<float_m>(0), _velocityRatios.at(eAttack));
+                    return getBarycentre(
+                            t / _lengths.at(ADSRState::eAttack),
+                            static_cast<float_m>(0),
+                            _velocityRatios.at(ADSRState::eAttack)
+                            );
                 };
-        _callbacks.at(eDecay) =
+        _callbacks.at(ADSRState::eDecay) =
                 [this](const time_m t) -> float_m
                 {
-                    return getBarycentre(t / _lengths.at(eDecay), _velocityRatios.at(eAttack), _velocityRatios.at(eSustain));
+                    return getBarycentre(
+                            t / _lengths.at(ADSRState::eDecay),
+                            _velocityRatios.at(ADSRState::eAttack),
+                            _velocityRatios.at(ADSRState::eSustain)
+                            );
                 };
-        _callbacks.at(eSustain) =
+        _callbacks.at(ADSRState::eSustain) =
                 [this](const time_m t) -> float_m
                 {
-                    return _velocityRatios.at(eSustain);
+                    return _velocityRatios.at(ADSRState::eSustain);
                 };
-        _callbacks.at(eRelease) =
+        _callbacks.at(ADSRState::eRelease) =
                 [this](const time_m t) -> float_m
                 {
-                    return getBarycentre(t / _lengths.at(eRelease), _velocityRatios.at(eSustain), static_cast<float_m>(0.));
+                    return getBarycentre(
+                            t / _lengths.at(ADSRState::eRelease),
+                            _velocityRatios.at(ADSRState::eSustain),
+                            static_cast<float_m>(0.)
+                            );
                 };
     }
 
-
-    bool
-    ADSREnvelope::
-    isSustainFinite() const
+    void ADSREnvelope::
+    flushChange()
     {
-        return _lengths.at(eSustain) >= static_cast<time_m>(0.);
-    }
-
-    bool
-    ADSREnvelope::
-    isPlayingState(ADSRState state)
-    {
-        return state != ADSRState::eNotPlaying;
-    }
-
-    void
-    ADSREnvelope::
-    computeState(ADSRState &state, time_m &stateLength, const time_m noteLength) const
-    {
-        /* starting values */
-        state = ADSRState::eAttack;
-        stateLength = noteLength;
-
-        REC_computeState(state, stateLength);
-    }
-
-    void
-    ADSREnvelope::
-    REC_computeState(ADSRState& state, time_m& length) const
-    {
-        switch (state)
+        for (auto& state : _states)
         {
-            case ADSRState::eAttack:
-                if (length > _lengths.at(eAttack))
+            state.flushChange();
+        }
+    }
+
+    ADSRState::
+    ADSRState()
+    : _type(ADSRStateType::eNotPlaying),
+    _tStart(),
+    _flagChanged(false)
+    {
+
+    }
+
+
+    bool
+    ADSRState::
+    isSustainFinite(const ArrayLengths& lengths)
+    {
+        return lengths.at(ADSRStateType::eSustain) >= static_cast<time_m>(0.);
+    }
+
+
+    time_m
+    ADSRState::
+    getLength(const time_m tCurrent) const
+    {
+        return tCurrent - _tStart;
+    }
+
+    time_m
+    ADSRState::
+    computeTimeStart(const time_m tCurrent, const time_m length)
+    {
+        return tCurrent - length;
+    }
+
+    void
+    ADSRState::
+    set(const ADSRStateType type, const time_m tStart)
+    {
+        if (type != _type)
+        {
+            raiseFlagChanged();
+        }
+        _type = type;
+        _tStart = tStart;
+    }
+
+    void
+    ADSRState::
+    setFromLength(const time_m tCurrent, const ADSRStateType type, const time_m length)
+    {
+        set(type, computeTimeStart(tCurrent, length));
+    }
+
+    void
+    ADSRState::
+    update(const time_m tCurrent, const MidiNoteInternal &note, const ArrayLengths& lengths)
+    {
+        if (note.justChangedPlaying())
+        {
+            if (note.isPlaying())
+            {
+                set(ADSRStateType::eAttack, tCurrent);
+            }
+            else
+            {
+                set(ADSRStateType::eRelease, tCurrent);
+            }
+        }
+        else
+        {
+            compute(tCurrent, lengths);
+        }
+    }
+
+    void
+    ADSRState::
+    apply(const time_m tCurrent, MidiNoteInternal &note, const ArrayCallbacks& callbacks) const
+    {
+        const float_m velocityRatio = getVelocityRatio(tCurrent, callbacks);
+        note.setVelocity(note.getVelocity() * velocityRatio);
+        note.setPlaying(this->isPlaying());
+    }
+
+    void
+    ADSRState::
+    flushChange()
+    {
+        discardFlagChanged();
+    }
+
+    bool
+    ADSRState::
+    isPlaying() const
+    {
+        return _type != ADSRStateType::eNotPlaying;
+    }
+
+    bool
+    ADSRState::
+    justChanged() const
+    {
+        return _flagChanged;
+    }
+
+    void
+    ADSRState::
+    raiseFlagChanged()
+    {
+        _flagChanged = true;
+    }
+
+    void
+    ADSRState::
+    discardFlagChanged()
+    {
+        _flagChanged = false;
+    }
+
+    void
+    ADSRState::
+    compute(const time_m tCurrent, const ArrayLengths& lengths)
+    {
+        ADSRStateType type = _type;
+        time_m length = getLength(tCurrent);
+        /* starting values */
+        ADSRState::REC_compute(type, length, lengths);
+        setFromLength(tCurrent, type, length);
+    }
+
+    void
+    ADSRState::
+    REC_compute(ADSRStateType& type, time_m& length, const ArrayLengths& lengths)
+    {
+        switch (type)
+        {
+            case ADSRStateType::eAttack:
+                if (length > lengths.at(eAttack))
                 {
                     /* */
-                    state = ADSRState::eDecay;
-                    length -= _lengths.at(eAttack);
+                    type = ADSRStateType::eDecay;
+                    length -= lengths.at(eAttack);
                     break;
                 }
                 return;
-            case ADSRState::eDecay:
-                if (length > _lengths.at(eDecay))
+            case ADSRStateType::eDecay:
+                if (length > lengths.at(eDecay))
                 {
-                    state = ADSRState::eSustain;
-                    length -= _lengths.at(eDecay);
+                    type = ADSRStateType::eSustain;
+                    length -= lengths.at(eDecay);
                     break;
                 }
                 return;
-            case ADSRState::eSustain:
-                if (isSustainFinite() && (length > _lengths.at(eSustain)))
+            case ADSRStateType::eSustain:
+                if (isSustainFinite(lengths) && (length > lengths.at(eSustain)))
                 {
-                    state = ADSRState::eRelease;
-                    length -= _lengths.at(eSustain);
+                    type = ADSRStateType::eRelease;
+                    length -= lengths.at(eSustain);
                     break;
                 }
                 return;
-            case ADSRState::eRelease:
-                if (length > _lengths.at(eRelease))
+            case ADSRStateType::eRelease:
+                if (length > lengths.at(eRelease))
                 {
-                    state = ADSRState::eNotPlaying;
-                    length -= _lengths.at(eRelease);
+                    type = ADSRStateType::eNotPlaying;
+                    length -= lengths.at(eRelease);
                     break;
                 }
                 return;
-            case ADSRState::eNotPlaying:
+            case ADSRStateType::eNotPlaying:
                 /* nothing to do */
                 return;
         }
-        REC_computeState(state, length);
+        REC_compute(type, length, lengths);
     }
+
+    float_m
+    ADSRState::
+    getVelocityRatio(const time_m tCurrent, const ArrayCallbacks& callbacks) const
+    {
+        if (!isPlaying())
+        {
+            return static_cast<float_m>(0);
+        }
+        return callbacks.at(_type)(getLength(tCurrent));
+    }
+
 
     void
     ADSREnvelope::
-    updateNote(MidiNoteInternal &note, const ADSRState state, const time_m stateLength) const
+    processVoice(const size_m iVoice, MidiNoteInternal &note)
     {
         /*
          * There used to be a concept of 'extendability'
@@ -161,43 +305,10 @@ namespace cant::pan
          * You'd need to add a _isExtendable field to MidiNoteInternal
          * to go back.
          */
-        const bool stateIsPlaying = isPlayingState(state);
-        const bool hasStateChangedNote = stateIsPlaying != note.isPlaying();
-        note.setPlaying(note.isPlaying() || stateIsPlaying);
-        if (note.justChanged())
-        {
-            note.setChanged(!stateIsPlaying);
-        }
-        else
-        {
-            note.setChanged(hasStateChangedNote);
-        }
-    }
-
-    float_m
-    ADSREnvelope::
-    computeVelocityRatio(const ADSRState state, const time_m stateLength) const
-    {
-        if (!isPlayingState(state))
-        {
-            return static_cast<float_m>(0);
-        }
-        return _callbacks.at(state)(stateLength);
-    }
-
-
-    void
-    ADSREnvelope::
-    apply(time_m tCurrent, MidiNoteInternal &note) const
-    {
-        ADSRState state;
-        time_m stateLength;
-        // naïve state, taking only time into account.
-        computeState(state, stateLength, note.getLength(tCurrent));
-        updateNote(note, state, stateLength);
-
-        const float_m velocityRatio = computeVelocityRatio(state, stateLength);
-        note.setVelocity(note.getVelocity() * velocityRatio);
+        ADSRState& state = _states.at(iVoice);
+        const time_m tCurrent = getCurrentTime();
+        state.update(tCurrent, note, _lengths);
+        state.apply(tCurrent, note, _callbacks);
     }
 }
 

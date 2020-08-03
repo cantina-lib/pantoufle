@@ -14,11 +14,13 @@ namespace cant::pan
     class FlatToneEnvelope final : protected ToneEnvelope
     {
     private:
-        FlatToneEnvelope() = default;
+        CANT_EXPLICIT FlatToneEnvelope(size_m numberVoices);
     public:
-        void apply(time_m tCurrent, MidiNoteInternal& note) const override;
+        void processVoice(size_m iVoice, MidiNoteInternal& note) override;
 
-        static UPtr<ToneEnvelope> make();
+        static UPtr<ToneEnvelope> make(size_m numberVoices);
+
+        void flushChange();
     };
 }
 

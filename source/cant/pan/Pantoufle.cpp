@@ -31,20 +31,58 @@ namespace cant::pan
     update()
     {
         const time_m tCurrent = getCurrentTime();
-        updateRawNoteInput(tCurrent);
         updateControlChain(tCurrent);
         updateEnvelopeLayer(tCurrent);
+        processAll();
+        /**
+         * ++IMPORTANT
+         * Raw input has got to be updated last,
+         * because it discards its 'changed' state,
+         * and the info is never received by the processors.
+         **/
+         flushChange();
     }
 
     void
     Pantoufle::
-    updateRawNoteInput(const time_m tCurrent)
+    processAll()
     {
-        for (auto& input : _rawNoteInput)
+        /*
+         * Whatever the case, we will have to process the notes
+         * each time we update, so no need to do process them individually
+         * when they are received.
+         */
+        for (size_m i = 0; i < getNumberVoices(); ++i)
         {
-            input.update(tCurrent);
+            process(i);
         }
     }
+
+    void
+    Pantoufle::
+    flushChange()
+    {
+        flushChangeRawNoteInput();
+        flushChangeEnvelopeLayer();
+    }
+
+    void
+    Pantoufle::
+    flushChangeRawNoteInput()
+    {
+        for(auto& input : _rawNoteInput)
+        {
+            input.flushChange();
+        }
+    }
+
+    void
+    Pantoufle::
+    flushChangeEnvelopeLayer()
+    {
+        _envlpLayer.flushChange();
+    }
+
 
     void
     Pantoufle::
@@ -61,9 +99,9 @@ namespace cant::pan
 
     time_m
     Pantoufle::
-    getCurrentTime()
+    getCurrentTime() const
     {
-        return Time::getCurrentTime();
+        return _timer.getCurrentTime();
     }
 
     size_m
@@ -104,8 +142,8 @@ namespace cant::pan
     receiveRawNoteData(const size_m iVoice, const MidiNoteInputData& inputData)
     {
         MidiNoteInput& input = _rawNoteInput.at(iVoice);
-        input.update(inputData, getCurrentTime());
-        process(iVoice);
+        input.set(getCurrentTime(), inputData);
+        /* processing will be done when time comes to update. */
     }
 
     void
@@ -115,35 +153,26 @@ namespace cant::pan
         const MidiNoteInput& input = _rawNoteInput.at(iVoice);
         MidiNoteInternal& internal = _processedNoteInternal.at(iVoice);
         MidiNoteOutput& output = _processedNoteOutput.at(iVoice);
-        internal.update(input);
-        /* updating controllers and envelope layer */
+        internal.set(input);
+        /* processing controllers and envelope layer */
         processControllerChainVoice(iVoice);
         processEnvelopeLayerVoice(iVoice);
         /* */
-        output.update(internal);
+        output.set(internal);
     }
 
     void
     Pantoufle::
     processControllerChainVoice(const size_m iVoice)
     {
-        _ctrlChain.processVoice(iVoice, _processedNoteInternal.at(iVoice));
+       _ctrlChain.processVoice(iVoice, _processedNoteInternal.at(iVoice));
     }
 
     void
     Pantoufle::
-    processControllerChainControl(const MidiControlInput& input)
+    processControllerChainControl(const MidiControlInternal& input)
     {
         _ctrlChain.processControl(input);
-        /*
-         * then we need to update the envelopes,
-         * because the input (here ControlledNotes)
-         * have changed.
-         */
-        for (size_m i = 0; i < getNumberVoices(); ++i)
-        {
-            process(i);
-        }
     }
 
     void
@@ -173,19 +202,7 @@ namespace cant::pan
         }
         MidiControlInternal& control = _rawControlInput.at(controllerId);
         control = MidiControlInput(controlData);
-        /*
-         * processing all the notes again
-         */
         processControllerChainControl(control);
-        /*
-         * No need to compute everything again,
-         * the notes have access to their control and can
-         * adjust on their own.
-	 * YOU WISH
-	 * well, if every smart pointer wasn't deep-copied,
-	 * it would indeed be the case
-	 * Tough luck.
-         */
     }
 
 

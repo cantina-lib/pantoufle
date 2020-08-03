@@ -34,7 +34,8 @@ namespace cant::pan
         CANT_NODISCARD virtual tone_m getTone() const = 0;
         CANT_NODISCARD virtual vel_m getVelocity() const = 0;
 
-        CANT_NODISCARD virtual bool justChanged() const = 0;
+        CANT_NODISCARD virtual bool justChangedPlaying() const = 0;
+        CANT_NODISCARD virtual bool justChangedTone() const = 0;
     };
 
     class MidiNoteInputCompatible : public MidiNoteCompatible
@@ -43,8 +44,6 @@ namespace cant::pan
         CANT_NODISCARD virtual bool isPressed() const = 0;
 
         CANT_NODISCARD virtual time_m getStartingTime() const = 0;
-
-        virtual void update(time_m) = 0;
     };
 
     class MidiNoteInternalCompatible : public MidiNoteCompatible

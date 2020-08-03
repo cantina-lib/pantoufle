@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "MidiNoteData.hpp"
 #include "MidiNoteCompatible.hpp"
+#include "MidiNoteData.hpp"
+#include "MidiNote.hpp"
 
 #endif //CANTINA_NOTE_HPP

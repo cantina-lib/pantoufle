@@ -7,19 +7,33 @@
 namespace cant::pan
 {
 
+    FlatToneEnvelope::
+    FlatToneEnvelope(const size_m numberVoices)
+    : ToneEnvelope(numberVoices)
+    {
+
+    }
+
     UPtr<ToneEnvelope>
     FlatToneEnvelope::
-    make()
+    make(const size_m numberVoices)
     {
-        return UPtr<ToneEnvelope>(new FlatToneEnvelope());
+        return UPtr<ToneEnvelope>(new FlatToneEnvelope(numberVoices));
     }
 
 
     void
     FlatToneEnvelope::
-    apply(time_m tCurrent, MidiNoteInternal &note) const
+    processVoice(size_m iVoice, MidiNoteInternal &note)
     {
         /* nothing to doooo */
+    }
+
+    void
+    FlatToneEnvelope::
+    flushChange()
+    {
+
     }
 }
 

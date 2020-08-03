@@ -7,11 +7,9 @@
 
 #pragma once
 
-#include <iostream>
+#include <cant/common/formatting.hpp>
 
-#include <fmt/format.h>
-
-#include <cant/pan/common/Time.hpp>
+#include <cant/pan/common/MidiTimer.hpp>
 
 #include <cant/pan/common/types.hpp>
 #include <cant/pan/note/MidiNoteCompatible.hpp>
@@ -76,7 +74,6 @@ namespace cant::pan
         }
     };
 
-
     using MidiNoteInputData = MidiNoteData<tone_mint, vel_mint>;
     using MidiNoteOutputData = MidiNoteData<tone_m, vel_m>;
 
@@ -90,115 +87,6 @@ namespace cant::pan
         void setVelocity(const vel_m velocity) { _velocity = velocity; }
 
     };
-
-
-
-    class MidiNoteInput : MidiNoteInputCompatible
-    {
-    private:
-        MidiNoteInputData _data;
-        time_m _tStart;
-        bool _isPressed;
-        bool _flagChanged;
-    private:
-        void raiseFlagChanged();
-        void discardFlagChanged();
-
-        CANT_CONSTEXPR MidiNoteInput(const MidiNoteInput&) = default;
-
-        MidiNoteInput(byte_m channel, tone_m tone, vel_m velocity, bool isPressed);
-    public:
-        MidiNoteInput();
-
-        // does not need a time, just as long as it is called at every iteration
-        void update(const MidiNoteInputData& data, time_m tCurrent);
-
-        void update(time_m tCurrent) override;
-
-        CANT_NODISCARD byte_m getChannel() const override { return _data.getChannel(); }
-        CANT_NODISCARD tone_m getTone() const override    { return _data.getTone(); }
-        CANT_NODISCARD vel_m getVelocity() const override { return _data.getVelocity(); }
-
-        CANT_NODISCARD const MidiNoteInputData& getData() const { return _data; }
-
-        CANT_NODISCARD time_m getStartingTime() const override { return _tStart; }
-
-        CANT_NODISCARD bool isPressed() const override   { return _isPressed; }
-        CANT_NODISCARD bool justChanged() const override { return _flagChanged; }
-
-        friend std::ostream& operator<<(std::ostream& out, const MidiNoteInput& input);
-    };
-
-
-    class MidiNoteInternal : MidiNoteInternalCompatible
-    {
-    private:
-        MidiNoteInternalData _data;
-
-        time_m _tStart;
-        bool _isPlaying;
-        bool _justChanged;
-
-    public:
-        MidiNoteInternal();
-
-        void update(const MidiNoteInput& input);
-
-        CANT_NODISCARD time_m getLength(const time_m tCurrent) const override { return tCurrent - _tStart; }
-
-        void setPlaying(const bool isPlaying)   { _isPlaying = isPlaying; }
-        void setChanged(const bool justChanged) { _justChanged = justChanged; }
-
-        void setTone(const tone_m tone) { _data.setTone(tone); }
-        void setVelocity(const vel_m velocity) { _data.setVelocity(velocity); }
-
-        CANT_NODISCARD byte_m getChannel() const override { return _data.getChannel(); }
-        CANT_NODISCARD tone_m getTone() const override { return _data.getTone(); }
-        CANT_NODISCARD vel_m getVelocity() const override { return _data.getVelocity(); }
-
-        CANT_NODISCARD time_m getStartingTime() const override { return _tStart; }
-
-        CANT_NODISCARD const MidiNoteInternalData& getData() const { return _data; }
-
-        CANT_NODISCARD bool isPlaying() const override   { return _isPlaying; }
-        CANT_NODISCARD bool justChanged() const override { return _justChanged; }
-
-        friend std::ostream& operator<<(std::ostream& out, const MidiNoteInternal& output);
-    };
-
-    class MidiNoteOutput : MidiNoteOutputCompatible
-    {
-    private:
-        MidiNoteOutputData _data;
-
-        time_m _tStart;
-        bool _isPlaying;
-        bool _justChanged;
-    private:
-        CANT_NODISCARD vel_m getVelocity() const override { return _data.getVelocity(); }
-
-    public:
-        MidiNoteOutput();
-
-        void update(const MidiNoteInternal& internal);
-
-        CANT_NODISCARD time_m getLength(const time_m tCurrent) const override { return tCurrent - _tStart; }
-
-        CANT_NODISCARD byte_m getChannel() const override { return _data.getChannel(); }
-        CANT_NODISCARD tone_m getTone() const override { return _data.getTone(); }
-        CANT_NODISCARD vel_m getVelocityPlaying() const override;
-
-        CANT_NODISCARD bool isPlaying() const override   { return _isPlaying; }
-        CANT_NODISCARD bool justChanged() const override { return _justChanged; }
-
-        CANT_NODISCARD bool justStarted() const { return _justChanged && isPlaying(); }
-        CANT_NODISCARD bool justStopped() const { return _justChanged && !isPlaying(); }
-
-        friend std::ostream& operator<<(std::ostream& out, const MidiNoteInternal& output);
-
-    };
-
-
 }
 
 #endif //CANTINA_MIDINOTEDATA_HPP

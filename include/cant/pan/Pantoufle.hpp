@@ -8,7 +8,7 @@
 #pragma once
 
 #include <cant/pan/common/types.hpp>
-#include <cant/pan/common/Time.hpp>
+#include <cant/pan/common/MidiTimer.hpp>
 
 #include <cant/pan/processor/processor.hpp>
 
@@ -29,21 +29,29 @@ namespace cant::pan
 
         Map<byte_m, MidiControlInput> _rawControlInput;
 
+        MidiTimer _timer;
+
         void allocateControl(byte_m controllerId);
 
         void processControllerChainVoice(size_m iVoice);
-        void processControllerChainControl(const MidiControlInput& input);
+        void processControllerChainControl(const MidiControlInternal& control);
 
         void processEnvelopeLayerVoice(size_m iVoice);
 
         void process(size_m iVoice);
 
+        void flushChangeRawNoteInput();
+        void flushChangeEnvelopeLayer();
 
-        void updateRawNoteInput(time_m tCurrent);
-        void updateEnvelopeLayer(const time_m tCurrent);
+        void flushChange();
+
+
+
+        void updateEnvelopeLayer(time_m tCurrent);
         void updateControlChain(time_m tCurrent);
+        void processAll();
 
-        static time_m getCurrentTime();
+        CANT_NODISCARD time_m getCurrentTime() const;
     public:
         Pantoufle(size_m numberVoices, byte_m chanId);
 

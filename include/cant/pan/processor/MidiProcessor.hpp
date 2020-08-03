@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cant/pan/note/MidiNoteData.hpp>
+#include <cant/pan/note/MidiNote.hpp>
 
 namespace cant::pan
 {

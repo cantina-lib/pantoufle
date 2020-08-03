@@ -21,7 +21,7 @@ namespace cant::pan
     MidiController::
     processVoice(const size_m iVoice, MidiNoteInternal &internal)
     {
-        beforeNoteChange(iVoice, internal);
+        beforeNoteProcess(iVoice, internal);
         IMPL_processVoice(iVoice, internal);
         updateVoice(iVoice, internal);
     }
@@ -52,8 +52,8 @@ namespace cant::pan
     MidiController::
     receiveControl(const MidiControlInternal& control)
     {
+        beforeControlProcess(control);
         _control = control;
-        beforeControlChange(control);
     }
 
 

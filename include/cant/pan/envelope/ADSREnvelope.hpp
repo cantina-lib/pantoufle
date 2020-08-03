@@ -7,11 +7,57 @@
 
 #pragma once
 
+#include <cant/pan/common/types.hpp>
+#include <cant/common/formatting.hpp>
+
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
 namespace cant::pan
 {
-    enum ADSRState { eAttack=0, eDecay=2, eSustain=1, eRelease=3, eNotPlaying=4 };
+
+    class ADSRState
+    {
+    public:
+        enum ADSRStateType { eAttack=0, eDecay=2, eSustain=1, eRelease=3, eNotPlaying=4 };
+        typedef std::array<time_m, 4> ArrayLengths;
+        typedef std::array<float_m , 2> ArrayVelocityRatios;
+        typedef std::array<timefunc_m<float_m>, 4> ArrayCallbacks;
+
+    private:
+        ADSRStateType _type;
+        time_m _tStart;
+        bool _flagChanged;
+
+    private:
+        static constexpr const char* m_STATETYPE_CSTRING[] = { "ATTACK", "SUSTAIN", "DECAY", "RELEASE", "NOTPLAYING"};
+    private:
+        static void REC_compute(ADSRStateType& type, time_m& length, const ArrayLengths& lengths);
+        void compute(time_m tCurrent, const ArrayLengths& lengths);
+
+        CANT_NODISCARD static time_m computeTimeStart(time_m tCurrent, time_m length);
+
+        CANT_NODISCARD static bool isSustainFinite(const ArrayLengths& lengths);
+
+        void set(ADSRStateType type, time_m tStart);
+        void setFromLength(time_m tCurrent, ADSRStateType type, time_m length);
+
+        CANT_NODISCARD float_m getVelocityRatio(time_m tCurrent, const ADSRState::ArrayCallbacks& callbacks) const;
+
+        void raiseFlagChanged();
+        void discardFlagChanged();
+
+        CANT_NODISCARD bool isPlaying() const;
+        CANT_NODISCARD bool justChanged() const;
+    public:
+        ADSRState();
+
+        CANT_NODISCARD time_m getLength(time_m tCurrent) const;
+
+        void update(time_m tCurrent, const MidiNoteInternal& note, const ArrayLengths& lengths);
+        void apply(time_m tCurrent, MidiNoteInternal& note, const ArrayCallbacks& callbacks) const;
+
+        void flushChange();
+    };
 
     class ADSREnvelope final : private VelocityEnvelope
     {
@@ -21,50 +67,45 @@ namespace cant::pan
          * the release doesn't work right. We should then release at the same rate,
          * so it might take longer for the note die.
          */
-        typedef std::array<time_m, 4> ArrayLength;
-        typedef std::array<float_m , 2> ArrayVelocityRatios;
-        typedef std::array<timefunc_m<float_m>, 4> ArrayCallback;
 
-        static CANT_CONSTEXPR ArrayLength m_DEFAULT_ADSR_LENGTHS = ArrayLength({30., -1, 50., 30. });
-        static CANT_CONSTEXPR ArrayVelocityRatios m_DEFAULT_ADSR_VELOCITIES = ArrayVelocityRatios({1., 0.7});
+        static CANT_CONSTEXPR ADSRState::ArrayLengths m_DEFAULT_ADSR_LENGTHS
+          = ADSRState::ArrayLengths({30., -1, 50., 80. });
+        static CANT_CONSTEXPR ADSRState::ArrayVelocityRatios m_DEFAULT_ADSR_VELOCITIES
+          = ADSRState::ArrayVelocityRatios({1., 0.7});
     private:
         /* 0: attack time
          * 2: decay time
-         * 1: sustain time, can be infinite -> reserved value (-1, negative?)
+         * 1: sustain time, can be infinite -> reserved value (negative)
          * 3: release time
          */
-        ArrayLength _lengths;
+        ADSRState::ArrayLengths _lengths;
         /*
          * 0: attack peak velocity
          * 1: sustain velocity
          */
-        ArrayVelocityRatios _velocityRatios;
-        ArrayCallback _callbacks;
+        ADSRState::ArrayVelocityRatios _velocityRatios;
+        ADSRState::ArrayCallbacks _callbacks;
+
+        Stream<ADSRState> _states;
     private:
-        void REC_computeState(ADSRState& state, time_m& length) const;
-        void computeState(ADSRState &state, time_m &stateLength, time_m noteLength) const;
-
-        CANT_NODISCARD bool isSustainFinite() const;
-
-        void updateNote(MidiNoteInternal& note, ADSRState state, time_m stateLength) const;
-
-        static bool isPlayingState(ADSRState state);
-
-        CANT_NODISCARD float_m computeVelocityRatio(ADSRState state, time_m stateLength) const;
 
         void setCallbacks();
-        static void checkLengths(const ArrayLength& lengths);
+        static void checkLengths(const ADSRState::ArrayLengths& lengths);
         static vel_m getBarycentre(time_m lambda,  vel_m v1, vel_m v2);
-        ADSREnvelope(const ArrayLength& lengths, const ArrayVelocityRatios& velocities);
+
+        ADSREnvelope(size_m numberVoices, const ADSRState::ArrayLengths& lengths, const ADSRState::ArrayVelocityRatios& velocities);
         ADSREnvelope(const ADSREnvelope& adsr) = default;
 
     public:
-        void apply(time_m tCurrent, MidiNoteInternal& note) const override;
+        void processVoice(size_m iVoice, MidiNoteInternal& note) override;
 
         static UPtr<VelocityEnvelope> make(
-                const ADSREnvelope::ArrayLength& lengths = ADSREnvelope::m_DEFAULT_ADSR_LENGTHS,
-                const ADSREnvelope::ArrayVelocityRatios& velocities = ADSREnvelope::m_DEFAULT_ADSR_VELOCITIES
+                size_m numberVoices,
+                const ADSRState::ArrayLengths& lengths = ADSREnvelope::m_DEFAULT_ADSR_LENGTHS,
+                const ADSRState::ArrayVelocityRatios& velocities = ADSREnvelope::m_DEFAULT_ADSR_VELOCITIES
         );
+
+        void flushChange();
     };
 }
 

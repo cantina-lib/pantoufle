@@ -10,9 +10,11 @@
 
 #include <cant/common/formatting.hpp>
 #include <cant/pan/common/types.hpp>
-#include <cant/pan/common/Time.hpp>
+#include <cant/pan/common/MidiTimer.hpp>
 
-#include <cant/pan/note/MidiNoteData.hpp>
+#include <cant/pan/note/MidiNote.hpp>
+
+#include <cant/pan/processor/MidiProcessor.hpp>
 
 namespace cant::pan
 {
@@ -23,27 +25,51 @@ namespace cant::pan
      * and current time.
      **/
     template <typename T>
-    class MidiEnvelope
+    class MidiEnvelope : MidiProcessorMemory
     {
+    private:
+        time_m _tCurrent;
+    protected:
+        CANT_NODISCARD time_m getCurrentTime() const
+        {
+            return _tCurrent;
+        }
     public:
-        MidiEnvelope() = default;
-        virtual ~MidiEnvelope() = default;
+        CANT_EXPLICIT MidiEnvelope(size_m numberVoices)
+        : MidiProcessorMemory(numberVoices),
+        _tCurrent()
+        {
+
+        }
 
         // envelopes are state-less, so const here
-        virtual void apply(time_m tCurrent, MidiNoteInternal& note) const = 0;
+        // TODO noooo, it needs a state
+        void update(const time_m tCurrent) override
+        {
+            _tCurrent = tCurrent;
+        }
+        void processVoice(size_m iVoice, MidiNoteInternal& note) override = 0;
+
+        virtual void flushChange() = 0;
     };
 
     class ToneEnvelope : public MidiEnvelope<tone_m>
     {
     public:
-        void apply(time_m tCurrent, MidiNoteInternal& note) const override = 0;
+        CANT_EXPLICIT ToneEnvelope(size_m numberVoices);
+        void processVoice(size_m iVoice, MidiNoteInternal& note) override = 0;
+
+        void flushChange() = 0;
     };
 
 
     class VelocityEnvelope : public MidiEnvelope<vel_m>
     {
     public:
-        void apply(time_m tCurrent, MidiNoteInternal& note) const override = 0;
+        CANT_EXPLICIT VelocityEnvelope(size_m numberVoices);
+        void processVoice(size_m iVoice, MidiNoteInternal& note) override = 0;
+
+        void flushChange() = 0;
     };
 }
 

@@ -19,14 +19,14 @@ namespace cant::pan
     private:
         UPtr<ToneEnvelope> _toneEnvelope;
         UPtr<VelocityEnvelope> _velocityEnvelope;
-
-        time_m _tCurrent;
     public:
 
         void update(time_m tCurrent) override;
         void processVoice(size_m iVoice, MidiNoteInternal& note) override;
 
         CANT_EXPLICIT MidiEnvelopeLayer(size_m numberVoices, byte_m channel);
+
+        void flushChange();
 
     };
 }

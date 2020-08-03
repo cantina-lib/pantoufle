@@ -26,7 +26,7 @@ namespace cant::pan
         CANT_EXPLICIT MidiControllerChain(size_m numberVoices);
 
         void setController(UPtr<MidiController> controller);
-        void processControl(const MidiControlInput& input);
+        void processControl(const MidiControlInternal& control);
 
         // will notes need updating in processors?
         // updateMidiNoteStream(_memory, tCurrent);

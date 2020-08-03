@@ -14,7 +14,7 @@
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/pan/control/MidiControlData.hpp>
-#include <cant/pan/note/MidiNoteData.hpp>
+#include <cant/pan/note/MidiNote.hpp>
 
 
 namespace cant::pan
@@ -33,13 +33,13 @@ namespace cant::pan
         MidiControlInternal _control;
     private:
         // event functions
-        virtual void beforeControlChange(const MidiControlInternal& incoming) = 0;
+        virtual void beforeControlProcess(const MidiControlInternal& incoming) = 0;
         /**
          * State changes in the controller as side-effects should be called here.
          * Controller will not be allowed to mutate in IMPL_processVoice,
          * but will be automatically updated in update.
          **/
-        virtual void beforeNoteChange(size_m iVoice, const MidiNoteInternal& incoming) = 0;
+        virtual void beforeNoteProcess(size_m iVoice, const MidiNoteInternal& incoming) = 0;
         // to be implemented
         virtual void IMPL_processVoice(size_m iVoice, MidiNoteInternal& incoming) const = 0;
     private:
