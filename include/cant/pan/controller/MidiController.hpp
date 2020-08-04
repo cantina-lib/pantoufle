@@ -10,6 +10,7 @@
 #include <cant/common/formatting.hpp>
 
 #include <cant/pan/common/types.hpp>
+#include <cant/common/memory.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
@@ -29,7 +30,8 @@ namespace cant::pan
     {
     private:
         byte_m _channel;
-        const byte_m _controllerId;
+        // Array<byte_m, numberControlBindings_V> _bindings;
+        byte_m _controllerId;
         MidiControlInternal _control;
     private:
         // event functions
@@ -62,11 +64,26 @@ namespace cant::pan
         void receiveControl(const MidiControlInternal& control);
 
 
-        friend std::ostream& operator<<(std::ostream& out, const MidiController* controller);
+        friend std::ostream&
+        operator<<(std::ostream& out, const MidiController* controller)
+        {
+            out << "[midicontroller]";
+            if (!MidiController::isControllerSet(controller))
+            {
+                return out << "!NOTSET";
+            }
+            out << '#' << (int) controller->getControllerId() << " : ";
+            out << controller->getControl();
+            return out;
+        }
+        friend std::ostream&
+        operator<<(std::ostream& out, const UPtr<MidiController>& controller)
+        {
+            return out << controller.get();
+        }
     };
 
-    std::ostream& operator<<(std::ostream& out, const MidiController* controller);
-    std::ostream& operator<<(std::ostream& out, const UPtr<MidiController>& controller);
+
 
 }
 

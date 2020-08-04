@@ -9,6 +9,9 @@
 
 #include <cant/pan/note/MidiNote.hpp>
 
+#include <cant/common/types.hpp>
+#include <cant/common/memory.hpp>
+
 namespace cant::pan
 {
     class MidiProcessor

@@ -57,24 +57,6 @@ namespace cant::pan
     }
 
 
-    std::ostream&
-    operator<<(std::ostream& out, const MidiController* controller)
-    {
-        out << "[midicontroller]";
-        if (!MidiController::isControllerSet(controller))
-        {
-            return out << "!NOTSET";
-        }
-        out << '#' << (int) controller->getControllerId() << " : ";
-        out << controller->getControl();
-        return out;
-    }
-
-    std::ostream&
-    operator<<(std::ostream& out, const UPtr<MidiController>& controller)
-    {
-        return out << controller.get();
-    }
 
 }
 

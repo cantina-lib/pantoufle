@@ -20,6 +20,16 @@ namespace cant::pan
          * funky with std::vector<bool> template specialisation.
          */
         Stream<byte_m> _shouldHoldNotes;
+        /*
+         * It's not necessary to use this additional vector,
+         * we could just use getMemory(iVoice).isPlaying().
+         * However, I think that accessing the memory of the last processed notes
+         * in the function in charge of processing is, in concept, a bad idea.
+         * I'd rather save the values I'm interested in in the dedicated
+         * function beforeNoteProcess(), where I get insurance
+         * that this code will be executed *before* any new processing is done.
+         */
+        Stream<byte_m> _isMemoryPlaying;
     private:
         void beforeControlProcess(const MidiControlInternal& incomingControl) override;
         void beforeNoteProcess(size_m iVoice, const MidiNoteInternal& incomingNote) override;

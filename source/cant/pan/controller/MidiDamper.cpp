@@ -9,7 +9,8 @@ namespace cant::pan
     MidiDamper::
     MidiDamper(const size_m numberVoices, const byte_m channelId, const byte_m controllerId)
     : MidiController(numberVoices, channelId, controllerId),
-      _shouldHoldNotes(numberVoices, false)
+      _shouldHoldNotes(numberVoices, false),
+      _isMemoryPlaying(numberVoices, false)
     {
 
     }
@@ -49,9 +50,10 @@ namespace cant::pan
     MidiDamper::
     beforeNoteProcess(const size_m iVoice, const MidiNoteInternal& incomingNote)
     {
+        _isMemoryPlaying.at(iVoice) = getMemory(iVoice).isPlaying();
         _shouldHoldNotes.at(iVoice) = static_cast<byte_m>(
                 isOn()
-                && (getMemory(iVoice).isPlaying() || incomingNote.isPlaying())
+                && (static_cast<bool>(_isMemoryPlaying.at(iVoice)) || incomingNote.isPlaying())
                 );
     }
 
@@ -67,7 +69,7 @@ namespace cant::pan
          * to decide whether it has changed.
          * It's pretty overkill, but it gets the work done.
          */
-        note.setChangedPlaying(note.isPlaying() != getMemory(iVoice).isPlaying());
+        note.setChangedPlaying(note.isPlaying() != _isMemoryPlaying.at(iVoice));
     }
 
     void

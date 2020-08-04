@@ -14,7 +14,7 @@ namespace cant::pan
     class MidiNoteDataCompatible
     {
     public:
-        virtual ~MidiNoteDataCompatible() = default;
+        // no virtual destructor for interfaces!
         CANT_NODISCARD virtual byte_m getChannel() const = 0;
         CANT_NODISCARD virtual tone_m getTone() const = 0;
 
@@ -27,9 +27,6 @@ namespace cant::pan
     class MidiNoteCompatible
     {
     public:
-    public:
-        virtual ~MidiNoteCompatible() = default;
-
         CANT_NODISCARD virtual byte_m getChannel() const = 0;
         CANT_NODISCARD virtual tone_m getTone() const = 0;
         CANT_NODISCARD virtual vel_m getVelocity() const = 0;

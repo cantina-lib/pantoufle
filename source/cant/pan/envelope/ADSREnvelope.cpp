@@ -112,8 +112,8 @@ namespace cant::pan
     ADSRState::
     ADSRState()
     : _type(ADSRStateType::eNotPlaying),
-    _tStart(),
-    _flagChanged(false)
+      _tStart(),
+      _flagChangedPlaying(false)
     {
 
     }
@@ -188,6 +188,7 @@ namespace cant::pan
         const float_m velocityRatio = getVelocityRatio(tCurrent, callbacks);
         note.setVelocity(note.getVelocity() * velocityRatio);
         note.setPlaying(this->isPlaying());
+        note.setChangedPlaying(this->justChangedPlaying());
     }
 
     void
@@ -206,23 +207,23 @@ namespace cant::pan
 
     bool
     ADSRState::
-    justChanged() const
+    justChangedPlaying() const
     {
-        return _flagChanged;
+        return _flagChangedPlaying;
     }
 
     void
     ADSRState::
     raiseFlagChanged()
     {
-        _flagChanged = true;
+        _flagChangedPlaying = true;
     }
 
     void
     ADSRState::
     discardFlagChanged()
     {
-        _flagChanged = false;
+        _flagChangedPlaying = false;
     }
 
     void

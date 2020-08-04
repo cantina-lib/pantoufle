@@ -8,6 +8,8 @@
 #pragma once
 
 #include <cant/pan/common/types.hpp>
+
+#include <cant/common/memory.hpp>
 #include <cant/common/formatting.hpp>
 
 #include <cant/pan/envelope/MidiEnvelope.hpp>
@@ -19,14 +21,14 @@ namespace cant::pan
     {
     public:
         enum ADSRStateType { eAttack=0, eDecay=2, eSustain=1, eRelease=3, eNotPlaying=4 };
-        typedef std::array<time_m, 4> ArrayLengths;
-        typedef std::array<float_m , 2> ArrayVelocityRatios;
-        typedef std::array<timefunc_m<float_m>, 4> ArrayCallbacks;
+        typedef Array<time_m, 4> ArrayLengths;
+        typedef Array<float_m , 2> ArrayVelocityRatios;
+        typedef Array<timefunc_m<float_m>, 4> ArrayCallbacks;
 
     private:
         ADSRStateType _type;
         time_m _tStart;
-        bool _flagChanged;
+        bool _flagChangedPlaying;
 
     private:
         static constexpr const char* m_STATETYPE_CSTRING[] = { "ATTACK", "SUSTAIN", "DECAY", "RELEASE", "NOTPLAYING"};
@@ -47,7 +49,7 @@ namespace cant::pan
         void discardFlagChanged();
 
         CANT_NODISCARD bool isPlaying() const;
-        CANT_NODISCARD bool justChanged() const;
+        CANT_NODISCARD bool justChangedPlaying() const;
     public:
         ADSRState();
 
@@ -105,7 +107,7 @@ namespace cant::pan
                 const ADSRState::ArrayVelocityRatios& velocities = ADSREnvelope::m_DEFAULT_ADSR_VELOCITIES
         );
 
-        void flushChange();
+        void flushChange() override;
     };
 }
 
