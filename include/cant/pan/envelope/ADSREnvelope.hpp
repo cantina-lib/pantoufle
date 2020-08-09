@@ -99,7 +99,7 @@ namespace cant::pan
         ADSREnvelope(const ADSREnvelope& adsr) = default;
 
     public:
-        void processVoice(size_m iVoice, MidiNoteInternal& note) override;
+        void process(MidiNoteInternal& note) override;
 
         static UPtr<VelocityEnvelope> make(
                 size_m numberVoices,

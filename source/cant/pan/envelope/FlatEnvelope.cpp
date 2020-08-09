@@ -24,7 +24,7 @@ namespace cant::pan
 
     void
     FlatToneEnvelope::
-    processVoice(size_m iVoice, MidiNoteInternal &note)
+    process(MidiNoteInternal &note)
     {
         /* nothing to doooo */
     }

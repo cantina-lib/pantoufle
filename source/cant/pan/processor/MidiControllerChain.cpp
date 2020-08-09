@@ -7,35 +7,74 @@
 namespace cant::pan
 {
     MidiControllerChain::
-    MidiControllerChain(const size_m numberVoices)
-    : MidiProcessorMemory(numberVoices), _controllers()
+    MidiControllerChain(size_m numberVoices)
+    : _numberVoices(numberVoices),
+    _controllers(),
+    _controls()
     {
-
+        _controllers.reserve(m_CONTROLLERS_STARTING_CAPACITY);
     }
 
     void
     MidiControllerChain::
-    processControl(const MidiControlInternal& input)
+    receiveControl(const MidiControlInternal& control)
     {
+        const byte_m controllerId = control.getId();
+        if (_controls.find(controllerId) == _controls.end())
+        {
+            return;
+        }
+        _controls.at(controllerId) = control;
+        for (auto& controller : _controllers)
+        {
+            controller->receiveControl(control);
+        }
+        /*
         auto it = _controllers.find(input.getControllerId());
         if (it == _controllers.end() || !it->second)
         {
-            /* no input control, skipping this controller. */
+            // no input control, skipping this controller.
             return;
         }
         PANTOUFLE_TRY_RETHROW({
              it->second->receiveControl(input);
         })
-
+        */
     }
 
     void
     MidiControllerChain::
-    processVoice(const size_m iVoice, MidiNoteInternal &in)
+    allocateControls(const Stream<byte_m>& controllerIds)
     {
-        for(auto& [id, controller] : _controllers)
+        for (const auto& controllerId : controllerIds)
         {
-            controller->processVoice(iVoice, in);
+            /*
+             * In a map, attempting to inserting an already-present key
+             * will not actually insert it.
+             */
+            _controls.insert(std::pair<byte_m, MidiControlInternal>(controllerId, MidiControlInternal()));
+        }
+
+        /*
+        auto it = _controls.find(controllerId);
+        // if control not already set;
+        if(it == _controls.end())
+        {
+            _controls.insert
+                    (
+                            std::pair<byte_m, MidiControlInternal>(controllerId, MidiControlInternal())
+                    );
+        }
+        */
+    }
+
+    void
+    MidiControllerChain::
+    process(MidiNoteInternal &in)
+    {
+        for(auto& controller: _controllers)
+        {
+            controller->process(in);
         }
     }
 
@@ -51,7 +90,7 @@ namespace cant::pan
          * a control's value can decrease as time passes.
          * Wait, there *are* controller like that..
          */
-        for (auto& [id, controller] : _controllers)
+        for (auto& controller : _controllers)
         {
             controller->update(tCurrent);
         }
@@ -59,12 +98,14 @@ namespace cant::pan
 
     void
     MidiControllerChain::
-    setController(UPtr<MidiController> controller)
+    addController(UPtr<MidiController> controller)
     {
+        allocateControls(controller->getControllerIds());
+        _controllers.push_back(std::move(controller));
+        /*
         const byte_m id = controller->getControllerId();
         auto entry = std::pair<byte_m, UPtr<MidiController>>(id, std::move(controller));
         auto it = _controllers.find(id);
-        /* is controller not yet set? */
         if (it == _controllers.cend())
         {
             _controllers.insert(std::move(entry));
@@ -73,5 +114,6 @@ namespace cant::pan
         {
             _controllers.at(id) = std::move(entry.second);
         }
+        */
     }
 }

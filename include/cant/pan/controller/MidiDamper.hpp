@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include <cant/pan/controller/MidiController.hpp>
+#include <cant/pan/controller/MultiMidiController.hpp>
 
 
 namespace cant::pan
 {
-    class MidiDamper final : public MidiController
+    class MidiDamper final : public MultiMidiController<1>
     {
     private:
         /*
@@ -32,18 +32,18 @@ namespace cant::pan
         Stream<byte_m> _isMemoryPlaying;
     private:
         void beforeControlProcess(const MidiControlInternal& incomingControl) override;
-        void beforeNoteProcess(size_m iVoice, const MidiNoteInternal& incomingNote) override;
+        void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
     private:
-        MidiDamper(size_m numberVoices, byte_m channelId, byte_m controllerId);
+        MidiDamper(size_m numberVoices, byte_m channel, byte_m controllerId);
 
         CANT_NODISCARD bool isOn() const;
         CANT_NODISCARD static bool isOn(const MidiControlInternal& control);
     public:
-        void IMPL_processVoice(size_m iVoice, MidiNoteInternal& note) const override;
+        void IMPL_process(MidiNoteInternal& note) const override;
 
         void update(time_m tCurrent) override;
 
-        static UPtr<MidiController> make(size_m numberVoices, byte_m channelId, byte_m controllerId);
+        static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
     };
 }
 

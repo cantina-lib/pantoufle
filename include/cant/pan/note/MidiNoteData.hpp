@@ -12,6 +12,8 @@
 #include <cant/pan/common/MidiTimer.hpp>
 
 #include <cant/pan/common/types.hpp>
+#include <cant/common/memory.hpp>
+
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
 namespace cant::pan
@@ -65,28 +67,40 @@ namespace cant::pan
         CANT_NODISCARD vel_m getVelocity() const override { return static_cast<vel_m>(_velocity); }
 
         CANT_NODISCARD bool isPressed() const override { return static_cast<bool>(_velocity); }
-
-        friend std::ostream& operator<<(std::ostream& out, const MidiNoteData& data)
-        {
-            out << "[data] ";
-            out << fmt::format("[{0}, {1}, {2}]", data.getChannel(), data.getTone(), data.getVelocity());
-            return out;
-        }
     };
 
     using MidiNoteInputData = MidiNoteData<tone_mint, vel_mint>;
-    using MidiNoteOutputData = MidiNoteData<tone_m, vel_m>;
 
     class MidiNoteInternalData : public MidiNoteData<tone_m, vel_m>
     {
+    private:
+        pan_m _pan;
     public:
         MidiNoteInternalData();
         CANT_EXPLICIT MidiNoteInternalData(const MidiNoteInputData& input);
 
-        void setTone(const tone_m tone) { _tone = tone; }
-        void setVelocity(const vel_m velocity) { _velocity = velocity; }
+        void setTone(tone_m tone);
+        void setVelocity(vel_m velocity);
+        void setPan(pan_m pan);
+
+        CANT_NODISCARD pan_m getPan() const;
 
     };
+
+    class MidiNoteOutputData : public MidiNoteData<tone_m, vel_m>
+    {
+    private:
+        pan_m _pan;
+
+    public:
+        MidiNoteOutputData();
+        CANT_EXPLICIT MidiNoteOutputData(const MidiNoteInternalData& internal);
+
+        CANT_NODISCARD Array<vel_m, 2> getVelocityPanned() const;
+
+        CANT_NODISCARD pan_m getPan() const;
+    };
+
 }
 
 #endif //CANTINA_MIDINOTEDATA_HPP

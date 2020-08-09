@@ -7,8 +7,8 @@
 namespace cant::pan
 {
     MidiDamper::
-    MidiDamper(const size_m numberVoices, const byte_m channelId, const byte_m controllerId)
-    : MidiController(numberVoices, channelId, controllerId),
+    MidiDamper(const size_m numberVoices, const byte_m channel, const byte_m controllerId)
+    : MultiMidiController<1>(numberVoices, channel, { controllerId }),
       _shouldHoldNotes(numberVoices, false),
       _isMemoryPlaying(numberVoices, false)
     {
@@ -19,14 +19,14 @@ namespace cant::pan
     MidiDamper::
     isOn() const
     {
-          return isOn(getControl());
+          return isOn(getControl(0));
     }
 
     bool
     MidiDamper::
     isOn(const MidiControlInternal &control)
     {
-        return control.getValue() > MIDI_MID_VALUE;
+        return control.getValue() > MIDI_CONTROL_MID_VALUE;
     }
 
     void
@@ -48,20 +48,22 @@ namespace cant::pan
 
     void
     MidiDamper::
-    beforeNoteProcess(const size_m iVoice, const MidiNoteInternal& incomingNote)
+    beforeNoteProcess(const MidiNoteInternal& incomingNote)
     {
-        _isMemoryPlaying.at(iVoice) = getMemory(iVoice).isPlaying();
-        _shouldHoldNotes.at(iVoice) = static_cast<byte_m>(
+        const size_m voice = incomingNote.getVoice();
+        _isMemoryPlaying.at(voice) = getMemory(voice).isPlaying();
+        _shouldHoldNotes.at(voice) = static_cast<byte_m>(
                 isOn()
-                && (static_cast<bool>(_isMemoryPlaying.at(iVoice)) || incomingNote.isPlaying())
+                && (static_cast<bool>(_isMemoryPlaying.at(voice)) || incomingNote.isPlaying())
                 );
     }
 
     void
     MidiDamper::
-    IMPL_processVoice(const size_m iVoice, MidiNoteInternal &note) const
+    IMPL_process(MidiNoteInternal &note) const
     {
-        const bool shouldHold = static_cast<bool>(_shouldHoldNotes.at(iVoice));
+        const size_m voice = note.getVoice();
+        const bool shouldHold = static_cast<bool>(_shouldHoldNotes.at(voice));
         note.setPlaying(note.isPlaying() || shouldHold);
         /*
          * After setting the playing state to it
@@ -69,7 +71,7 @@ namespace cant::pan
          * to decide whether it has changed.
          * It's pretty overkill, but it gets the work done.
          */
-        note.setChangedPlaying(note.isPlaying() != _isMemoryPlaying.at(iVoice));
+        note.setChangedPlaying(note.isPlaying() != _isMemoryPlaying.at(voice));
     }
 
     void
@@ -81,9 +83,9 @@ namespace cant::pan
 
     UPtr<MidiController>
     MidiDamper::
-    make(const size_m numberVoices, const byte_m channelId, const byte_m controllerId)
+    make(const size_m numberVoices, const byte_m channel, const byte_m controllerId)
     {
-        return UPtr<MidiController>(new MidiDamper(numberVoices, channelId, controllerId));
+        return UPtr<MidiController>(new MidiDamper(numberVoices, channel, controllerId));
     }
 
 

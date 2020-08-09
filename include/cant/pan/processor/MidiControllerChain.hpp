@@ -8,25 +8,36 @@
 #pragma once
 
 #include <cant/pan/common/types.hpp>
+#include <cant/common/memory.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/pan/control/MidiControlData.hpp>
-#include <cant/pan/controller/MidiController.hpp>
+#include <cant/pan/controller/MultiMidiController.hpp>
+
 
 namespace cant::pan
 {
-    class MidiControllerChain final : public MidiProcessorMemory
+    class MidiControllerChain final : public MidiProcessor
     {
     private:
-        UMap<byte_m, MidiController> _controllers;
-    public:
-        void processVoice(size_m iVoice, MidiNoteInternal& in) override;
+        static constexpr size_m m_CONTROLLERS_STARTING_CAPACITY = 50;
 
+        size_m _numberVoices;
+        UStream<MidiController> _controllers;
+
+        Map<byte_m, MidiControlInternal> _controls;
+    private:
+        void allocateControls(const Stream<byte_m>& controllerIds);
+
+    public:
         CANT_EXPLICIT MidiControllerChain(size_m numberVoices);
 
-        void setController(UPtr<MidiController> controller);
-        void processControl(const MidiControlInternal& control);
+        void process(MidiNoteInternal& in) override;
+
+        void addController(UPtr<MidiController> controller);
+        void receiveControl(const MidiControlInternal& control);
+
 
         // will notes need updating in processors?
         // updateMidiNoteStream(_memory, tCurrent);

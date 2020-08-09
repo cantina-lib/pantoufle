@@ -10,7 +10,12 @@
 #include <cant/pan/common/types.hpp>
 #include <cant/pan/common/MidiTimer.hpp>
 
-#include <cant/pan/processor/processor.hpp>
+#include <cant/pan/controller/MidiController.hpp>
+#include <cant/pan/processor/MidiControllerChain.hpp>
+#include <cant/pan/processor/MidiEnvelopeLayer.hpp>
+
+#include <cant/pan/layer/MidiNoteInputPoly.hpp>
+
 
 #include <cant/pan/control/control.hpp>
 #include <cant/pan/note/note.hpp>
@@ -23,24 +28,21 @@ namespace cant::pan
         MidiControllerChain _ctrlChain;
         MidiEnvelopeLayer _envlpLayer;
 
-        Stream<MidiNoteInput> _rawNoteInput;
-        Stream<MidiNoteInternal> _processedNoteInternal;
-        mutable Stream<MidiNoteOutput> _processedNoteOutput;
+        MidiNoteInputPoly _poly;
 
-        Map<byte_m, MidiControlInput> _rawControlInput;
+        MidiNoteInternalLayer _processedNoteInternal;
+        mutable MidiNoteOutputLayer _processedNoteOutput;
+
 
         MidiTimer _timer;
 
-        void allocateControl(byte_m controllerId);
-
         void processControllerChainVoice(size_m iVoice);
-        void processControllerChainControl(const MidiControlInternal& control);
 
         void processEnvelopeLayerVoice(size_m iVoice);
 
         void process(size_m iVoice);
 
-        void flushChangeRawNoteInput();
+        void flushChangeNoteInput();
         void flushChangeEnvelopeLayer();
 
         void flushChange();
@@ -53,13 +55,13 @@ namespace cant::pan
 
         CANT_NODISCARD time_m getCurrentTime() const;
     public:
-        Pantoufle(size_m numberVoices, byte_m chanId);
+        Pantoufle(size_m numberVoices, byte_m channel);
 
         CANT_NODISCARD size_m getNumberVoices() const;
 
         void setController(UPtr<MidiController> controller);
 
-        void receiveRawNoteData(size_m iVoice, const MidiNoteInputData& inputData);
+        void receiveInputNoteData(const MidiNoteInputData& inputData);
         void receiveRawControlData(const MidiControlInputData &controlData);
         CANT_NODISCARD const Stream<MidiNoteOutput>& getProcessedOutputData() const;
 

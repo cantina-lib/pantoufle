@@ -16,11 +16,11 @@ namespace cant::pan
     private:
         CANT_EXPLICIT FlatToneEnvelope(size_m numberVoices);
     public:
-        void processVoice(size_m iVoice, MidiNoteInternal& note) override;
+        void process(MidiNoteInternal& note) override;
 
         static UPtr<ToneEnvelope> make(size_m numberVoices);
 
-        void flushChange();
+        void flushChange() override;
     };
 }
 

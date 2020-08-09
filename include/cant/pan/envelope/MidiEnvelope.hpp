@@ -48,7 +48,7 @@ namespace cant::pan
         {
             _tCurrent = tCurrent;
         }
-        void processVoice(size_m iVoice, MidiNoteInternal& note) override = 0;
+        void process(MidiNoteInternal& note) override = 0;
 
         virtual void flushChange() = 0;
     };
@@ -57,9 +57,9 @@ namespace cant::pan
     {
     public:
         CANT_EXPLICIT ToneEnvelope(size_m numberVoices);
-        void processVoice(size_m iVoice, MidiNoteInternal& note) override = 0;
+        void process(MidiNoteInternal& note) override = 0;
 
-        void flushChange() = 0;
+        void flushChange() override = 0;
     };
 
 
@@ -67,9 +67,9 @@ namespace cant::pan
     {
     public:
         CANT_EXPLICIT VelocityEnvelope(size_m numberVoices);
-        void processVoice(size_m iVoice, MidiNoteInternal& note) override = 0;
+        void process(MidiNoteInternal& note) override = 0;
 
-        void flushChange() = 0;
+        void flushChange() override = 0;
     };
 }
 

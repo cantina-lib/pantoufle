@@ -8,17 +8,20 @@ namespace cant::pan
 {
 
     MidiNoteInput::
-    MidiNoteInput(byte_m channel, tone_m tone, vel_m velocity, const bool isPressed)
-            : _data(channel, tone, velocity), _tStart(), _isPressed(isPressed), _flagChangedPlaying(true)
+    MidiNoteInput(size_m voice, byte_m channel, tone_m tone, vel_m velocity, bool isPressed)
+    : MidiNote(voice, channel, tone, velocity),
+    _isPressed(isPressed),
+    _flagChangedPlaying(true),
+    _flagChangedTone(false)
     {
         CANTINA_ASSERT(velocity > static_cast<vel_m>(0))
     }
 
-    MidiNoteInput::MidiNoteInput()
-    : _data(),
-      _tStart(),
+    MidiNoteInput::MidiNoteInput(const size_m voice)
+    : MidiNote<MidiNoteInputData>(voice),
       _isPressed(false),
-      _flagChangedPlaying(false)
+      _flagChangedPlaying(false),
+      _flagChangedTone(false)
     {
 
     }
@@ -32,7 +35,7 @@ namespace cant::pan
 
     void
     MidiNoteInput::
-    set(time_m tCurrent, const MidiNoteInputData &data)
+    set(const time_m tCurrent, const MidiNoteInputData &data)
     {
         const bool isInputPressed = data.isPressed();
         const bool isToneDifferent = data.getTone() != getTone();
@@ -55,17 +58,7 @@ namespace cant::pan
         {
             raiseFlagChangedPlaying();
         }
-
         _isPressed = isInputPressed;
-    }
-
-    std::ostream &operator<<(std::ostream &out, const MidiNoteInput &input)
-    {
-        out << "[input] [{ " << input.getData() << " }";
-        out << (input.isPressed() ? " [PRESSED]" : " [RELEASED]" );
-        out << (input.justChangedPlaying() ? " !CHANGE" : "");
-        out << "]";
-        return out;
     }
 
     void MidiNoteInput::raiseFlagChangedPlaying()
@@ -84,27 +77,13 @@ namespace cant::pan
         _flagChangedTone = false;
     }
 
-    MidiNoteInternalData::
-    MidiNoteInternalData()
-            : MidiNoteData()
-    {
-
-    }
-
-    MidiNoteInternalData::
-    MidiNoteInternalData(const MidiNoteInputData &input)
-            : MidiNoteData<vel_m, tone_m>(input)
-    {
-
-    }
 
     MidiNoteInternal::
-    MidiNoteInternal()
-            : _data(),
-              _tStart(),
-              _isPlaying(false),
-              _justChangedPlaying(false),
-              _justChangedTone(false)
+    MidiNoteInternal(const size_m voice)
+    : MidiNote<MidiNoteInternalData>(voice),
+    _isPlaying(false),
+    _justChangedPlaying(false),
+    _justChangedTone(false)
     {
 
     }
@@ -118,15 +97,14 @@ namespace cant::pan
         _isPlaying = input.isPressed(); // at input stage, playing if and only if pressed
         _justChangedPlaying = input.justChangedPlaying();
         _justChangedTone = input.justChangedTone();
-
     }
 
     MidiNoteOutput::
-    MidiNoteOutput()
-    : _data(),
-      _tStart(),
-      _isPlaying(false),
-      _justChangedPlaying(false)
+    MidiNoteOutput(const size_m voice)
+    : MidiNote<MidiNoteOutputData>(voice),
+    _isPlaying(false),
+    _justChangedPlaying(false),
+    _justChangedTone(false)
     {
 
     }
@@ -148,11 +126,4 @@ namespace cant::pan
         return isPlaying() ? getVelocity() : static_cast<vel_m>(0);
     }
 
-    std::ostream &operator<<(std::ostream &out, const MidiNoteInternal &output)
-    {
-        out << output.getData();
-        out << (output.isPlaying() ? " [PLAYING]" : " [NOT_PLAYING]");
-        out << " " << (output.justChangedPlaying() ? " !CHANGED" : "");
-        return out;
-    }
 }

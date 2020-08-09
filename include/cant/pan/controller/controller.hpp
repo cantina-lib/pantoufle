@@ -9,6 +9,9 @@
 
 
 #include "MidiController.hpp"
+#include "MultiMidiController.hpp"
+
 #include "MidiDamper.hpp"
+#include "MidiPan.hpp"
 
 #endif //CANTINA_CONTROLLER_HPP

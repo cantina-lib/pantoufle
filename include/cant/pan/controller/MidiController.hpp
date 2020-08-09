@@ -1,90 +1,51 @@
 //
-// Created by piptouque on 28/04/2020.
+// Created by binabik on 05/08/2020.
 //
 
-#ifndef CANTINA_MIDICONTROLLER_HPP
-#define CANTINA_MIDICONTROLLER_HPP
+#ifndef CANTINA_TILDE_MIDICONTROLLER_HPP
+#define CANTINA_TILDE_MIDICONTROLLER_HPP
 
 #pragma once
 
-#include <cant/common/formatting.hpp>
-
 #include <cant/pan/common/types.hpp>
-#include <cant/common/memory.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/pan/control/MidiControlData.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 
-
 namespace cant::pan
 {
-
-    /**
-     * MidiController should not grant unguarded access
-     * to its Processor _memory to child classes.
-     * It updates it, but can give a read-only ref
-     **/
-    class MidiController : protected MidiProcessorMemory
+    class MidiController : public MidiProcessorMemory
     {
     private:
-        byte_m _channel;
-        // Array<byte_m, numberControlBindings_V> _bindings;
-        byte_m _controllerId;
-        MidiControlInternal _control;
-    private:
+        // private inheritance
+        virtual void IMPL_receiveControl(const MidiControlInternal& control) = 0;
+        virtual void IMPL_process(MidiNoteInternal& note) const = 0;
+
+        void updateVoice(const MidiNoteInternal& note);
+    protected:
+        CANT_EXPLICIT MidiController(size_m numberVoices);
         // event functions
-        virtual void beforeControlProcess(const MidiControlInternal& incoming) = 0;
+        virtual void beforeControlProcess(const MidiControlInternal& control) = 0;
         /**
          * State changes in the controller as side-effects should be called here.
          * Controller will not be allowed to mutate in IMPL_processVoice,
          * but will be automatically updated in update.
          **/
-        virtual void beforeNoteProcess(size_m iVoice, const MidiNoteInternal& incoming) = 0;
-        // to be implemented
-        virtual void IMPL_processVoice(size_m iVoice, MidiNoteInternal& incoming) const = 0;
-    private:
-        CANT_NODISCARD static bool isControllerSet(const MidiController* controller);
-
-        void updateVoice(size_m iVoice, const MidiNoteInternal& note);
-    protected:
-        CANT_EXPLICIT MidiController(size_m numberVoices, byte_m channel, byte_m controllerId);
-
-        CANT_NODISCARD const MidiNoteInternal& getMemory(size_m iVoice) const { return _memory.at(iVoice); }
+        virtual void beforeNoteProcess(const MidiNoteInternal& note) = 0;
     public:
-        void processVoice(size_m iVoice, MidiNoteInternal& internal) final;
-
-        CANT_NODISCARD static bool isControllerSet(const UPtr<MidiController>& controller);
-        CANT_NODISCARD byte_m getControllerId() const { return _controllerId; }
-        CANT_NODISCARD const MidiControlInternal& getControl() const { return _control; }
-
         void update(time_m tCurrent) override = 0;
 
+        /*
+         * won't have to call it regularily,
+         * so it's fine returning a copy
+         */
+        CANT_NODISCARD virtual Stream<byte_m> getControllerIds() const = 0;
+
         void receiveControl(const MidiControlInternal& control);
-
-
-        friend std::ostream&
-        operator<<(std::ostream& out, const MidiController* controller)
-        {
-            out << "[midicontroller]";
-            if (!MidiController::isControllerSet(controller))
-            {
-                return out << "!NOTSET";
-            }
-            out << '#' << (int) controller->getControllerId() << " : ";
-            out << controller->getControl();
-            return out;
-        }
-        friend std::ostream&
-        operator<<(std::ostream& out, const UPtr<MidiController>& controller)
-        {
-            return out << controller.get();
-        }
+        void process(MidiNoteInternal& internal) final;
     };
-
-
-
 }
 
-#endif //CANTINA_MIDICONTROLLER_HPP
+#endif //CANTINA_TILDE_MIDICONTROLLER_HPP

@@ -4,9 +4,6 @@
 
 #include <cant/pan/envelope/ADSREnvelope.hpp>
 
-#include <sstream>
-#include <fmt/format.h>
-
 namespace cant::pan
 {
     UPtr<VelocityEnvelope>
@@ -297,7 +294,7 @@ namespace cant::pan
 
     void
     ADSREnvelope::
-    processVoice(const size_m iVoice, MidiNoteInternal &note)
+    process(MidiNoteInternal &note)
     {
         /*
          * There used to be a concept of 'extendability'
@@ -306,7 +303,7 @@ namespace cant::pan
          * You'd need to add a _isExtendable field to MidiNoteInternal
          * to go back.
          */
-        ADSRState& state = _states.at(iVoice);
+        ADSRState& state = _states.at(note.getVoice());
         const time_m tCurrent = getCurrentTime();
         state.update(tCurrent, note, _lengths);
         state.apply(tCurrent, note, _callbacks);

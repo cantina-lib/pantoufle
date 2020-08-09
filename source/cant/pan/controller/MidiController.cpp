@@ -4,47 +4,30 @@
 
 #include <cant/pan/controller/MidiController.hpp>
 
-
 namespace cant::pan
 {
+
     MidiController::
-    MidiController(const size_m numberVoices, const byte_m channel, const byte_m id)
-    : MidiProcessorMemory(numberVoices),
-    _channel(channel),
-    _controllerId(id),
-    _control()
+    MidiController(const size_m numberVoices)
+    : MidiProcessorMemory(numberVoices)
     {
 
     }
 
     void
     MidiController::
-    processVoice(const size_m iVoice, MidiNoteInternal &internal)
+    process(MidiNoteInternal &internal)
     {
-        beforeNoteProcess(iVoice, internal);
-        IMPL_processVoice(iVoice, internal);
-        updateVoice(iVoice, internal);
+        beforeNoteProcess(internal);
+        IMPL_process(internal);
+        updateVoice(internal);
     }
 
     void
     MidiController::
-    updateVoice(const size_m iVoice, const MidiNoteInternal &note)
+    updateVoice(const MidiNoteInternal &note)
     {
-        _memory.at(iVoice) = note;
-    }
-
-    bool
-    MidiController::
-    isControllerSet(const MidiController* controller)
-    {
-        return static_cast<bool>(controller);
-    }
-
-    bool
-    MidiController::
-    isControllerSet(const UPtr<MidiController>& controller)
-    {
-        return isControllerSet(controller.get());
+        _memory.setVoice(note);
     }
 
 
@@ -53,7 +36,7 @@ namespace cant::pan
     receiveControl(const MidiControlInternal& control)
     {
         beforeControlProcess(control);
-        _control = control;
+        IMPL_receiveControl(control);
     }
 
 

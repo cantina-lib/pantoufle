@@ -25,10 +25,10 @@ namespace cant::pan
 
     void
     MidiEnvelopeLayer::
-    processVoice(const size_m iVoice, MidiNoteInternal& note)
+    process(MidiNoteInternal& note)
     {
-        _toneEnvelope->processVoice(iVoice, note);
-        _velocityEnvelope->processVoice(iVoice, note);
+        _toneEnvelope->process(note);
+        _velocityEnvelope->process(note);
     }
 
     void

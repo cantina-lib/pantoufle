@@ -33,6 +33,8 @@ set(PANTOUFLE_FILES
         ### note
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNoteData.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNote.cpp
+        ### io layers
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteInputPoly.cpp
         ### env
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/MidiEnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSREnvelope.cpp
@@ -45,7 +47,8 @@ set(PANTOUFLE_FILES
         ### controller
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiController.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiDamper.cpp
-
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiPan.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiWah.cpp
 
         ## headers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/Pantoufle.hpp
@@ -55,6 +58,10 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.hpp
+        ### io layers
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/layer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteLayer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteInputPoly.hpp
         ### env
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/envelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/MidiEnvelope.hpp
@@ -63,7 +70,10 @@ set(PANTOUFLE_FILES
         ### controller
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/controller.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiController.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MultiMidiController.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiDamper.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiPan.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiWah.hpp
         ### processor
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/processor.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiControllerChain.hpp

@@ -22,7 +22,7 @@ namespace cant::pan
     public:
 
         void update(time_m tCurrent) override;
-        void processVoice(size_m iVoice, MidiNoteInternal& note) override;
+        void process(MidiNoteInternal& note) override;
 
         CANT_EXPLICIT MidiEnvelopeLayer(size_m numberVoices, byte_m channel);
 

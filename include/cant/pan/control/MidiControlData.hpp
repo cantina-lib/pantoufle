@@ -32,13 +32,8 @@ namespace cant::pan
         CANT_CONSTEXPR MidiControlData(const MidiControlData&) = default;
 
         CANT_NODISCARD byte_m getChannel() const override { return _channel; }
-        CANT_NODISCARD byte_m getControllerId() const override { return _controllerId; }
+        CANT_NODISCARD byte_m getId() const override { return _controllerId; }
         CANT_NODISCARD byte_m getValue() const override { return _value; }
-
-        friend std::ostream& operator<<(std::ostream& out, const MidiControlData& data)
-        {
-            return out << fmt::format("[data] [{0}, {1}]", data.getControllerId(), data.getValue());
-        }
 
     };
 
