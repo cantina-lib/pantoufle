@@ -9,7 +9,7 @@
 
 #include <cant/pan/controller/MultiMidiController.hpp>
 
-
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiDamper final : public MultiMidiController<1>
@@ -46,5 +46,7 @@ namespace cant::pan
         static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
     };
 }
+
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_MIDIDAMPER_HPP

@@ -11,6 +11,7 @@
 
 #include <cant/pan/controller/MultiMidiController.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiWah : MultiMidiController<2>
@@ -30,5 +31,5 @@ namespace cant::pan
     };
 
 }
-
+#include <cant/common/undef_macro.hpp>
 #endif //wah!

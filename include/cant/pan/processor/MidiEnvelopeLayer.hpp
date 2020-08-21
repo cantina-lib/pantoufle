@@ -12,6 +12,7 @@
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiEnvelopeLayer: public MidiProcessorMemory
@@ -31,4 +32,5 @@ namespace cant::pan
     };
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_MIDIENVELOPELAYER_HPP

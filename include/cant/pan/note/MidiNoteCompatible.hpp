@@ -11,6 +11,7 @@
 
 #include <cant/common/memory.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiNoteDataCompatible
@@ -75,4 +76,5 @@ namespace cant::pan
 
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_MIDIPLAYABLE_HPP

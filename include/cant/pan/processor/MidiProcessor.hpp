@@ -14,6 +14,7 @@
 
 #include <cant/pan/layer/MidiNoteLayer.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiProcessor
@@ -44,5 +45,6 @@ namespace cant::pan
         void process(MidiNoteInternal& in) override = 0;
     };
 }
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_MIDIPROCESSOR_HPP

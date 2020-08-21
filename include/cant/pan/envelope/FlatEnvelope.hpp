@@ -9,6 +9,7 @@
 
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class FlatToneEnvelope final : protected ToneEnvelope
@@ -23,6 +24,7 @@ namespace cant::pan
         void flushChange() override;
     };
 }
+#include <cant/common/undef_macro.hpp>
 
 
 #endif //CANTINA_FLATENVELOPE_HPP

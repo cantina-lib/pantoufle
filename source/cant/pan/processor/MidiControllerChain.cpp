@@ -29,17 +29,6 @@ namespace cant::pan
         {
             controller->receiveControl(control);
         }
-        /*
-        auto it = _controllers.find(input.getControllerId());
-        if (it == _controllers.end() || !it->second)
-        {
-            // no input control, skipping this controller.
-            return;
-        }
-        PANTOUFLE_TRY_RETHROW({
-             it->second->receiveControl(input);
-        })
-        */
     }
 
     void
@@ -54,18 +43,6 @@ namespace cant::pan
              */
             _controls.insert(std::pair<byte_m, MidiControlInternal>(controllerId, MidiControlInternal()));
         }
-
-        /*
-        auto it = _controls.find(controllerId);
-        // if control not already set;
-        if(it == _controls.end())
-        {
-            _controls.insert
-                    (
-                            std::pair<byte_m, MidiControlInternal>(controllerId, MidiControlInternal())
-                    );
-        }
-        */
     }
 
     void
@@ -102,18 +79,5 @@ namespace cant::pan
     {
         allocateControls(controller->getControllerIds());
         _controllers.push_back(std::move(controller));
-        /*
-        const byte_m id = controller->getControllerId();
-        auto entry = std::pair<byte_m, UPtr<MidiController>>(id, std::move(controller));
-        auto it = _controllers.find(id);
-        if (it == _controllers.cend())
-        {
-            _controllers.insert(std::move(entry));
-        }
-        else
-        {
-            _controllers.at(id) = std::move(entry.second);
-        }
-        */
     }
 }

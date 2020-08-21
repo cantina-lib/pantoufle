@@ -11,6 +11,8 @@
 
 #include <cant/pan/controller/MultiMidiController.hpp>
 
+
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiPan : MultiMidiController<1>
@@ -32,4 +34,5 @@ namespace cant::pan
 
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_TILDE_MIDIPAN_HPP

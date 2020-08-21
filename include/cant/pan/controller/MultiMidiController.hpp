@@ -8,9 +8,8 @@
 #pragma once
 
 #include <cant/common/formatting.hpp>
-
-#include <cant/pan/common/types.hpp>
 #include <cant/common/memory.hpp>
+#include <cant/pan/common/types.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
@@ -18,6 +17,8 @@
 #include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/pan/controller/MidiController.hpp>
+
+#include <cant/common/macro.hpp>
 
 namespace cant::pan
 {
@@ -89,4 +90,5 @@ namespace cant::pan
     };
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_MIDICONTROLLER_HPP

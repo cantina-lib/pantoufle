@@ -15,7 +15,7 @@
 #include <cant/pan/control/MidiControlData.hpp>
 #include <cant/pan/controller/MultiMidiController.hpp>
 
-
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiControllerChain final : public MidiProcessor
@@ -52,4 +52,5 @@ namespace cant::pan
     };
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_MIDICONTROLPROCESSOR_HPP

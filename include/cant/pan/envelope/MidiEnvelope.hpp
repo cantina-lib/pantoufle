@@ -16,6 +16,7 @@
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
 
@@ -72,5 +73,6 @@ namespace cant::pan
         void flushChange() override = 0;
     };
 }
+#include <cant/common/undef_macro.hpp>
 
 #endif //PANTOUFLEENVELOPE_HPP

@@ -8,17 +8,16 @@
 #pragma once
 
 #include <cant/common/formatting.hpp>
+#include <cant/common/memory.hpp>
+#include <cant/pan/common/types.hpp>
 
 #include <cant/pan/common/MidiTimer.hpp>
 
-#include <cant/pan/common/types.hpp>
-#include <cant/common/memory.hpp>
-
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
-
     template <typename Tone_T, typename Vel_T>
     class MidiNoteData : MidiNoteDataCompatible
     {
@@ -103,4 +102,5 @@ namespace cant::pan
 
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_MIDINOTEDATA_HPP

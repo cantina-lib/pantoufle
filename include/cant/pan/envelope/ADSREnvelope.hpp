@@ -14,6 +14,7 @@
 
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
 
@@ -31,7 +32,7 @@ namespace cant::pan
         bool _flagChangedPlaying;
 
     private:
-        static constexpr const char* m_STATETYPE_CSTRING[] = { "ATTACK", "SUSTAIN", "DECAY", "RELEASE", "NOTPLAYING"};
+        static CANT_CONSTEXPR const char* m_STATETYPE_CSTRING[] = { "ATTACK", "SUSTAIN", "DECAY", "RELEASE", "NOTPLAYING"};
     private:
         static void REC_compute(ADSRStateType& type, time_m& length, const ArrayLengths& lengths);
         void compute(time_m tCurrent, const ArrayLengths& lengths);
@@ -110,5 +111,6 @@ namespace cant::pan
         void flushChange() override;
     };
 }
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_ADSRENVELOPE_HPP

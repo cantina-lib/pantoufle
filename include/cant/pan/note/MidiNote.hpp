@@ -12,8 +12,8 @@
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 #include <cant/pan/note/MidiNoteData.hpp>
 
-#include <cant/pan/common/MidiEvent.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
 
@@ -143,5 +143,7 @@ namespace cant::pan
 
     };
 }
+
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_MIDINOTE_HPP

@@ -7,12 +7,13 @@
 
 #pragma once
 
-#include <cant/pan/common/types.hpp>
-
 #include <cant/common/memory.hpp>
+
+#include <cant/pan/common/types.hpp>
 
 #include <cant/pan/note/MidiNote.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     template <class Note_T>
@@ -86,4 +87,5 @@ namespace cant::pan
     using MidiNoteOutputLayer = MidiNoteInternalOutputLayer<MidiNoteOutput, MidiNoteInternal>;
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_TILDE_MIDINOTELAYER_HPP

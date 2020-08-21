@@ -4,6 +4,7 @@
 
 #include <cant/pan/envelope/ADSREnvelope.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     UPtr<VelocityEnvelope>

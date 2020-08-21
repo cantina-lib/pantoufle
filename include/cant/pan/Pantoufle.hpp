@@ -16,10 +16,10 @@
 
 #include <cant/pan/layer/MidiNoteInputPoly.hpp>
 
-
 #include <cant/pan/control/control.hpp>
 #include <cant/pan/note/note.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class Pantoufle
@@ -69,4 +69,5 @@ namespace cant::pan
     };
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_MIDIMACHINE_HPP

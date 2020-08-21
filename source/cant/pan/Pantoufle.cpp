@@ -6,6 +6,7 @@
 
 #include <cant/pan/common/PantoufleException.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     Pantoufle::
@@ -157,6 +158,4 @@ namespace cant::pan
         const auto control = MidiControlInternal(controlData);
         _ctrlChain.receiveControl(control);
     }
-
-
 }

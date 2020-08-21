@@ -4,6 +4,7 @@
 
 #include <cant/pan/note/MidiNote.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
 
@@ -14,7 +15,9 @@ namespace cant::pan
     _flagChangedPlaying(true),
     _flagChangedTone(false)
     {
-        CANTINA_ASSERT(velocity > static_cast<vel_m>(0))
+        CANTINA_ASSERT(
+                velocity > static_cast<vel_m>(0),
+               "Velocity should not be null. Use changedPlaying if note is note is not playing.");
     }
 
     MidiNoteInput::MidiNoteInput(const size_m voice)

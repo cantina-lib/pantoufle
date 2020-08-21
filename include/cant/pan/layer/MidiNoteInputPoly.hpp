@@ -7,10 +7,13 @@
 
 #pragma once
 
+#include <cant/pan/common/types.hpp>
+
 #include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/pan/layer/MidiNoteLayer.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiNoteInputPoly : public MidiNoteInputLayer
@@ -28,5 +31,6 @@ namespace cant::pan
         void receive(time_m tCurrent, const MidiNoteInputData& data) override;
     };
 }
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_MIDINOTEINPUTPOLY_HPP

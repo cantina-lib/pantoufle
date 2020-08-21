@@ -14,6 +14,7 @@
 #include <cant/pan/control/MidiControlData.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiController : public MidiProcessorMemory
@@ -47,5 +48,7 @@ namespace cant::pan
         void process(MidiNoteInternal& internal) final;
     };
 }
+
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_MIDICONTROLLER_HPP

@@ -12,7 +12,7 @@
 #include <cant/pan/common/types.hpp>
 #include <cant/pan/control/MidiControlCompatible.hpp>
 
-
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
     class MidiControlData : MidiControlCompatible
@@ -46,4 +46,5 @@ namespace cant::pan
 
 }
 
+#include <cant/common/undef_macro.hpp>
 #endif //CANTINA_MIDICONTROLDATA_HPP

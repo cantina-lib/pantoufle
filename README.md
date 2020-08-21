@@ -3,9 +3,9 @@
 
 #### Whatever
 
-doing:
+doing
 
-* The third Bamboozle
+* Done here. No joke, I won't be touching this stuff until the next bamboozle.
 
 todo:
 
