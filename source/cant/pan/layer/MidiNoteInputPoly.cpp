@@ -9,8 +9,7 @@ namespace cant::pan
     MidiNoteInputPoly::
     MidiNoteInputPoly(size_m numberVoices, byte_m channel)
     : MidiNoteInputLayer(numberVoices),
-    _channel(channel),
-    _lastStolenVoice(0)
+    _channel(channel)
     {
 
     }
@@ -56,6 +55,8 @@ namespace cant::pan
          */
         /*
          * We could go for a mix of both. I think favouring stealing a note with the same tone.
+         * -- If not, steal the note with the tone that's closest to input.
+         * -- Mainly so that it disorients as little as possible the pitch-shifter it is assigned to.
          * Another difference is that we won't allow multiple notes with the same tone.
          */
         /*
@@ -73,17 +74,31 @@ namespace cant::pan
             }
             ++i;
         }
-        i = 0;
-        /* second pass, taking ownership of first not playing note. */
-        for (const auto& note : _notes)
+        // Second pass, taking ownership of note with closest tone.
+        auto findClosestToneIndex = [this](const MidiNoteInputData& inputData, size_m& closestIndex, bool force) -> bool
         {
-            const bool noteIsPressed = note.isPressed();
-            if (!noteIsPressed)
+            tone_mint closestDist;
+            bool foundClosest = false;
+            size_m i = 0;
+            for (const auto& note : _notes)
             {
-                voice = i;
-                return true;
+                if (!note.isPressed() || force)
+                {
+                    const tone_mint dist = std::abs(note.getTone() - inputData.getTone());
+                    if (!foundClosest || dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closestIndex = i;
+                        foundClosest = true;
+                    }
+                }
+                ++i;
             }
-            ++i;
+            return foundClosest;
+        };
+        if (findClosestToneIndex(data, voice, false))
+        {
+            return true;
         }
         /*
          * by this time, if input is not pressed and there was no note to signal,
@@ -94,8 +109,7 @@ namespace cant::pan
             return false;
         }
         /* forced pass -> stealing */
-        voice = (_lastStolenVoice + 1) % getNumberVoices();
-        _lastStolenVoice = voice;
+        findClosestToneIndex(data, voice, true);
         return true;
     }
 }

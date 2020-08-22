@@ -20,7 +20,6 @@ namespace cant::pan
     {
     private:
         byte_m _channel;
-        size_m _lastStolenVoice;
     private:
         CANT_NODISCARD virtual bool chooseVoice(size_m &voice, const MidiNoteInputData &data);
     public:
