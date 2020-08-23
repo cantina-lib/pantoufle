@@ -86,7 +86,7 @@ set(PANTOUFLE_FILES
         )
 
 
-add_library(pantoufle ${PANTOUFLE_FILES})
+add_library(pantoufle STATIC ${PANTOUFLE_FILES})
 
 set(PANTOUFLE_LIBRARIES pantoufle ${CANTINA_COMMON_LIBRARIES} PARENT_SCOPE)
 
