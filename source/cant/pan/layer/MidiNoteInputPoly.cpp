@@ -4,8 +4,10 @@
 
 #include <cant/pan/layer/MidiNoteInputPoly.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
+
     MidiNoteInputPoly::
     MidiNoteInputPoly(size_m numberVoices, byte_m channel)
     : MidiNoteInputLayer(numberVoices),
@@ -38,6 +40,32 @@ namespace cant::pan
             _notes.at(voice).set(tCurrent, data);
         }
     }
+
+    CANT_CONSTEXPR static auto findClosestToneIndex = [](
+            const Stream<MidiNoteInput>& notes,
+            const MidiNoteInputData& inputData,
+            size_m& closestIndex,
+            bool force) -> bool
+    {
+        tone_mint closestDist;
+        bool foundClosest = false;
+        size_m i = 0;
+        for (const auto& note : notes)
+        {
+            if (!note.isPressed() || force)
+            {
+                const tone_mint dist = std::abs(note.getTone() - inputData.getTone());
+                if (!foundClosest || dist < closestDist)
+                {
+                    closestDist = dist;
+                    closestIndex = i;
+                    foundClosest = true;
+                }
+            }
+            ++i;
+        }
+        return foundClosest;
+    };
 
     bool
     MidiNoteInputPoly::
@@ -75,28 +103,7 @@ namespace cant::pan
             ++i;
         }
         // Second pass, taking ownership of note with closest tone.
-        auto findClosestToneIndex = [this](const MidiNoteInputData& inputData, size_m& closestIndex, bool force) -> bool
-        {
-            tone_mint closestDist;
-            bool foundClosest = false;
-            size_m i = 0;
-            for (const auto& note : _notes)
-            {
-                if (!note.isPressed() || force)
-                {
-                    const tone_mint dist = std::abs(note.getTone() - inputData.getTone());
-                    if (!foundClosest || dist < closestDist)
-                    {
-                        closestDist = dist;
-                        closestIndex = i;
-                        foundClosest = true;
-                    }
-                }
-                ++i;
-            }
-            return foundClosest;
-        };
-        if (findClosestToneIndex(data, voice, false))
+        if (findClosestToneIndex(_notes, data, voice, false))
         {
             return true;
         }
@@ -109,7 +116,7 @@ namespace cant::pan
             return false;
         }
         /* forced pass -> stealing */
-        findClosestToneIndex(data, voice, true);
+        findClosestToneIndex(_notes, data, voice, true);
         return true;
     }
 }
