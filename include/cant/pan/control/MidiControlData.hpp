@@ -24,16 +24,12 @@ namespace cant::pan
     public:
         MidiControlData(byte_m channel, byte_m controllerId, byte_m value);
 
-        CANT_CONSTEXPR MidiControlData()
-        : _channel(), _controllerId(), _value()
-        {
-
-        }
+        CANT_CONSTEXPR MidiControlData();
         CANT_CONSTEXPR MidiControlData(const MidiControlData&) = default;
 
-        CANT_NODISCARD byte_m getChannel() const override { return _channel; }
-        CANT_NODISCARD byte_m getId() const override { return _controllerId; }
-        CANT_NODISCARD byte_m getValue() const override { return _value; }
+        CANT_NODISCARD byte_m getChannel() const override;
+        CANT_NODISCARD byte_m getId() const override;
+        CANT_NODISCARD byte_m getValue() const override;
 
     };
 
@@ -47,4 +43,7 @@ namespace cant::pan
 }
 
 #include <cant/common/undef_macro.hpp>
+
+#include "MidiControlData.inl"
+
 #endif //CANTINA_MIDICONTROLDATA_HPP

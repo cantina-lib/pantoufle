@@ -32,8 +32,6 @@ namespace cant::pan
         bool _flagChangedPlaying;
 
     private:
-        static CANT_CONSTEXPR const char* m_STATETYPE_CSTRING[] = { "ATTACK", "SUSTAIN", "DECAY", "RELEASE", "NOTPLAYING"};
-    private:
         static void REC_compute(ADSRStateType& type, time_m& length, const ArrayLengths& lengths);
         void compute(time_m tCurrent, const ArrayLengths& lengths);
 

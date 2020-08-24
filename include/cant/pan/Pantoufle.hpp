@@ -8,33 +8,27 @@
 #pragma once
 
 #include <cant/pan/common/types.hpp>
-#include <cant/pan/common/MidiTimer.hpp>
+#include <cant/common/memory.hpp>
 
-#include <cant/pan/controller/MidiController.hpp>
-#include <cant/pan/processor/MidiControllerChain.hpp>
-#include <cant/pan/processor/MidiEnvelopeLayer.hpp>
-
-#include <cant/pan/layer/MidiNoteInputPoly.hpp>
-
-#include <cant/pan/control/control.hpp>
-#include <cant/pan/note/note.hpp>
+#include <cant/pan/pan_forward.hpp>
 
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
+
     class Pantoufle
     {
     private:
-        MidiControllerChain _ctrlChain;
-        MidiEnvelopeLayer _envlpLayer;
+        UPtr<MidiControllerChain> _ctrlChain;
+        UPtr<MidiEnvelopeLayer> _envlpLayer;
 
-        MidiNoteInputPoly _poly;
+        UPtr<MidiNoteInputPoly> _poly;
 
-        MidiNoteInternalLayer _processedNoteInternal;
-        mutable MidiNoteOutputLayer _processedNoteOutput;
+        UPtr<MidiNoteInternalLayer> _processedNoteInternal;
+        mutable UPtr<MidiNoteOutputLayer> _processedNoteOutput;
 
 
-        MidiTimer _timer;
+        UPtr<MidiTimer> _timer;
 
         void processControllerChainVoice(size_m iVoice);
 
@@ -62,7 +56,7 @@ namespace cant::pan
         void setController(UPtr<MidiController> controller);
 
         void receiveInputNoteData(const MidiNoteInputData& inputData);
-        void receiveRawControlData(const MidiControlInputData &controlData);
+        void receiveRawControlData(const MidiControlData &controlData);
         CANT_NODISCARD const Stream<MidiNoteOutput>& getProcessedOutputData() const;
 
         void update();

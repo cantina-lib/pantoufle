@@ -10,9 +10,6 @@
 
 #include <cant/common/formatting.hpp>
 #include <cant/pan/common/types.hpp>
-#include <cant/pan/common/MidiTimer.hpp>
-
-#include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 
@@ -26,33 +23,21 @@ namespace cant::pan
      * and current time.
      **/
     template <typename T>
-    class MidiEnvelope : MidiProcessorMemory
+    class MidiEnvelope : public MidiProcessorMemory
     {
     private:
         time_m _tCurrent;
     protected:
-        CANT_NODISCARD time_m getCurrentTime() const
-        {
-            return _tCurrent;
-        }
+        CANT_NODISCARD time_m getCurrentTime() const;
     public:
-        CANT_EXPLICIT MidiEnvelope(size_m numberVoices)
-        : MidiProcessorMemory(numberVoices),
-        _tCurrent()
-        {
+        CANT_EXPLICIT MidiEnvelope(size_m numberVoices);
 
-        }
-
-        // envelopes are state-less, so const here
-        // TODO noooo, it needs a state
-        void update(const time_m tCurrent) override
-        {
-            _tCurrent = tCurrent;
-        }
+        void update(time_m tCurrent) override;
         void process(MidiNoteInternal& note) override = 0;
 
         virtual void flushChange() = 0;
     };
+
 
     class ToneEnvelope : public MidiEnvelope<tone_m>
     {
@@ -74,5 +59,7 @@ namespace cant::pan
     };
 }
 #include <cant/common/undef_macro.hpp>
+
+#include "MidiEnvelope.inl"
 
 #endif //PANTOUFLEENVELOPE_HPP

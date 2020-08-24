@@ -17,6 +17,8 @@
 
 #include "envelope/envelope.hpp"
 
+#include "layer/layer.hpp"
+
 #include "processor/processor.hpp"
 
 

@@ -11,6 +11,7 @@
 
 #include <cant/pan/common/types.hpp>
 
+#include <cant/pan/note/MidiNoteData.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/common/macro.hpp>
@@ -22,70 +23,48 @@ namespace cant::pan
     protected:
         Stream<Note_T> _notes;
     private:
-        void initialiseNotes(const size_m numberVoices)
-        {
-            _notes.reserve(numberVoices);
-            for (size_m i = 0; i < numberVoices; ++i)
-            {
-                _notes.push_back(Note_T(i));
-            }
-        }
+        void initialiseNotes(size_m numberVoices);
     public:
-        CANT_EXPLICIT MidiNoteLayer(size_m numberVoices)
-        : _notes()
-        {
-            initialiseNotes(numberVoices);
-        }
+        CANT_EXPLICIT MidiNoteLayer(size_m numberVoices);
         virtual ~MidiNoteLayer() = default;
 
-        CANT_NODISCARD const Note_T& get(size_m voice) const { return _notes.at(voice); }
+        CANT_NODISCARD const Note_T& getVoice(size_m voice) const;
 
-        CANT_NODISCARD size_m getNumberVoices() const { return _notes.size(); }
+        CANT_NODISCARD size_m getNumberVoices() const;
     };
+
 
     class MidiNoteInputLayer : public MidiNoteLayer<MidiNoteInput>
     {
     public:
-        CANT_EXPLICIT MidiNoteInputLayer(size_m numberVoices)
-        : MidiNoteLayer<MidiNoteInput>(numberVoices)
-        {
-        }
+        CANT_EXPLICIT MidiNoteInputLayer(size_m numberVoices);
         virtual void receive(time_m tCurrent, const MidiNoteInputData &data) = 0;
     };
+
 
     template <class Note_T, class PreviousLayerNote_T>
     class MidiNoteInternalOutputLayer : public MidiNoteLayer<Note_T>
     {
     public:
-        CANT_EXPLICIT MidiNoteInternalOutputLayer(size_m numberVoices)
-        : MidiNoteLayer<Note_T>(numberVoices)
-        {
+        CANT_EXPLICIT MidiNoteInternalOutputLayer(size_m numberVoices);
 
-        }
+        void receive(const PreviousLayerNote_T& previous);
 
-        void receive(const PreviousLayerNote_T& previous)
-        {
-            PANTOUFLE_TRY_RETHROW({
-                this->_notes.at(previous.getVoice()).set(previous);
-            })
-        }
+        void setVoice(const Note_T& note);
 
-        void setVoice(const Note_T& note)
-        {
-            PANTOUFLE_TRY_RETHROW({
-                this->_notes.at(note.getVoice()) = note;
-            })
-        }
-
-        CANT_NODISCARD Note_T& getMutable(size_m voice) { return this->_notes.at(voice); }
+        CANT_NODISCARD Note_T& getVoiceMutable(size_m voice);
 
 
-        CANT_NODISCARD const Stream<Note_T>& getNotes() const { return this->_notes; }
+        CANT_NODISCARD const Stream<Note_T>& getNotes() const;
     };
+
 
     using MidiNoteInternalLayer = MidiNoteInternalOutputLayer<MidiNoteInternal, MidiNoteInput>;
     using MidiNoteOutputLayer = MidiNoteInternalOutputLayer<MidiNoteOutput, MidiNoteInternal>;
 }
 
 #include <cant/common/undef_macro.hpp>
+
+#include "MidiNoteLayer.inl"
+
 #endif //CANTINA_TILDE_MIDINOTELAYER_HPP

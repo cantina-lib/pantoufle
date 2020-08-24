@@ -30,28 +30,21 @@ namespace cant::pan
          * probably has to do with template, when instantiating it... whatever,
          * it'll have to be concrete.
          */
-        MidiNote(size_m voice, byte_m channel, tone_m tone, vel_m velocity)
-        : _data(channel, tone, velocity), _voice(voice), _tStart()
-        {
+        MidiNote(size_m voice, byte_m channel, tone_m tone, vel_m velocity);
 
-        }
+        CANT_EXPLICIT MidiNote(size_m voice);
 
-        CANT_EXPLICIT MidiNote(size_m voice)
-        : _data(),  _voice(voice), _tStart()
-        {
+        CANT_NODISCARD const Data_T& getData() const;
 
-        }
+        CANT_NODISCARD size_m getVoice() const;
 
-        CANT_NODISCARD const Data_T& getData() const { return _data; }
+        CANT_NODISCARD byte_m getChannel() const override;
+        CANT_NODISCARD tone_m getTone() const override;
+        CANT_NODISCARD vel_m getVelocity() const override;
 
-        CANT_NODISCARD size_m getVoice() const { return _voice; }
-
-        CANT_NODISCARD byte_m getChannel() const override { return _data.getChannel(); }
-        CANT_NODISCARD tone_m getTone() const override    { return _data.getTone(); }
-        CANT_NODISCARD vel_m getVelocity() const override { return _data.getVelocity(); }
-
-        CANT_NODISCARD time_m getStartingTime() const override { return _tStart; }
+        CANT_NODISCARD time_m getStartingTime() const override;
     };
+
 
     class MidiNoteInput : public MidiNote<MidiNoteInputData>, MidiNoteInputCompatible
     {
@@ -77,9 +70,9 @@ namespace cant::pan
 
         void flushChange();
 
-        CANT_NODISCARD bool isPressed() const override   { return _isPressed; }
-        CANT_NODISCARD bool justChangedPlaying() const override { return _flagChangedPlaying; }
-        CANT_NODISCARD bool justChangedTone() const override { return _flagChangedTone; }
+        CANT_NODISCARD bool isPressed() const override;
+        CANT_NODISCARD bool justChangedPlaying() const override;
+        CANT_NODISCARD bool justChangedTone() const override;
     };
 
 
@@ -95,21 +88,21 @@ namespace cant::pan
 
         void set(const MidiNoteInput& input);
 
-        CANT_NODISCARD time_m getLength(const time_m tCurrent) const override { return tCurrent - _tStart; }
+        CANT_NODISCARD time_m getLength(time_m tCurrent) const override;
 
-        void setPlaying(bool isPlaying) { _isPlaying = isPlaying; }
-        void setChangedPlaying(const bool justChanged) { _justChangedPlaying = justChanged; }
-        void setChangedTone(const bool justChanged) { _justChangedTone = justChanged; }
+        void setPlaying(bool isPlaying);
+        void setChangedPlaying(bool justChanged);
+        void setChangedTone(bool justChanged);
 
-        void setTone(const tone_m tone) override { _data.setTone(tone); }
-        void setVelocity(const vel_m velocity) override { _data.setVelocity(velocity); }
-        void setPan(const pan_m pan) override { _data.setPan(pan); }
+        void setTone(tone_m tone) override;
+        void setVelocity(vel_m velocity) override;
+        void setPan(pan_m pan) override;
 
-        CANT_NODISCARD pan_m getPan() const override { return _data.getPan(); }
+        CANT_NODISCARD pan_m getPan() const override;
 
-        CANT_NODISCARD bool isPlaying() const override   { return _isPlaying; }
-        CANT_NODISCARD bool justChangedPlaying() const override { return _justChangedPlaying; }
-        CANT_NODISCARD bool justChangedTone() const override { return _justChangedTone; }
+        CANT_NODISCARD bool isPlaying() const override;
+        CANT_NODISCARD bool justChangedPlaying() const override;
+        CANT_NODISCARD bool justChangedTone() const override;
 
     };
 
@@ -120,30 +113,32 @@ namespace cant::pan
         bool _justChangedPlaying;
         bool _justChangedTone;
     private:
-        CANT_NODISCARD vel_m getVelocity() const override { return _data.getVelocity(); }
+        CANT_NODISCARD vel_m getVelocity() const override;
 
     public:
         CANT_EXPLICIT MidiNoteOutput(size_m voice);
 
         void set(const MidiNoteInternal& internal);
 
-        CANT_NODISCARD time_m getLength(const time_m tCurrent) const override { return tCurrent - _tStart; }
+        CANT_NODISCARD time_m getLength(time_m tCurrent) const override;
 
         CANT_NODISCARD vel_m getVelocityPlaying() const override;
-        CANT_NODISCARD Array<vel_m, 2> getVelocityPanned() const override { return _data.getVelocityPanned(); }
+        CANT_NODISCARD Array<vel_m, 2> getVelocityPanned() const override;
 
-        CANT_NODISCARD pan_m getPan() const override { return _data.getPan(); }
+        CANT_NODISCARD pan_m getPan() const override;
 
-        CANT_NODISCARD bool isPlaying() const override   { return _isPlaying; }
-        CANT_NODISCARD bool justChangedPlaying() const override { return _justChangedPlaying; }
-        CANT_NODISCARD bool justChangedTone() const override { return _justChangedTone; }
+        CANT_NODISCARD bool isPlaying() const override;
+        CANT_NODISCARD bool justChangedPlaying() const override;
+        CANT_NODISCARD bool justChangedTone() const override;
 
-        CANT_NODISCARD bool justStarted() const { return _justChangedPlaying && isPlaying(); }
-        CANT_NODISCARD bool justStopped() const { return _justChangedPlaying && !isPlaying(); }
+        CANT_NODISCARD bool justStarted() const;
+        CANT_NODISCARD bool justStopped() const;
 
     };
 }
 
 #include <cant/common/undef_macro.hpp>
+
+#include "MidiNote.inl"
 
 #endif //CANTINA_TILDE_MIDINOTE_HPP

@@ -81,6 +81,7 @@ namespace cant::pan
     }
 
 
+
     MidiNoteInternal::
     MidiNoteInternal(const size_m voice)
     : MidiNote<MidiNoteInternalData>(voice),
@@ -102,6 +103,7 @@ namespace cant::pan
         _justChangedTone = input.justChangedTone();
     }
 
+
     MidiNoteOutput::
     MidiNoteOutput(const size_m voice)
     : MidiNote<MidiNoteOutputData>(voice),
@@ -122,11 +124,5 @@ namespace cant::pan
         _justChangedPlaying = internal.justChangedPlaying();
     }
 
-    vel_m
-    MidiNoteOutput::
-    getVelocityPlaying() const
-    {
-        return isPlaying() ? getVelocity() : static_cast<vel_m>(0);
-    }
 
 }

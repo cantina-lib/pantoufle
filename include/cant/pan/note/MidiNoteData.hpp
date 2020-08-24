@@ -26,47 +26,26 @@ namespace cant::pan
         Tone_T _tone;
         Vel_T _velocity;
     public:
-        MidiNoteData(byte_m channel, Tone_T tone, Vel_T velocity)
-        : _channel(channel), _tone(tone), _velocity(velocity)
-        {
-
-        }
+        MidiNoteData(byte_m channel, Tone_T tone, Vel_T velocity);
 
         template <typename Tone_U, typename Vel_U>
-        CANT_EXPLICIT MidiNoteData(const MidiNoteData<Tone_U, Vel_U>& other)
-        : _channel(other.getChannel()),
-        _tone(static_cast<Tone_T>(other.getTone())),
-        _velocity(static_cast<Vel_T>(other.getVelocity()))
-        {
+        CANT_EXPLICIT MidiNoteData(const MidiNoteData<Tone_U, Vel_U>& other);
 
-        }
-
-        CANT_CONSTEXPR MidiNoteData()
-        : _channel(), _tone(), _velocity()
-        {
-
-        }
+        CANT_CONSTEXPR MidiNoteData();
 
         MidiNoteData(const MidiNoteData &) = default;
 
         // Shouldn't be used with tone_m/vel_m
-        CANT_NODISCARD bool operator==(const MidiNoteData& data) const
-        {
-            return data._channel == _channel
-                   && data._tone == _tone
-                   && data._velocity== _velocity;
-        }
-        CANT_NODISCARD bool operator!=(const MidiNoteData& data) const
-        {
-            return !operator==(data);
-        }
+        CANT_NODISCARD bool operator==(const MidiNoteData& data) const;
+        CANT_NODISCARD bool operator!=(const MidiNoteData& data) const;
 
-        CANT_NODISCARD byte_m getChannel() const override { return _channel; }
-        CANT_NODISCARD tone_m getTone() const override { return static_cast<tone_m>(_tone); };
-        CANT_NODISCARD vel_m getVelocity() const override { return static_cast<vel_m>(_velocity); }
+        CANT_NODISCARD byte_m getChannel() const override;
+        CANT_NODISCARD tone_m getTone() const override;;
+        CANT_NODISCARD vel_m getVelocity() const override;
 
-        CANT_NODISCARD bool isPressed() const override { return static_cast<bool>(_velocity); }
+        CANT_NODISCARD bool isPressed() const override;
     };
+
 
     using MidiNoteInputData = MidiNoteData<tone_mint, vel_mint>;
 
@@ -103,4 +82,7 @@ namespace cant::pan
 }
 
 #include <cant/common/undef_macro.hpp>
+
+#include "MidiNoteData.inl"
+
 #endif //CANTINA_MIDINOTEDATA_HPP

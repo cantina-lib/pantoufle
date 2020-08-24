@@ -10,8 +10,6 @@
 #include <cant/common/types.hpp>
 #include <cant/common/memory.hpp>
 
-#include <cant/pan/note/MidiNote.hpp>
-
 #include <cant/pan/layer/MidiNoteLayer.hpp>
 
 #include <cant/common/macro.hpp>
@@ -31,20 +29,18 @@ namespace cant::pan
         MidiNoteInternalLayer _memory;
     public:
         virtual ~MidiProcessorMemory() = default;
-        CANT_EXPLICIT MidiProcessorMemory(const size_m numberVoices)
-        : _memory(numberVoices)
-        {
+        CANT_EXPLICIT MidiProcessorMemory(size_m numberVoices);
 
-        }
-
-        CANT_NODISCARD CANT_INLINE
-        size_m getNumberVoices() const { return _memory.getNumberVoices(); }
+        CANT_NODISCARD size_m getNumberVoices() const;
 
         void update(time_m tCurrent) override = 0;
 
         void process(MidiNoteInternal& in) override = 0;
     };
 }
+
 #include <cant/common/undef_macro.hpp>
+
+#include "MidiProcessor.inl"
 
 #endif //CANTINA_MIDIPROCESSOR_HPP

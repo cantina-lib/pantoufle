@@ -24,34 +24,6 @@ namespace cant::pan
 
     }
 
-    void
-    MidiNoteInternalData::
-    setTone(const tone_m tone)
-    {
-        _tone = tone;
-    }
-
-    void
-    MidiNoteInternalData::
-    setVelocity(const vel_m velocity)
-    {
-        _velocity = velocity;
-    }
-
-    void
-    MidiNoteInternalData::
-    setPan(const pan_m pan)
-    {
-        _pan = std::clamp(pan, static_cast<pan_m>(-1), static_cast<pan_m>(1));
-    }
-
-    pan_m
-    MidiNoteInternalData::
-    getPan() const
-    {
-        return _pan;
-    }
-
     MidiNoteOutputData::
     MidiNoteOutputData()
     : MidiNoteData(),
@@ -66,13 +38,6 @@ namespace cant::pan
       _pan(static_cast<pan_m>(0)) // balanced pan
     {
 
-    }
-
-    pan_m
-    MidiNoteOutputData::
-    getPan() const
-    {
-        return _pan;
     }
 
     Array<vel_m, 2>

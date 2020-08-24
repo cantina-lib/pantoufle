@@ -53,24 +53,30 @@ set(PANTOUFLE_FILES
         ## headers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/Pantoufle.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/pan.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/pan_forward.hpp
         ### note
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/note.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.inl
         ### io layers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/layer.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteLayer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteLayer.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteInputPoly.hpp
         ### env
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/envelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/MidiEnvelope.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/MidiEnvelope.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/FlatEnvelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/ADSREnvelope.hpp
         ### controller
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/controller.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiController.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MultiMidiController.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MultiMidiController.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiDamper.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiPan.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiWah.hpp
@@ -79,6 +85,7 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiControllerChain.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiEnvelopeLayer.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.inl
         ### control
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlCompatible.hpp

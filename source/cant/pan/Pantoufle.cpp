@@ -4,6 +4,14 @@
 
 #include <cant/pan/Pantoufle.hpp>
 
+#include <cant/pan/processor/processor.hpp>
+#include <cant/pan/layer/layer.hpp>
+
+#include <cant/pan/controller/MidiController.hpp>
+#include <cant/pan/control/MidiControlData.hpp>
+#include <cant/pan/note/MidiNote.hpp>
+#include <cant/pan/note/MidiNoteData.hpp>
+
 #include <cant/pan/common/PantoufleException.hpp>
 
 #include <cant/common/macro.hpp>
@@ -11,11 +19,11 @@ namespace cant::pan
 {
     Pantoufle::
     Pantoufle(const size_m numberVoices, const byte_m channel)
-    : _ctrlChain(numberVoices),
-      _envlpLayer(numberVoices, channel),
-      _poly(numberVoices, channel),
-      _processedNoteInternal(numberVoices),
-      _processedNoteOutput(numberVoices)
+    : _ctrlChain(std::make_unique<MidiControllerChain>(numberVoices)),
+      _envlpLayer(std::make_unique<MidiEnvelopeLayer>(numberVoices, channel)),
+      _poly(std::make_unique<MidiNoteInputPoly>(numberVoices, channel)),
+      _processedNoteInternal(std::make_unique<MidiNoteInternalLayer>(numberVoices)),
+      _processedNoteOutput(std::make_unique<MidiNoteOutputLayer>(numberVoices))
     {
 
     }
@@ -24,7 +32,7 @@ namespace cant::pan
     Pantoufle::
     getProcessedOutputData() const
     {
-        return _processedNoteOutput.getNotes();
+        return _processedNoteOutput->getNotes();
     }
 
     void
@@ -66,14 +74,14 @@ namespace cant::pan
     Pantoufle::
     flushChangeNoteInput()
     {
-        _poly.flushChange();
+        _poly->flushChange();
     }
 
     void
     Pantoufle::
     flushChangeEnvelopeLayer()
     {
-        _envlpLayer.flushChange();
+        _envlpLayer->flushChange();
     }
 
 
@@ -81,27 +89,27 @@ namespace cant::pan
     Pantoufle::
     updateControlChain(const time_m tCurrent)
     {
-        _ctrlChain.update(tCurrent);
+        _ctrlChain->update(tCurrent);
     }
 
     void Pantoufle::
     updateEnvelopeLayer(const time_m tCurrent)
     {
-         _envlpLayer.update(tCurrent);
+         _envlpLayer->update(tCurrent);
     }
 
     time_m
     Pantoufle::
     getCurrentTime() const
     {
-        return _timer.getCurrentTime();
+        return _timer->getCurrentTime();
     }
 
     size_m
     Pantoufle::
     getNumberVoices() const
     {
-        return _poly.getNumberVoices();
+        return _poly->getNumberVoices();
     }
 
     void
@@ -109,7 +117,7 @@ namespace cant::pan
     setController(UPtr<MidiController> controller)
     {
         PANTOUFLE_TRY_RETHROW({
-                                  _ctrlChain.addController(std::move(controller));
+                                  _ctrlChain->addController(std::move(controller));
         })
     }
 
@@ -118,7 +126,7 @@ namespace cant::pan
     Pantoufle::
     receiveInputNoteData(const MidiNoteInputData& inputData)
     {
-        _poly.receive(getCurrentTime(), inputData);
+        _poly->receive(getCurrentTime(), inputData);
         /* processing will be done when time comes to update. */
     }
 
@@ -126,28 +134,28 @@ namespace cant::pan
     Pantoufle::
     process(const size_m voice)
     {
-        const MidiNoteInput& input = _poly.get(voice);
-        _processedNoteInternal.receive(input);
+        const MidiNoteInput& input = _poly->getVoice(voice);
+        _processedNoteInternal->receive(input);
         /* processing controllers and envelope layer */
         processControllerChainVoice(voice);
         processEnvelopeLayerVoice(voice);
         /* */
-        const MidiNoteInternal& internal = _processedNoteInternal.get(voice);
-        _processedNoteOutput.receive(internal);
+        const MidiNoteInternal& internal = _processedNoteInternal->getVoice(voice);
+        _processedNoteOutput->receive(internal);
     }
 
     void
     Pantoufle::
     processControllerChainVoice(const size_m voice)
     {
-        _ctrlChain.process(_processedNoteInternal.getMutable(voice));
+        _ctrlChain->process(_processedNoteInternal->getVoiceMutable(voice));
     }
 
     void
     Pantoufle::
     processEnvelopeLayerVoice(const size_m voice)
     {
-        _envlpLayer.process(_processedNoteInternal.getMutable(voice));
+        _envlpLayer->process(_processedNoteInternal->getVoiceMutable(voice));
     }
 
 
@@ -156,6 +164,6 @@ namespace cant::pan
     receiveRawControlData(const MidiControlInputData &controlData)
     {
         const auto control = MidiControlInternal(controlData);
-        _ctrlChain.receiveControl(control);
+        _ctrlChain->receiveControl(control);
     }
 }
