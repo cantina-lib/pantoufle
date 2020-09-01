@@ -14,6 +14,8 @@ namespace cant::pan
 {
     class MidiControlCompatible
     {
+    public:
+        /** -- methods -- **/
         // no virtual destructor for interfaces, prevents creating v-tables.
         CANT_NODISCARD virtual byte_m getChannel() const = 0;
         CANT_NODISCARD virtual byte_m getId() const = 0;

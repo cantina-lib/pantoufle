@@ -14,7 +14,25 @@ namespace cant::pan
 {
     class MidiDamper final : public MultiMidiController<1>
     {
+    public:
+        // factory method
+        static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
+
+        void update(time_m tCurrent) override;
     private:
+        /** -- methods **/
+        MidiDamper(size_m numberVoices, byte_m channel, byte_m controllerId);
+
+        CANT_NODISCARD bool isOn() const;
+        // static methods
+        CANT_NODISCARD static bool isOn(const MidiControlInternal& control);
+        // event functions
+        void beforeControlProcess(const MidiControlInternal& incomingControl) override;
+        void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
+        // private inheritance
+        void IMPL_process(MidiNoteInternal& note) const override;
+
+        /** -- fields **/
         /*
          * Can't be bool, since Stream are actually std::vector, and c++ does summat
          * funky with std::vector<bool> template specialisation.
@@ -30,20 +48,6 @@ namespace cant::pan
          * that this code will be executed *before* any new processing is done.
          */
         Stream<byte_m> _isMemoryPlaying;
-    private:
-        void beforeControlProcess(const MidiControlInternal& incomingControl) override;
-        void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
-    private:
-        MidiDamper(size_m numberVoices, byte_m channel, byte_m controllerId);
-
-        CANT_NODISCARD bool isOn() const;
-        CANT_NODISCARD static bool isOn(const MidiControlInternal& control);
-    public:
-        void IMPL_process(MidiNoteInternal& note) const override;
-
-        void update(time_m tCurrent) override;
-
-        static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
     };
 }
 

@@ -11,20 +11,29 @@
 
 namespace cant::pan
 {
-    CANT_INLINE byte_m MidiControlData::getChannel() const
-    { return _channel; }
+    CANT_INLINE
+    byte_m
+    MidiControlData::
+    getChannel() const
+    { return m_channel; }
 
-    CANT_INLINE byte_m MidiControlData::getId() const
-    { return _controllerId; }
+    CANT_INLINE
+    byte_m
+    MidiControlData::
+    getId() const
+    { return m_controllerId; }
 
-    CANT_INLINE byte_m MidiControlData::getValue() const
-    { return _value; }
+    CANT_INLINE
+    byte_m
+    MidiControlData::
+    getValue() const
+    { return m_value; }
 
-    CANT_CONSTEXPR MidiControlData::MidiControlData()
-            : _channel(), _controllerId(), _value()
-    {
-
-    }
+    CANT_CONSTEXPR
+    MidiControlData::
+    MidiControlData()
+            : m_channel(), m_controllerId(), m_value()
+    {}
 
 }
 

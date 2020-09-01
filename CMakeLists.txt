@@ -35,6 +35,7 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNote.cpp
         ### io layers
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteInputPoly.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteLayer.cpp
         ### env
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/MidiEnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSREnvelope.cpp
@@ -56,6 +57,7 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/pan_forward.hpp
         ### note
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/note.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/note_forward.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.inl
@@ -88,8 +90,12 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.inl
         ### control
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control_forward.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlData.hpp
+        ### time
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/MidiTimer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/MidiTimer.inl
         )
 
 

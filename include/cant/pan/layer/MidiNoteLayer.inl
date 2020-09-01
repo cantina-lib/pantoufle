@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cant/common/CantinaException.hpp>
+#include <cant/pan/note/note_forward.hpp>
 
 #include <cant/common/macro.hpp>
 namespace cant::pan
@@ -17,45 +17,45 @@ namespace cant::pan
     MidiNoteLayer<Note_T>::
     initialiseNotes(const size_m numberVoices)
     {
-        _notes.reserve(numberVoices);
+        m_notes.reserve(numberVoices);
         for (size_m i = 0; i < numberVoices; ++i)
         {
-            _notes.push_back(Note_T(i));
+            m_notes.push_back(Note_T { i });
         }
     }
 
     template<class Note_T>
-    MidiNoteLayer<Note_T>::MidiNoteLayer(size_m numberVoices)
-            : _notes()
+    MidiNoteLayer<Note_T>::
+    MidiNoteLayer(size_m numberVoices)
+        : m_notes()
+
     {
         initialiseNotes(numberVoices);
     }
 
     template<class Note_T>
-    CANT_NODISCARD CANT_INLINE const Note_T &
+    CANT_NODISCARD CANT_INLINE
+    const Note_T &
     MidiNoteLayer<Note_T>::
     getVoice(size_m voice) const
     {
-        return _notes.at(voice);
+        return m_notes.at(voice);
     }
 
     template<class Note_T>
-    CANT_NODISCARD CANT_INLINE size_m
+    CANT_NODISCARD CANT_INLINE
+    size_m
     MidiNoteLayer<Note_T>::
     getNumberVoices() const
     {
-        return _notes.size();
+        return m_notes.size();
     }
 
 
-    CANT_INLINE MidiNoteInputLayer::
-    MidiNoteInputLayer(size_m numberVoices)
-            : MidiNoteLayer<MidiNoteInput>(numberVoices)
-    {
-    }
 
     template<class Note_T, class PreviousLayerNote_T>
-    CANT_INLINE MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::
+    CANT_INLINE
+    MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::
     MidiNoteInternalOutputLayer(size_m numberVoices)
             : MidiNoteLayer<Note_T>(numberVoices)
     {
@@ -63,37 +63,37 @@ namespace cant::pan
     }
 
     template<class Note_T, class PreviousLayerNote_T>
-    CANT_INLINE void
+    CANT_INLINE
+    void
     MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::
     receive(const PreviousLayerNote_T &previous)
     {
-        PANTOUFLE_TRY_RETHROW({
-                                      this->_notes.at(previous.getVoice()).set(previous);
-                              })
+          this->m_notes.at(previous.getVoice()).set(previous);
     }
 
     template<class Note_T, class PreviousLayerNote_T>
-    CANT_INLINE void
+    CANT_INLINE
+    void
     MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::
     setVoice(const Note_T &note)
     {
-        PANTOUFLE_TRY_RETHROW({
-                                      this->_notes.at(note.getVoice()) = note;
-                              })
+          this->m_notes.at(note.getVoice()) = note;
     }
 
     template<class Note_T, class PreviousLayerNote_T>
-    CANT_NODISCARD CANT_INLINE Note_T &
+    CANT_NODISCARD CANT_INLINE
+    Note_T &
     MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::getVoiceMutable(size_m voice)
     {
-        return this->_notes.at(voice);
+        return this->m_notes.at(voice);
     }
 
     template<class Note_T, class PreviousLayerNote_T>
-    CANT_NODISCARD CANT_INLINE const Stream <Note_T> &
+    CANT_NODISCARD CANT_INLINE
+    const Stream <Note_T> &
     MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::getNotes() const
     {
-        return this->_notes;
+        return this->m_notes;
     }
 }
 

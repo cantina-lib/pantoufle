@@ -4,6 +4,9 @@
 
 #include <cant/pan/controller/MidiController.hpp>
 
+#include <cant/pan/control/MidiControlData.hpp>
+#include <cant/pan/note/MidiNote.hpp>
+
 namespace cant::pan
 {
 
@@ -27,7 +30,7 @@ namespace cant::pan
     MidiController::
     updateVoice(const MidiNoteInternal &note)
     {
-        _memory.setVoice(note);
+        m_memory.setVoice(note);
     }
 
 

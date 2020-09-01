@@ -18,24 +18,25 @@ namespace cant::pan
     class MidiProcessor
     {
     public:
+        /** -- methods -- **/
         virtual void update(time_m tCurrent) = 0;
-
         virtual void process(MidiNoteInternal& in) = 0;
     };
 
     class MidiProcessorMemory : public MidiProcessor
     {
-    protected:
-        MidiNoteInternalLayer _memory;
     public:
-        virtual ~MidiProcessorMemory() = default;
+        /** -- methods -- **/
         CANT_EXPLICIT MidiProcessorMemory(size_m numberVoices);
-
-        CANT_NODISCARD size_m getNumberVoices() const;
+        virtual ~MidiProcessorMemory() = default;
 
         void update(time_m tCurrent) override = 0;
-
         void process(MidiNoteInternal& in) override = 0;
+
+        CANT_NODISCARD size_m getNumberVoices() const;
+    protected:
+        /** -- fields -- **/
+        MidiNoteInternalLayer m_memory;
     };
 }
 

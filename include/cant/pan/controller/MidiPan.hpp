@@ -17,19 +17,23 @@ namespace cant::pan
 {
     class MidiPan : MultiMidiController<1>
     {
+    public:
+        /** -- methods -- **/
+        // factory method
+        static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
+
+        void update(time_m tCurrent) override;
     private:
-        void beforeControlProcess(const MidiControlInternal& incomingControl) override;
-        void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
-    private:
+        /** -- methods -- **/
         MidiPan(size_m numberVoices, byte_m channel, byte_m controllerId);
 
         CANT_NODISCARD pan_m getPan() const;
-    public:
+
+        // event functions
+        void beforeControlProcess(const MidiControlInternal& incomingControl) override;
+        void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
+        // private inheritance
         void IMPL_process(MidiNoteInternal& note) const override;
-
-        void update(time_m tCurrent) override;
-
-        static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
     };
 
 }

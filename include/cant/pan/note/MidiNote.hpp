@@ -12,7 +12,6 @@
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 #include <cant/pan/note/MidiNoteData.hpp>
 
-
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
@@ -20,18 +19,14 @@ namespace cant::pan
     template <class Data_T>
     class MidiNote : MidiNoteCompatible
     {
-    protected:
-        Data_T _data;
-        size_m _voice;
-        time_m _tStart;
     public:
+        /** -- methods -- **/
         /*
          * todo: get undefined symbol when defining abstract destructor here
          * probably has to do with template, when instantiating it... whatever,
          * it'll have to be concrete.
          */
         MidiNote(size_m voice, byte_m channel, tone_m tone, vel_m velocity);
-
         CANT_EXPLICIT MidiNote(size_m voice);
 
         CANT_NODISCARD const Data_T& getData() const;
@@ -43,28 +38,19 @@ namespace cant::pan
         CANT_NODISCARD vel_m getVelocity() const override;
 
         CANT_NODISCARD time_m getStartingTime() const override;
+    protected:
+        /** -- fields -- **/
+        Data_T m_data;
+        size_m m_voice;
+        time_m m_tStart;
     };
 
 
     class MidiNoteInput : public MidiNote<MidiNoteInputData>, MidiNoteInputCompatible
     {
-    private:
-        bool _isPressed;
-        bool _flagChangedPlaying;
-        bool _flagChangedTone;
-    private:
-        void raiseFlagChangedPlaying();
-        void raiseFlagChangedNote();
-        void discardAllChangeFlags();
-
-        CANT_CONSTEXPR MidiNoteInput(const MidiNoteInput&) = default;
-        CANT_NODISCARD  MidiNoteInput& operator=(const MidiNoteInput&) = default;
-
-        MidiNoteInput(size_m voice, byte_m channel, tone_m tone, vel_m velocity, bool isPressed);
     public:
+        /** -- methods -- **/
         CANT_EXPLICIT MidiNoteInput(size_m voice);
-
-        CANT_CONSTEXPR MidiNoteInput(MidiNoteInput&&) = default;
 
         void set(time_m tCurrent, const MidiNoteInputData& data);
 
@@ -73,17 +59,26 @@ namespace cant::pan
         CANT_NODISCARD bool isPressed() const override;
         CANT_NODISCARD bool justChangedPlaying() const override;
         CANT_NODISCARD bool justChangedTone() const override;
+    private:
+        /** -- methods -- **/
+        MidiNoteInput(size_m voice, byte_m channel, tone_m tone, vel_m velocity, bool isPressed);
+        CANT_NODISCARD  MidiNoteInput& operator=(const MidiNoteInput&);
+
+        void raiseFlagChangedPlaying();
+        void raiseFlagChangedNote();
+        void discardAllChangeFlags();
+
+        /** -- fields -- **/
+        bool _isPressed;
+        bool _flagChangedPlaying;
+        bool _flagChangedTone;
     };
 
 
     class MidiNoteInternal : public MidiNote<MidiNoteInternalData>, MidiNoteInternalCompatible
     {
-    private:
-        bool _isPlaying;
-        bool _justChangedPlaying;
-        bool _justChangedTone;
-
     public:
+        /** -- methods -- **/
         CANT_EXPLICIT MidiNoteInternal(size_m voice);
 
         void set(const MidiNoteInput& input);
@@ -104,18 +99,19 @@ namespace cant::pan
         CANT_NODISCARD bool justChangedPlaying() const override;
         CANT_NODISCARD bool justChangedTone() const override;
 
+    private:
+        /** -- fields -- **/
+        bool m_isPlaying;
+        bool m_justChangedPlaying;
+        bool m_justChangedTone;
+
+
     };
 
     class MidiNoteOutput : public MidiNote<MidiNoteOutputData>, MidiNoteOutputCompatible
     {
-    private:
-        bool _isPlaying;
-        bool _justChangedPlaying;
-        bool _justChangedTone;
-    private:
-        CANT_NODISCARD vel_m getVelocity() const override;
-
     public:
+        /** -- methods -- **/
         CANT_EXPLICIT MidiNoteOutput(size_m voice);
 
         void set(const MidiNoteInternal& internal);
@@ -133,6 +129,14 @@ namespace cant::pan
 
         CANT_NODISCARD bool justStarted() const;
         CANT_NODISCARD bool justStopped() const;
+    private:
+        /** -- methods -- **/
+        CANT_NODISCARD vel_m getVelocity() const override;
+
+        /** -- fields -- **/
+        bool m_isPlaying;
+        bool m_justChangedPlaying;
+        bool m_justChangedTone;
 
     };
 }

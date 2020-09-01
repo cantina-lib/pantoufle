@@ -16,18 +16,21 @@ namespace cant::pan
 {
     class MidiWah : MultiMidiController<2>
     {
-    private:
-        void beforeControlProcess(const MidiControlInternal& incomingControl) override;
-        void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
-    private:
-        MidiWah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah);
-
     public:
-        void IMPL_process(MidiNoteInternal& note) const override;
+        /** -- methods -- **/
+        // factory method
+        static UPtr<MidiController> wah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah);
 
         void update(time_m tCurrent) override;
+    private:
+        /** -- methods -- **/
+        MidiWah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah);
 
-        static UPtr<MidiController> wah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah);
+        // event functions
+        void beforeControlProcess(const MidiControlInternal& incomingControl) override;
+        void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
+        // private inheritance
+        void IMPL_process(MidiNoteInternal& note) const override;
     };
 
 }

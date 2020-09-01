@@ -7,11 +7,8 @@
 
 #pragma once
 
-#include <cant/common/formatting.hpp>
 #include <cant/common/memory.hpp>
 #include <cant/pan/common/types.hpp>
-
-#include <cant/pan/common/MidiTimer.hpp>
 
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
@@ -21,19 +18,13 @@ namespace cant::pan
     template <typename Tone_T, typename Vel_T>
     class MidiNoteData : MidiNoteDataCompatible
     {
-    protected:
-        byte_m _channel;
-        Tone_T _tone;
-        Vel_T _velocity;
     public:
+        /** -- methods -- **/
+        CANT_CONSTEXPR MidiNoteData();
         MidiNoteData(byte_m channel, Tone_T tone, Vel_T velocity);
-
         template <typename Tone_U, typename Vel_U>
         CANT_EXPLICIT MidiNoteData(const MidiNoteData<Tone_U, Vel_U>& other);
-
-        CANT_CONSTEXPR MidiNoteData();
-
-        MidiNoteData(const MidiNoteData &) = default;
+        MidiNoteData(const MidiNoteData &);
 
         // Shouldn't be used with tone_m/vel_m
         CANT_NODISCARD bool operator==(const MidiNoteData& data) const;
@@ -44,16 +35,20 @@ namespace cant::pan
         CANT_NODISCARD vel_m getVelocity() const override;
 
         CANT_NODISCARD bool isPressed() const override;
+    protected:
+        /** -- fields -- **/
+        byte_m m_channel;
+        Tone_T m_tone;
+        Vel_T m_velocity;
     };
 
 
-    using MidiNoteInputData = MidiNoteData<tone_mint, vel_mint>;
+    typedef MidiNoteData<tone_mint, vel_mint> MidiNoteInputData;
 
     class MidiNoteInternalData : public MidiNoteData<tone_m, vel_m>
     {
-    private:
-        pan_m _pan;
     public:
+        /** -- methods -- **/
         MidiNoteInternalData();
         CANT_EXPLICIT MidiNoteInternalData(const MidiNoteInputData& input);
 
@@ -62,21 +57,24 @@ namespace cant::pan
         void setPan(pan_m pan);
 
         CANT_NODISCARD pan_m getPan() const;
-
+    private:
+        /** -- fields -- **/
+        pan_m m_pan;
     };
 
     class MidiNoteOutputData : public MidiNoteData<tone_m, vel_m>
     {
-    private:
-        pan_m _pan;
-
     public:
+        /** -- methods -- **/
         MidiNoteOutputData();
         CANT_EXPLICIT MidiNoteOutputData(const MidiNoteInternalData& internal);
 
         CANT_NODISCARD Array<vel_m, 2> getVelocityPanned() const;
 
         CANT_NODISCARD pan_m getPan() const;
+    private:
+        /** -- fields -- **/
+        pan_m m_pan;
     };
 
 }

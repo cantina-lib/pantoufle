@@ -5,4 +5,8 @@
 #ifndef CANTINA_TILDE_TIME_HPP
 #define CANTINA_TILDE_TIME_HPP
 
+#pragma once
+
+#include "MidiTimer.hpp"
+
 #endif //CANTINA_TILDE_TIME_HPP

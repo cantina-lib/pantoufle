@@ -9,6 +9,8 @@
 
 #include "Pantoufle.hpp"
 
+#include "time/time.hpp"
+
 #include "note/note.hpp"
 
 #include "control/control.hpp"
@@ -20,6 +22,5 @@
 #include "layer/layer.hpp"
 
 #include "processor/processor.hpp"
-
 
 #endif //CANTINA_MIDI_HPP

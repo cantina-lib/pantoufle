@@ -18,48 +18,45 @@ namespace cant::pan
 
     class Pantoufle
     {
+    public:
+        /** -- methods -- **/
+        Pantoufle(size_m numberVoices, byte_m channel);
+
+        void update();
+
+        void setController(UPtr<MidiController> controller);
+        void receiveInputNoteData(const MidiNoteInputData& inputData);
+        void receiveRawControlData(const MidiControlData &controlData);
+
+        CANT_NODISCARD const Stream<MidiNoteOutput>& getProcessedOutputData() const;
+        CANT_NODISCARD size_m getNumberVoices() const;
     private:
-        UPtr<MidiControllerChain> _ctrlChain;
-        UPtr<MidiEnvelopeLayer> _envlpLayer;
-
-        UPtr<MidiNoteInputPoly> _poly;
-
-        UPtr<MidiNoteInternalLayer> _processedNoteInternal;
-        mutable UPtr<MidiNoteOutputLayer> _processedNoteOutput;
-
-
-        UPtr<MidiTimer> _timer;
-
-        void processControllerChainVoice(size_m iVoice);
-
-        void processEnvelopeLayerVoice(size_m iVoice);
-
+        /** -- methods -- **/
         void process(size_m iVoice);
+        void processControllerChainVoice(size_m iVoice);
+        void processEnvelopeLayerVoice(size_m iVoice);
+        void processAll();
 
+        void flushChange();
         void flushChangeNoteInput();
         void flushChangeEnvelopeLayer();
 
-        void flushChange();
-
-
-
         void updateEnvelopeLayer(time_m tCurrent);
         void updateControlChain(time_m tCurrent);
-        void processAll();
 
         CANT_NODISCARD time_m getCurrentTime() const;
-    public:
-        Pantoufle(size_m numberVoices, byte_m channel);
 
-        CANT_NODISCARD size_m getNumberVoices() const;
+        /** -- fields -- **/
+        UPtr<MidiControllerChain> m_controllerChain;
+        UPtr<MidiEnvelopeLayer> m_envelopeLayer;
 
-        void setController(UPtr<MidiController> controller);
+        UPtr<MidiNoteInputPoly> m_poly;
 
-        void receiveInputNoteData(const MidiNoteInputData& inputData);
-        void receiveRawControlData(const MidiControlData &controlData);
-        CANT_NODISCARD const Stream<MidiNoteOutput>& getProcessedOutputData() const;
+        UPtr<MidiNoteInternalLayer> m_processedNoteInternal;
+        UPtr<MidiTimer> m_timer;
 
-        void update();
+        // mutable fields
+        mutable UPtr<MidiNoteOutputLayer> m_processedNoteOutput;
     };
 }
 

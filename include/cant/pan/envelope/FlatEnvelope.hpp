@@ -14,14 +14,17 @@ namespace cant::pan
 {
     class FlatToneEnvelope final : protected ToneEnvelope
     {
-    private:
-        CANT_EXPLICIT FlatToneEnvelope(size_m numberVoices);
     public:
-        void process(MidiNoteInternal& note) override;
-
+        /** -- methods -- **/
+        // factory method
         static UPtr<ToneEnvelope> make(size_m numberVoices);
 
+        void process(MidiNoteInternal& note) override;
+
         void flushChange() override;
+    private:
+        /** -- methods -- **/
+        CANT_EXPLICIT FlatToneEnvelope(size_m numberVoices);
     };
 }
 #include <cant/common/undef_macro.hpp>

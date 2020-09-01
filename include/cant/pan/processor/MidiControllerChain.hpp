@@ -20,24 +20,14 @@ namespace cant::pan
 {
     class MidiControllerChain final : public MidiProcessor
     {
-    private:
-        static constexpr size_m m_CONTROLLERS_STARTING_CAPACITY = 50;
-
-        size_m _numberVoices;
-        UStream<MidiController> _controllers;
-
-        Map<byte_m, MidiControlInternal> _controls;
-    private:
-        void allocateControls(const Stream<byte_m>& controllerIds);
-
     public:
+        /** -- methods -- **/
         CANT_EXPLICIT MidiControllerChain(size_m numberVoices);
 
         void process(MidiNoteInternal& in) override;
 
         void addController(UPtr<MidiController> controller);
         void receiveControl(const MidiControlInternal& control);
-
 
         // will notes need updating in processors?
         // updateMidiNoteStream(_memory, tCurrent);
@@ -48,7 +38,18 @@ namespace cant::pan
          * whatever.
          */
         void update(time_m tCurrent) override;
+    private:
+        /** -- methods -- **/
+        void allocateControls(const Stream<byte_m>& controllerIds);
 
+        /** -- fields -- **/
+        size_m m_numberVoices;
+        UStream<MidiController> m_controllers;
+
+        Map<byte_m, MidiControlInternal> m_controls;
+
+        // constants
+        static CANT_CONSTEXPR size_m c_controllerStartingSize = 50;
     };
 }
 

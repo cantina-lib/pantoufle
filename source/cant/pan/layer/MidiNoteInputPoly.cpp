@@ -4,6 +4,9 @@
 
 #include <cant/pan/layer/MidiNoteInputPoly.hpp>
 
+#include <cant/pan/note/MidiNote.hpp>
+#include <cant/pan/note/MidiNoteData.hpp>
+
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
@@ -11,7 +14,7 @@ namespace cant::pan
     MidiNoteInputPoly::
     MidiNoteInputPoly(size_m numberVoices, byte_m channel)
     : MidiNoteInputLayer(numberVoices),
-    _channel(channel)
+      m_channel(channel)
     {
 
     }
@@ -20,7 +23,7 @@ namespace cant::pan
     MidiNoteInputPoly::
     flushChange()
     {
-        for(auto& note : _notes)
+        for(auto& note : m_notes)
         {
             note.flushChange();
         }
@@ -37,11 +40,13 @@ namespace cant::pan
         bool isChosen = chooseVoice(voice, data);
         if (isChosen)
         {
-            _notes.at(voice).set(tCurrent, data);
+            m_notes.at(voice).set(tCurrent, data);
         }
     }
 
-    CANT_CONSTEXPR static auto findClosestToneIndex = [](
+    CANT_CONSTEXPR
+    static auto
+    findClosestToneIndex = [](
             const Stream<MidiNoteInput>& notes,
             const MidiNoteInputData& inputData,
             size_m& closestIndex,
@@ -92,7 +97,7 @@ namespace cant::pan
          * by integer in InputData, but then go to floating-point in InternalData
          */
         size_m i = 0;
-        for (const auto& note : _notes)
+        for (const auto& note : m_notes)
         {
             const bool noteIsSame = note.getTone() == inputTone;
             if (noteIsSame)
@@ -103,7 +108,7 @@ namespace cant::pan
             ++i;
         }
         // Second pass, taking ownership of note with closest tone.
-        if (findClosestToneIndex(_notes, data, voice, false))
+        if (findClosestToneIndex(m_notes, data, voice, false))
         {
             return true;
         }
@@ -116,7 +121,7 @@ namespace cant::pan
             return false;
         }
         /* forced pass -> stealing */
-        findClosestToneIndex(_notes, data, voice, true);
+        findClosestToneIndex(m_notes, data, voice, true);
         return true;
     }
 }

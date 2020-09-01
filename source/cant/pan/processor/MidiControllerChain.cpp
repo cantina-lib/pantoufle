@@ -8,11 +8,11 @@ namespace cant::pan
 {
     MidiControllerChain::
     MidiControllerChain(size_m numberVoices)
-    : _numberVoices(numberVoices),
-    _controllers(),
-    _controls()
+    : m_numberVoices(numberVoices),
+      m_controllers(),
+      m_controls()
     {
-        _controllers.reserve(m_CONTROLLERS_STARTING_CAPACITY);
+        m_controllers.reserve(c_controllerStartingSize);
     }
 
     void
@@ -20,12 +20,12 @@ namespace cant::pan
     receiveControl(const MidiControlInternal& control)
     {
         const byte_m controllerId = control.getId();
-        if (_controls.find(controllerId) == _controls.end())
+        if (m_controls.find(controllerId) == m_controls.end())
         {
             return;
         }
-        _controls.at(controllerId) = control;
-        for (auto& controller : _controllers)
+        m_controls.at(controllerId) = control;
+        for (auto& controller : m_controllers)
         {
             controller->receiveControl(control);
         }
@@ -41,7 +41,7 @@ namespace cant::pan
              * In a map, attempting to inserting an already-present key
              * will not actually insert it.
              */
-            _controls.insert(std::pair<byte_m, MidiControlInternal>(controllerId, MidiControlInternal()));
+            m_controls.insert(std::pair<byte_m, MidiControlInternal>(controllerId, MidiControlInternal()));
         }
     }
 
@@ -49,7 +49,7 @@ namespace cant::pan
     MidiControllerChain::
     process(MidiNoteInternal &in)
     {
-        for(auto& controller: _controllers)
+        for(auto& controller: m_controllers)
         {
             controller->process(in);
         }
@@ -67,7 +67,7 @@ namespace cant::pan
          * a control's value can decrease as time passes.
          * Wait, there *are* controller like that..
          */
-        for (auto& controller : _controllers)
+        for (auto& controller : m_controllers)
         {
             controller->update(tCurrent);
         }
@@ -78,6 +78,6 @@ namespace cant::pan
     addController(UPtr<MidiController> controller)
     {
         allocateControls(controller->getControllerIds());
-        _controllers.push_back(std::move(controller));
+        m_controllers.push_back(std::move(controller));
     }
 }

@@ -9,8 +9,7 @@
 
 #include <cant/pan/common/types.hpp>
 
-#include <cant/pan/note/MidiNote.hpp>
-
+#include <cant/pan/note/note_forward.hpp>
 #include <cant/pan/layer/MidiNoteLayer.hpp>
 
 #include <cant/common/macro.hpp>
@@ -18,16 +17,18 @@ namespace cant::pan
 {
     class MidiNoteInputPoly : public MidiNoteInputLayer
     {
-    private:
-        byte_m _channel;
-    private:
-        CANT_NODISCARD virtual bool chooseVoice(size_m &voice, const MidiNoteInputData &data);
     public:
         CANT_EXPLICIT MidiNoteInputPoly(size_m numberVoices, byte_m channel);
 
         void flushChange();
 
         void receive(time_m tCurrent, const MidiNoteInputData& data) override;
+    private:
+        /** -- methods -- **/
+        CANT_NODISCARD virtual bool chooseVoice(size_m &voice, const MidiNoteInputData &data);
+
+        /** -- fields **/
+        byte_m m_channel;
     };
 }
 #include <cant/common/undef_macro.hpp>

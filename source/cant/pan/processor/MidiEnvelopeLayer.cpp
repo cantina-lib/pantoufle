@@ -9,8 +9,8 @@ namespace cant::pan
     MidiEnvelopeLayer::
     MidiEnvelopeLayer(const size_m numberVoices, const byte_m channel)
     : MidiProcessorMemory(numberVoices),
-    _toneEnvelope(FlatToneEnvelope::make(numberVoices)),
-    _velocityEnvelope(ADSREnvelope::make(numberVoices))
+      m_toneEnvelope(FlatToneEnvelope::make(numberVoices)),
+      m_velocityEnvelope(ADSREnvelope::make(numberVoices))
     {
 
     }
@@ -19,23 +19,23 @@ namespace cant::pan
     MidiEnvelopeLayer::
     update(time_m tCurrent)
     {
-        _toneEnvelope->update(tCurrent);
-        _velocityEnvelope->update(tCurrent);
+        m_toneEnvelope->update(tCurrent);
+        m_velocityEnvelope->update(tCurrent);
     }
 
     void
     MidiEnvelopeLayer::
     process(MidiNoteInternal& note)
     {
-        _toneEnvelope->process(note);
-        _velocityEnvelope->process(note);
+        m_toneEnvelope->process(note);
+        m_velocityEnvelope->process(note);
     }
 
     void
     MidiEnvelopeLayer::
     flushChange()
     {
-        _toneEnvelope->flushChange();
-        _velocityEnvelope->flushChange();
+        m_toneEnvelope->flushChange();
+        m_velocityEnvelope->flushChange();
     }
 }

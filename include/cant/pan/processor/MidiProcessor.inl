@@ -7,21 +7,24 @@
 
 #pragma once
 
+#include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
-    CANT_INLINE MidiProcessorMemory::
+    CANT_INLINE
+    MidiProcessorMemory::
     MidiProcessorMemory(const size_m numberVoices)
-            : _memory(numberVoices)
+            : m_memory(numberVoices)
     {
 
     }
 
-    CANT_NODISCARD CANT_INLINE size_m
+    CANT_NODISCARD CANT_INLINE
+    size_m
     MidiProcessorMemory::
     getNumberVoices() const
-    { return _memory.getNumberVoices(); }
+    { return m_memory.getNumberVoices(); }
 }
 
 #include <cant/common/undef_macro.hpp>

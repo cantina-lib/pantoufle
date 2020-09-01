@@ -7,8 +7,6 @@
 
 #pragma once
 
-
-#include <cant/common/formatting.hpp>
 #include <cant/pan/common/types.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
@@ -25,24 +23,29 @@ namespace cant::pan
     template <typename T>
     class MidiEnvelope : public MidiProcessorMemory
     {
-    private:
-        time_m _tCurrent;
-    protected:
-        CANT_NODISCARD time_m getCurrentTime() const;
     public:
+        /** -- methods -- **/
         CANT_EXPLICIT MidiEnvelope(size_m numberVoices);
 
         void update(time_m tCurrent) override;
         void process(MidiNoteInternal& note) override = 0;
 
         virtual void flushChange() = 0;
+    protected:
+        /** -- methods -- **/
+        CANT_NODISCARD time_m getCurrentTime() const;
+    private:
+        /** -- fields -- **/
+        time_m m_tCurrent;
     };
 
 
     class ToneEnvelope : public MidiEnvelope<tone_m>
     {
     public:
+        /** -- methods -- **/
         CANT_EXPLICIT ToneEnvelope(size_m numberVoices);
+
         void process(MidiNoteInternal& note) override = 0;
 
         void flushChange() override = 0;
@@ -52,7 +55,9 @@ namespace cant::pan
     class VelocityEnvelope : public MidiEnvelope<vel_m>
     {
     public:
+        /** -- methods -- **/
         CANT_EXPLICIT VelocityEnvelope(size_m numberVoices);
+
         void process(MidiNoteInternal& note) override = 0;
 
         void flushChange() override = 0;

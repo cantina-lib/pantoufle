@@ -31,4 +31,6 @@ namespace cant::pan
 }
 
 #include <cant/common/undef_macro.hpp>
+
+#include "MidiTimer.inl"
 #endif //CANTINA_TIME_HPP

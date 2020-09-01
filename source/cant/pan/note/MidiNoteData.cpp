@@ -11,7 +11,7 @@ namespace cant::pan
     MidiNoteInternalData::
     MidiNoteInternalData()
     : MidiNoteData(),
-    _pan(static_cast<pan_m>(0)) // balanced pan
+      m_pan(static_cast<pan_m>(0)) // balanced pan
     {
 
     }
@@ -19,7 +19,7 @@ namespace cant::pan
     MidiNoteInternalData::
     MidiNoteInternalData(const MidiNoteInputData &input)
     : MidiNoteData<vel_m, tone_m>(input),
-    _pan(static_cast<pan_m>(0)) // balanced pan
+      m_pan(static_cast<pan_m>(0)) // balanced pan
     {
 
     }
@@ -27,7 +27,7 @@ namespace cant::pan
     MidiNoteOutputData::
     MidiNoteOutputData()
     : MidiNoteData(),
-      _pan(static_cast<pan_m>(0)) // balanced pan
+      m_pan(static_cast<pan_m>(0)) // balanced pan
     {
 
     }
@@ -35,7 +35,7 @@ namespace cant::pan
     MidiNoteOutputData::
     MidiNoteOutputData(const MidiNoteInternalData &internal)
     : MidiNoteData<vel_m, tone_m>(internal.getChannel(), internal.getTone(), internal.getVelocity()),
-      _pan(static_cast<pan_m>(0)) // balanced pan
+      m_pan(static_cast<pan_m>(0)) // balanced pan
     {
 
     }

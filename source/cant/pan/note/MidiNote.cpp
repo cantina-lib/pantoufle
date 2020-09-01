@@ -45,17 +45,17 @@ namespace cant::pan
 
         if (isInputPressed)
         {
-            if (!_data.isPressed())
+            if (!m_data.isPressed())
             {
                 // a note is born!
-                _tStart = tCurrent;
+                m_tStart = tCurrent;
                raiseFlagChangedPlaying();
             }
             if (isToneDifferent)
             {
                 raiseFlagChangedNote();
             }
-            _data = data;
+            m_data = data;
         }
         else
         {
@@ -85,9 +85,9 @@ namespace cant::pan
     MidiNoteInternal::
     MidiNoteInternal(const size_m voice)
     : MidiNote<MidiNoteInternalData>(voice),
-    _isPlaying(false),
-    _justChangedPlaying(false),
-    _justChangedTone(false)
+      m_isPlaying(false),
+      m_justChangedPlaying(false),
+      m_justChangedTone(false)
     {
 
     }
@@ -96,20 +96,20 @@ namespace cant::pan
     MidiNoteInternal::
     set(const MidiNoteInput& input)
     {
-        _data = MidiNoteInternalData(input.getData());
-        _tStart = input.getStartingTime();
-        _isPlaying = input.isPressed(); // at input stage, playing if and only if pressed
-        _justChangedPlaying = input.justChangedPlaying();
-        _justChangedTone = input.justChangedTone();
+        m_data = MidiNoteInternalData(input.getData());
+        m_tStart = input.getStartingTime();
+        m_isPlaying = input.isPressed(); // at input stage, playing if and only if pressed
+        m_justChangedPlaying = input.justChangedPlaying();
+        m_justChangedTone = input.justChangedTone();
     }
 
 
     MidiNoteOutput::
     MidiNoteOutput(const size_m voice)
     : MidiNote<MidiNoteOutputData>(voice),
-    _isPlaying(false),
-    _justChangedPlaying(false),
-    _justChangedTone(false)
+      m_isPlaying(false),
+      m_justChangedPlaying(false),
+      m_justChangedTone(false)
     {
 
     }
@@ -118,10 +118,10 @@ namespace cant::pan
     MidiNoteOutput::
     set(const MidiNoteInternal &internal)
     {
-        _data = MidiNoteOutputData(internal.getData());
-        _tStart = internal.getStartingTime();
-        _isPlaying = internal.isPlaying();
-        _justChangedPlaying = internal.justChangedPlaying();
+        m_data = MidiNoteOutputData(internal.getData());
+        m_tStart = internal.getStartingTime();
+        m_isPlaying = internal.isPlaying();
+        m_justChangedPlaying = internal.justChangedPlaying();
     }
 
 
