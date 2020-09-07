@@ -23,7 +23,7 @@ namespace cant::pan
 
        void update();
 
-       CANT_NODISCARD time_m getCurrentTime() const;
+       CANT_NODISCARD time_d getCurrentTime() const;
     private:
         /** -- fields -- **/
         static std::chrono::time_point<std::chrono::steady_clock> s_mainTStart;

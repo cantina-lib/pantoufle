@@ -6,15 +6,15 @@
 namespace cant::pan
 {
     ToneEnvelope::
-    ToneEnvelope(const size_m numberVoices)
-    : MidiEnvelope<tone_m>(numberVoices)
+    ToneEnvelope(const size_u numberVoices)
+    : MidiEnvelope<tone_d>(numberVoices)
     {
 
     }
 
     VelocityEnvelope::
-    VelocityEnvelope(const size_m numberVoices)
-    : MidiEnvelope<vel_m>(numberVoices)
+    VelocityEnvelope(const size_u numberVoices)
+    : MidiEnvelope<vel_d>(numberVoices)
     {
 
     }

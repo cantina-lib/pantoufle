@@ -17,9 +17,9 @@ namespace cant::pan
     public:
         /** -- methods -- **/
         // no virtual destructor for interfaces, prevents creating v-tables.
-        CANT_NODISCARD virtual byte_m getChannel() const = 0;
-        CANT_NODISCARD virtual byte_m getId() const = 0;
-        CANT_NODISCARD virtual byte_m getValue() const = 0;
+        CANT_NODISCARD virtual id_u8 getChannel() const = 0;
+        CANT_NODISCARD virtual id_u8 getId() const = 0;
+        CANT_NODISCARD virtual id_u8 getValue() const = 0;
     };
 }
 

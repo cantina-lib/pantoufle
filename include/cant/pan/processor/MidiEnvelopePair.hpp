@@ -15,11 +15,11 @@
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
-    class MidiEnvelopeLayer: public MidiProcessorMemory
+    class MidiEnvelopePair: public MidiProcessorMemory
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiEnvelopeLayer(size_u numberVoices, id_u8 channel);
+        CANT_EXPLICIT MidiEnvelopePair(size_u numberVoices, id_u8 channel);
 
         void update(time_d tCurrent) override;
         void process(MidiNoteInternal& note) override;

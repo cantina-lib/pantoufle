@@ -24,18 +24,18 @@ namespace cant::pan
      * to its Processor _memory to child classes.
      * It updates it, but can give a read-only ref.
      **/
-     template <size_m numberBindings>
+     template <size_u numberBindings>
     class MultiMidiController : protected MidiController
     {
     public:
-        void update(time_m tCurrent) override = 0;
+        void update(time_d tCurrent) override = 0;
 
-        CANT_NODISCARD Stream<byte_m> getControllerIds() const override;
+        CANT_NODISCARD Stream<id_u8> getControllerIds() const override;
     protected:
-        CANT_EXPLICIT MultiMidiController(size_m numberVoices, byte_m channel, Array<byte_m, numberBindings> controllerIds);
+        CANT_EXPLICIT MultiMidiController(size_u numberVoices, id_u8 channel, Array<id_u8, numberBindings> controllerIds);
 
-        CANT_NODISCARD const MidiNoteInternal& getMemory(size_m voice) const;
-        CANT_NODISCARD const MidiControlInternal& getControl(size_m iControl) const;
+        CANT_NODISCARD const MidiNoteInternal& getMemory(size_u voice) const;
+        CANT_NODISCARD const MidiControlInternal& getControl(size_u iControl) const;
     private:
         /** -- methods -- **/
         // event functions
@@ -46,8 +46,8 @@ namespace cant::pan
         void IMPL_process(MidiNoteInternal& note) const override = 0;
 
         /** -- fields -- **/
-        byte_m m_channel;
-        Array<byte_m, numberBindings> m_controllerIds;
+        id_u8 m_channel;
+        Array<id_u8, numberBindings> m_controllerIds;
         Array<MidiControlInternal, numberBindings> m_controls;
     };
 

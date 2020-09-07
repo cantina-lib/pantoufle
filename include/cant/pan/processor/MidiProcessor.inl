@@ -14,14 +14,14 @@ namespace cant::pan
 {
     CANT_INLINE
     MidiProcessorMemory::
-    MidiProcessorMemory(const size_m numberVoices)
+    MidiProcessorMemory(const size_u numberVoices)
             : m_memory(numberVoices)
     {
 
     }
 
     CANT_NODISCARD CANT_INLINE
-    size_m
+    size_u
     MidiProcessorMemory::
     getNumberVoices() const
     { return m_memory.getNumberVoices(); }

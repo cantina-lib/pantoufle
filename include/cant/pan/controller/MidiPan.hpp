@@ -20,14 +20,14 @@ namespace cant::pan
     public:
         /** -- methods -- **/
         // factory method
-        static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
+        static UPtr<MidiController> make(size_u numberVoices, id_u8 channel, id_u8 controllerId);
 
-        void update(time_m tCurrent) override;
+        void update(time_d tCurrent) override;
     private:
         /** -- methods -- **/
-        MidiPan(size_m numberVoices, byte_m channel, byte_m controllerId);
+        MidiPan(size_u numberVoices, id_u8 channel, id_u8 controllerId);
 
-        CANT_NODISCARD pan_m getPan() const;
+        CANT_NODISCARD pan_d getPan() const;
 
         // event functions
         void beforeControlProcess(const MidiControlInternal& incomingControl) override;

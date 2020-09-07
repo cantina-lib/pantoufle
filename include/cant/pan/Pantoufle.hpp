@@ -20,7 +20,7 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        Pantoufle(size_m numberVoices, byte_m channel);
+        Pantoufle(size_u numberVoices, id_u8 channel);
 
         void update();
 
@@ -29,26 +29,26 @@ namespace cant::pan
         void receiveRawControlData(const MidiControlData &controlData);
 
         CANT_NODISCARD const Stream<MidiNoteOutput>& getProcessedOutputData() const;
-        CANT_NODISCARD size_m getNumberVoices() const;
+        CANT_NODISCARD size_u getNumberVoices() const;
     private:
         /** -- methods -- **/
-        void process(size_m iVoice);
-        void processControllerChainVoice(size_m iVoice);
-        void processEnvelopeLayerVoice(size_m iVoice);
+        void process(size_u iVoice);
+        void processControllerChainVoice(size_u iVoice);
+        void processEnvelopeLayerVoice(size_u iVoice);
         void processAll();
 
         void flushChange();
         void flushChangeNoteInput();
         void flushChangeEnvelopeLayer();
 
-        void updateEnvelopeLayer(time_m tCurrent);
-        void updateControlChain(time_m tCurrent);
+        void updateEnvelopeLayer(time_d tCurrent);
+        void updateControlChain(time_d tCurrent);
 
-        CANT_NODISCARD time_m getCurrentTime() const;
+        CANT_NODISCARD time_d getCurrentTime() const;
 
         /** -- fields -- **/
         UPtr<MidiControllerChain> m_controllerChain;
-        UPtr<MidiEnvelopeLayer> m_envelopeLayer;
+        UPtr<MidiEnvelopePair> m_envelopePair;
 
         UPtr<MidiNoteInputPoly> m_poly;
 

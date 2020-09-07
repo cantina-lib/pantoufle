@@ -12,7 +12,7 @@
 namespace cant::pan
 {
     class MidiControllerChain;
-    class MidiEnvelopeLayer;
+    class MidiEnvelopePair;
     class MidiTimer;
 
     template <typename T>

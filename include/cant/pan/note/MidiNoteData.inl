@@ -14,7 +14,7 @@ namespace cant::pan
     template<typename Tone_T, typename Vel_T>
     CANT_INLINE
     MidiNoteData<Tone_T, Vel_T>::
-    MidiNoteData(byte_m channel, Tone_T tone, Vel_T velocity)
+    MidiNoteData(id_u8 channel, Tone_T tone, Vel_T velocity)
             : m_channel(channel), m_tone(tone), m_velocity(velocity)
     {
 
@@ -67,24 +67,24 @@ namespace cant::pan
 
     template<typename Tone_T, typename Vel_T>
     CANT_NODISCARD CANT_INLINE
-    byte_m
+    id_u8
     MidiNoteData<Tone_T, Vel_T>::
     getChannel() const
     { return m_channel; }
 
     template<typename Tone_T, typename Vel_T>
     CANT_NODISCARD CANT_INLINE
-    tone_m
+    tone_d
     MidiNoteData<Tone_T, Vel_T>::
     getTone() const
-    { return static_cast<tone_m>(m_tone); }
+    { return static_cast<tone_d>(m_tone); }
 
     template<typename Tone_T, typename Vel_T>
     CANT_NODISCARD CANT_INLINE
-    vel_m
+    vel_d
     MidiNoteData<Tone_T, Vel_T>::
     getVelocity() const
-    { return static_cast<vel_m>(m_velocity); }
+    { return static_cast<vel_d>(m_velocity); }
 
     template<typename Tone_T, typename Vel_T>
     CANT_NODISCARD CANT_INLINE
@@ -96,7 +96,7 @@ namespace cant::pan
     CANT_INLINE
     void
     MidiNoteInternalData::
-    setTone(const tone_m tone)
+    setTone(const tone_d tone)
     {
         m_tone = tone;
     }
@@ -104,7 +104,7 @@ namespace cant::pan
     CANT_INLINE
     void
     MidiNoteInternalData::
-    setVelocity(const vel_m velocity)
+    setVelocity(const vel_d velocity)
     {
         m_velocity = velocity;
     }
@@ -112,13 +112,13 @@ namespace cant::pan
     CANT_INLINE
     void
     MidiNoteInternalData::
-    setPan(const pan_m pan)
+    setPan(const pan_d pan)
     {
-        m_pan = std::clamp(pan, static_cast<pan_m>(-1), static_cast<pan_m>(1));
+        m_pan = std::clamp(pan, static_cast<pan_d>(-1), static_cast<pan_d>(1));
     }
 
     CANT_NODISCARD CANT_INLINE
-    pan_m
+    pan_d
     MidiNoteInternalData::
     getPan() const
     {
@@ -126,7 +126,7 @@ namespace cant::pan
     }
 
     CANT_NODISCARD CANT_INLINE
-    pan_m
+    pan_d
     MidiNoteOutputData::
     getPan() const
     {

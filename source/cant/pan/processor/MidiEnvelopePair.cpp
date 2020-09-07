@@ -2,12 +2,12 @@
 // Created by piptouque on 28/04/2020.
 //
 
-#include <cant/pan/processor/MidiEnvelopeLayer.hpp>
+#include <cant/pan/processor/MidiEnvelopePair.hpp>
 
 namespace cant::pan
 {
-    MidiEnvelopeLayer::
-    MidiEnvelopeLayer(const size_u numberVoices, const id_u8 channel)
+    MidiEnvelopePair::
+    MidiEnvelopePair(const size_u numberVoices, const id_u8 channel)
     : MidiProcessorMemory(numberVoices),
       m_toneEnvelope(FlatToneEnvelope::make(numberVoices)),
       m_velocityEnvelope(ADSREnvelope::make(numberVoices))
@@ -16,7 +16,7 @@ namespace cant::pan
     }
 
     void
-    MidiEnvelopeLayer::
+    MidiEnvelopePair::
     update(time_d tCurrent)
     {
         m_toneEnvelope->update(tCurrent);
@@ -24,7 +24,7 @@ namespace cant::pan
     }
 
     void
-    MidiEnvelopeLayer::
+    MidiEnvelopePair::
     process(MidiNoteInternal& note)
     {
         m_toneEnvelope->process(note);
@@ -32,7 +32,7 @@ namespace cant::pan
     }
 
     void
-    MidiEnvelopeLayer::
+    MidiEnvelopePair::
     flushChange()
     {
         m_toneEnvelope->flushChange();

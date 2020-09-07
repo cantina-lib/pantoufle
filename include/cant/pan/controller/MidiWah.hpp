@@ -19,12 +19,12 @@ namespace cant::pan
     public:
         /** -- methods -- **/
         // factory method
-        static UPtr<MidiController> wah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah);
+        static UPtr<MidiController> wah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah);
 
-        void update(time_m tCurrent) override;
+        void update(time_d tCurrent) override;
     private:
         /** -- methods -- **/
-        MidiWah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah);
+        MidiWah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah);
 
         // event functions
         void beforeControlProcess(const MidiControlInternal& incomingControl) override;

@@ -15,10 +15,10 @@ namespace cant::pan
     template<class Note_T>
     void
     MidiNoteLayer<Note_T>::
-    initialiseNotes(const size_m numberVoices)
+    initialiseNotes(const size_u numberVoices)
     {
         m_notes.reserve(numberVoices);
-        for (size_m i = 0; i < numberVoices; ++i)
+        for (size_u i = 0; i < numberVoices; ++i)
         {
             m_notes.push_back(Note_T { i });
         }
@@ -26,7 +26,7 @@ namespace cant::pan
 
     template<class Note_T>
     MidiNoteLayer<Note_T>::
-    MidiNoteLayer(size_m numberVoices)
+    MidiNoteLayer(size_u numberVoices)
         : m_notes()
 
     {
@@ -37,14 +37,14 @@ namespace cant::pan
     CANT_NODISCARD CANT_INLINE
     const Note_T &
     MidiNoteLayer<Note_T>::
-    getVoice(size_m voice) const
+    getVoice(size_u voice) const
     {
         return m_notes.at(voice);
     }
 
     template<class Note_T>
     CANT_NODISCARD CANT_INLINE
-    size_m
+    size_u
     MidiNoteLayer<Note_T>::
     getNumberVoices() const
     {
@@ -56,7 +56,7 @@ namespace cant::pan
     template<class Note_T, class PreviousLayerNote_T>
     CANT_INLINE
     MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::
-    MidiNoteInternalOutputLayer(size_m numberVoices)
+    MidiNoteInternalOutputLayer(size_u numberVoices)
             : MidiNoteLayer<Note_T>(numberVoices)
     {
 
@@ -83,7 +83,7 @@ namespace cant::pan
     template<class Note_T, class PreviousLayerNote_T>
     CANT_NODISCARD CANT_INLINE
     Note_T &
-    MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::getVoiceMutable(size_m voice)
+    MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::getVoiceMutable(size_u voice)
     {
         return this->m_notes.at(voice);
     }

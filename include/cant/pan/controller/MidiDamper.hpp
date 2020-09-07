@@ -15,13 +15,14 @@ namespace cant::pan
     class MidiDamper final : public MultiMidiController<1>
     {
     public:
+        /** -- methods **/
         // factory method
-        static UPtr<MidiController> make(size_m numberVoices, byte_m channel, byte_m controllerId);
+        static UPtr<MidiController> make(size_u numberVoices, id_u8 channel, id_u8 controllerId);
 
-        void update(time_m tCurrent) override;
+        void update(time_d tCurrent) override;
     private:
         /** -- methods **/
-        MidiDamper(size_m numberVoices, byte_m channel, byte_m controllerId);
+        MidiDamper(size_u numberVoices, id_u8 channel, id_u8 controllerId);
 
         CANT_NODISCARD bool isOn() const;
         // static methods
@@ -37,7 +38,7 @@ namespace cant::pan
          * Can't be bool, since Stream are actually std::vector, and c++ does summat
          * funky with std::vector<bool> template specialisation.
          */
-        Stream<byte_m> _shouldHoldNotes;
+        Stream<id_u8> _shouldHoldNotes;
         /*
          * It's not necessary to use this additional vector,
          * we could just use getMemory(iVoice).isPlaying().
@@ -47,7 +48,7 @@ namespace cant::pan
          * function beforeNoteProcess(), where I get insurance
          * that this code will be executed *before* any new processing is done.
          */
-        Stream<byte_m> _isMemoryPlaying;
+        Stream<id_u8> _isMemoryPlaying;
     };
 }
 

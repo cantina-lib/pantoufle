@@ -10,6 +10,6 @@
 #include "MidiProcessor.hpp"
 
 #include "MidiControllerChain.hpp"
-#include "MidiEnvelopeLayer.hpp"
+#include "MidiEnvelopePair.hpp"
 
 #endif //CANTINA_PROCESSOR_HPP

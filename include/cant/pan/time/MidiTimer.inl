@@ -25,12 +25,12 @@ namespace cant::pan
     }
 
     CANT_INLINE
-    time_m
+    time_d
     MidiTimer::
     getCurrentTime() const
     {
         auto t = std::chrono::steady_clock::now();
-        std::chrono::duration<time_m> dur = t - s_mainTStart;
+        std::chrono::duration<time_d> dur = t - s_mainTStart;
         return dur.count() * 1000;
     }
 }

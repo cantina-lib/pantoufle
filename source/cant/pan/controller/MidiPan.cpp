@@ -7,7 +7,7 @@
 namespace cant::pan
 {
     MidiPan::
-    MidiPan(size_m numberVoices, byte_m channel, byte_m controllerId)
+    MidiPan(size_u numberVoices, id_u8 channel, id_u8 controllerId)
     : MultiMidiController<1>(numberVoices, channel, { controllerId })
     {
 
@@ -24,9 +24,9 @@ namespace cant::pan
     }
 
 
-    pan_m MidiPan::getPan() const
+    pan_d MidiPan::getPan() const
     {
-        return (getControl(0).getValue() / static_cast<pan_m>(MIDI_CONTROL_MID_VALUE)) * 2 - 1;
+        return (getControl(0).getValue() / static_cast<pan_d>(MIDI_CONTROL_MID_VALUE)) * 2 - 1;
     }
 
     void MidiPan::IMPL_process(MidiNoteInternal &note) const
@@ -34,12 +34,12 @@ namespace cant::pan
         note.setPan(getPan());
     }
 
-    void MidiPan::update(time_m tCurrent)
+    void MidiPan::update(time_d tCurrent)
     {
 
     }
 
-    UPtr<MidiController> MidiPan::make(size_m numberVoices, byte_m channel, byte_m controllerId)
+    UPtr<MidiController> MidiPan::make(size_u numberVoices, id_u8 channel, id_u8 controllerId)
     {
         return cant::UPtr<MidiController>(new MidiPan(numberVoices, channel, controllerId));
     }

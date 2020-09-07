@@ -19,7 +19,7 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        virtual void update(time_m tCurrent) = 0;
+        virtual void update(time_d tCurrent) = 0;
         virtual void process(MidiNoteInternal& in) = 0;
     };
 
@@ -27,13 +27,13 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiProcessorMemory(size_m numberVoices);
+        CANT_EXPLICIT MidiProcessorMemory(size_u numberVoices);
         virtual ~MidiProcessorMemory() = default;
 
-        void update(time_m tCurrent) override = 0;
+        void update(time_d tCurrent) override = 0;
         void process(MidiNoteInternal& in) override = 0;
 
-        CANT_NODISCARD size_m getNumberVoices() const;
+        CANT_NODISCARD size_u getNumberVoices() const;
     protected:
         /** -- fields -- **/
         MidiNoteInternalLayer m_memory;

@@ -7,7 +7,7 @@
 namespace cant::pan
 {
     MidiControllerChain::
-    MidiControllerChain(size_m numberVoices)
+    MidiControllerChain(size_u numberVoices)
     : m_numberVoices(numberVoices),
       m_controllers(),
       m_controls()
@@ -19,7 +19,7 @@ namespace cant::pan
     MidiControllerChain::
     receiveControl(const MidiControlInternal& control)
     {
-        const byte_m controllerId = control.getId();
+        const id_u8 controllerId = control.getId();
         if (m_controls.find(controllerId) == m_controls.end())
         {
             return;
@@ -33,7 +33,7 @@ namespace cant::pan
 
     void
     MidiControllerChain::
-    allocateControls(const Stream<byte_m>& controllerIds)
+    allocateControls(const Stream<id_u8>& controllerIds)
     {
         for (const auto& controllerId : controllerIds)
         {
@@ -41,7 +41,7 @@ namespace cant::pan
              * In a map, attempting to inserting an already-present key
              * will not actually insert it.
              */
-            m_controls.insert(std::pair<byte_m, MidiControlInternal>(controllerId, MidiControlInternal()));
+            m_controls.insert(std::pair<id_u8, MidiControlInternal>(controllerId, MidiControlInternal()));
         }
     }
 
@@ -57,7 +57,7 @@ namespace cant::pan
 
     void
     MidiControllerChain::
-    update(const time_m tCurrent)
+    update(const time_d tCurrent)
     {
         // will notes need updating in processors?
         // updateMidiNoteStream(_memory, tCurrent);

@@ -12,7 +12,7 @@ namespace cant::pan
 {
 
     MidiNoteInputPoly::
-    MidiNoteInputPoly(size_m numberVoices, byte_m channel)
+    MidiNoteInputPoly(size_u numberVoices, id_u8 channel)
     : MidiNoteInputLayer(numberVoices),
       m_channel(channel)
     {
@@ -29,14 +29,15 @@ namespace cant::pan
         }
     }
 
-    void MidiNoteInputPoly::
-    receive(const time_m tCurrent, const MidiNoteInputData &data)
+    void
+    MidiNoteInputPoly::
+    receive(const time_d tCurrent, const MidiNoteInputData &data)
     {
         /*
          * in this case, there is no getVoice(),
          * we have to choose it instead.
          */
-        size_m voice;
+        size_u voice;
         bool isChosen = chooseVoice(voice, data);
         if (isChosen)
         {
@@ -49,17 +50,17 @@ namespace cant::pan
     findClosestToneIndex = [](
             const Stream<MidiNoteInput>& notes,
             const MidiNoteInputData& inputData,
-            size_m& closestIndex,
+            size_u& closestIndex,
             bool force) -> bool
     {
-        tone_mint closestDist;
+        tone_u8 closestDist;
         bool foundClosest = false;
-        size_m i = 0;
+        size_u i = 0;
         for (const auto& note : notes)
         {
             if (!note.isPressed() || force)
             {
-                const tone_mint dist = std::abs(note.getTone() - inputData.getTone());
+                const tone_u8 dist = std::abs(note.getTone() - inputData.getTone());
                 if (!foundClosest || dist < closestDist)
                 {
                     closestDist = dist;
@@ -74,10 +75,10 @@ namespace cant::pan
 
     bool
     MidiNoteInputPoly::
-    chooseVoice(size_m &voice, const MidiNoteInputData &data)
+    chooseVoice(size_u &voice, const MidiNoteInputData &data)
     {
-        const tone_m inputTone = data.getTone();
         const bool inputIsPressed = data.isPressed();
+        const tone_u8 inputTone = data.getTone();
 
         /*
          * The way it works in Pure Data when a note is received by the poly object is:
@@ -96,16 +97,18 @@ namespace cant::pan
          * Remember that tone, velocity can be compared because they are represented
          * by integer in InputData, but then go to floating-point in InternalData
          */
-        size_m i = 0;
-        for (const auto& note : m_notes)
         {
-            const bool noteIsSame = note.getTone() == inputTone;
-            if (noteIsSame)
+            size_u i = 0;
+            for (const auto& note : m_notes)
             {
-                voice = i;
-                return true;
+                const bool noteIsSame = note.getTone() == inputTone;
+                if (noteIsSame)
+                {
+                    voice = i;
+                    return true;
+                }
+                ++i;
             }
-            ++i;
         }
         // Second pass, taking ownership of note with closest tone.
         if (findClosestToneIndex(m_notes, data, voice, false))

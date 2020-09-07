@@ -18,17 +18,18 @@ namespace cant::pan
     class MidiNoteInputPoly : public MidiNoteInputLayer
     {
     public:
-        CANT_EXPLICIT MidiNoteInputPoly(size_m numberVoices, byte_m channel);
+        /** -- methods -- **/
+        CANT_EXPLICIT MidiNoteInputPoly(size_u numberVoices, id_u8 channel);
 
         void flushChange();
 
-        void receive(time_m tCurrent, const MidiNoteInputData& data) override;
+        void receive(time_d tCurrent, const MidiNoteInputData& data) override;
     private:
         /** -- methods -- **/
-        CANT_NODISCARD virtual bool chooseVoice(size_m &voice, const MidiNoteInputData &data);
+        CANT_NODISCARD virtual bool chooseVoice(size_u &voice, const MidiNoteInputData &data);
 
         /** -- fields **/
-        byte_m m_channel;
+        id_u8 m_channel;
     };
 }
 #include <cant/common/undef_macro.hpp>

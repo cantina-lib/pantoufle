@@ -12,19 +12,19 @@
 namespace cant::pan
 {
     CANT_INLINE
-    byte_m
+    id_u8
     MidiControlData::
     getChannel() const
     { return m_channel; }
 
     CANT_INLINE
-    byte_m
+    id_u8
     MidiControlData::
     getId() const
     { return m_controllerId; }
 
     CANT_INLINE
-    byte_m
+    id_u8
     MidiControlData::
     getValue() const
     { return m_value; }

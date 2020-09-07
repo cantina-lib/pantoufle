@@ -7,7 +7,7 @@
 namespace cant::pan
 {
     MidiControlData::
-    MidiControlData(const byte_m channel, const byte_m controllerId, const byte_m value)
+    MidiControlData(const id_u8 channel, const id_u8 controllerId, const id_u8 value)
     : m_channel(channel), m_controllerId(controllerId), m_value(value)
     {
 

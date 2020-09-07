@@ -11,7 +11,7 @@ namespace cant::pan
 {
 
     MidiController::
-    MidiController(const size_m numberVoices)
+    MidiController(const size_u numberVoices)
     : MidiProcessorMemory(numberVoices)
     {
 

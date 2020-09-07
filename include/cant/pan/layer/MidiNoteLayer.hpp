@@ -20,17 +20,17 @@ namespace cant::pan
     {
     public:
         /** -- methods  -- **/
-        CANT_EXPLICIT MidiNoteLayer(size_m numberVoices);
+        CANT_EXPLICIT MidiNoteLayer(size_u numberVoices);
         virtual ~MidiNoteLayer() = default;
 
-        CANT_NODISCARD const Note_T& getVoice(size_m voice) const;
-        CANT_NODISCARD size_m getNumberVoices() const;
+        CANT_NODISCARD const Note_T& getVoice(size_u voice) const;
+        CANT_NODISCARD size_u getNumberVoices() const;
     protected:
         /** -- fields -- **/
         Stream<Note_T> m_notes;
     private:
         /** -- methods  -- **/
-        void initialiseNotes(size_m numberVoices);
+        void initialiseNotes(size_u numberVoices);
     };
 
 
@@ -39,8 +39,8 @@ namespace cant::pan
     {
     public:
         /** -- methods  -- **/
-        CANT_EXPLICIT MidiNoteInputLayer(size_m numberVoices);
-        virtual void receive(time_m tCurrent, const MidiNoteInputData &data) = 0;
+        CANT_EXPLICIT MidiNoteInputLayer(size_u numberVoices);
+        virtual void receive(time_d tCurrent, const MidiNoteInputData &data) = 0;
     };
 
 
@@ -49,12 +49,12 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiNoteInternalOutputLayer(size_m numberVoices);
+        CANT_EXPLICIT MidiNoteInternalOutputLayer(size_u numberVoices);
 
         void receive(const PreviousLayerNote_T& previous);
         void setVoice(const Note_T& note);
 
-        CANT_NODISCARD Note_T& getVoiceMutable(size_m voice);
+        CANT_NODISCARD Note_T& getVoiceMutable(size_u voice);
         CANT_NODISCARD const Stream<Note_T>& getNotes() const;
     };
 

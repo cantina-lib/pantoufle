@@ -22,7 +22,7 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiControllerChain(size_m numberVoices);
+        CANT_EXPLICIT MidiControllerChain(size_u numberVoices);
 
         void process(MidiNoteInternal& in) override;
 
@@ -37,19 +37,19 @@ namespace cant::pan
          * a control's value can decrease as time passes.
          * whatever.
          */
-        void update(time_m tCurrent) override;
+        void update(time_d tCurrent) override;
     private:
         /** -- methods -- **/
-        void allocateControls(const Stream<byte_m>& controllerIds);
+        void allocateControls(const Stream<id_u8>& controllerIds);
 
         /** -- fields -- **/
-        size_m m_numberVoices;
+        size_u m_numberVoices;
         UStream<MidiController> m_controllers;
 
-        Map<byte_m, MidiControlInternal> m_controls;
+        Map<id_u8, MidiControlInternal> m_controls;
 
         // constants
-        static CANT_CONSTEXPR size_m c_controllerStartingSize = 50;
+        static CANT_CONSTEXPR size_u c_controllerStartingSize = 50;
     };
 }
 

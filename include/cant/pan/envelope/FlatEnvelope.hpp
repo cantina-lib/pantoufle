@@ -17,14 +17,14 @@ namespace cant::pan
     public:
         /** -- methods -- **/
         // factory method
-        static UPtr<ToneEnvelope> make(size_m numberVoices);
+        static UPtr<ToneEnvelope> make(size_u numberVoices);
 
         void process(MidiNoteInternal& note) override;
 
         void flushChange() override;
     private:
         /** -- methods -- **/
-        CANT_EXPLICIT FlatToneEnvelope(size_m numberVoices);
+        CANT_EXPLICIT FlatToneEnvelope(size_u numberVoices);
     };
 }
 #include <cant/common/undef_macro.hpp>

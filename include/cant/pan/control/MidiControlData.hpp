@@ -19,19 +19,19 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        MidiControlData(byte_m channel, byte_m controllerId, byte_m value);
+        MidiControlData(id_u8 channel, id_u8 controllerId, id_u8 value);
 
         CANT_CONSTEXPR MidiControlData();
         CANT_CONSTEXPR MidiControlData(const MidiControlData&) = default;
 
-        CANT_NODISCARD byte_m getChannel() const override;
-        CANT_NODISCARD byte_m getId() const override;
-        CANT_NODISCARD byte_m getValue() const override;
+        CANT_NODISCARD id_u8 getChannel() const override;
+        CANT_NODISCARD id_u8 getId() const override;
+        CANT_NODISCARD id_u8 getValue() const override;
     private:
         /** -- fields -- **/
-        byte_m m_channel;
-        byte_m m_controllerId;
-        byte_m m_value;
+        id_u8 m_channel;
+        id_u8 m_controllerId;
+        id_u8 m_value;
 
     };
 

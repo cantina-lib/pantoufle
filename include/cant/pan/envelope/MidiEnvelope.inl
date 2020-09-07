@@ -12,7 +12,7 @@ namespace cant::pan
 {
     template<typename T>
     CANT_NODISCARD CANT_INLINE
-    time_m
+    time_d
     MidiEnvelope<T>::
     getCurrentTime() const
     {
@@ -22,7 +22,7 @@ namespace cant::pan
     template<typename T>
     CANT_INLINE
     MidiEnvelope<T>::
-    MidiEnvelope(size_m numberVoices)
+    MidiEnvelope(size_u numberVoices)
             : MidiProcessorMemory(numberVoices),
               m_tCurrent()
     {
@@ -32,7 +32,7 @@ namespace cant::pan
     template<typename T>
     CANT_INLINE void
     MidiEnvelope<T>::
-    update(const time_m tCurrent)
+    update(const time_d tCurrent)
     {
         m_tCurrent = tCurrent;
     }

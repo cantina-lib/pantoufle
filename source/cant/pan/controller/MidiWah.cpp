@@ -17,7 +17,7 @@ namespace cant::pan
     }
 
     MidiWah::
-    MidiWah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah)
+    MidiWah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah)
     : MultiMidiController(numberVoices, channel, wahwah)
     {
 
@@ -32,14 +32,14 @@ namespace cant::pan
 
     void
     MidiWah::
-    update(time_m tCurrent)
+    update(time_d tCurrent)
     {
         MultiMidiController::update(tCurrent);
     }
 
     UPtr<MidiController>
     MidiWah::
-    wah(size_m numberVoices, byte_m channel, Array<byte_m, 2> wahwah)
+    wah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah)
     {
         return cant::UPtr<MidiController>(new MidiWah(numberVoices, channel, wahwah));
     }

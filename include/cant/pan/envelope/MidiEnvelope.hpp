@@ -25,26 +25,26 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiEnvelope(size_m numberVoices);
+        CANT_EXPLICIT MidiEnvelope(size_u numberVoices);
 
-        void update(time_m tCurrent) override;
+        void update(time_d tCurrent) override;
         void process(MidiNoteInternal& note) override = 0;
 
         virtual void flushChange() = 0;
     protected:
         /** -- methods -- **/
-        CANT_NODISCARD time_m getCurrentTime() const;
+        CANT_NODISCARD time_d getCurrentTime() const;
     private:
         /** -- fields -- **/
-        time_m m_tCurrent;
+        time_d m_tCurrent;
     };
 
 
-    class ToneEnvelope : public MidiEnvelope<tone_m>
+    class ToneEnvelope : public MidiEnvelope<tone_d>
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT ToneEnvelope(size_m numberVoices);
+        CANT_EXPLICIT ToneEnvelope(size_u numberVoices);
 
         void process(MidiNoteInternal& note) override = 0;
 
@@ -52,11 +52,11 @@ namespace cant::pan
     };
 
 
-    class VelocityEnvelope : public MidiEnvelope<vel_m>
+    class VelocityEnvelope : public MidiEnvelope<vel_d>
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT VelocityEnvelope(size_m numberVoices);
+        CANT_EXPLICIT VelocityEnvelope(size_u numberVoices);
 
         void process(MidiNoteInternal& note) override = 0;
 

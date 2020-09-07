@@ -20,14 +20,14 @@ namespace cant::pan
     public:
         /* -- methods -- */
         void process(MidiNoteInternal& internal) final;
-        void update(time_m tCurrent) override = 0;
+        void update(time_d tCurrent) override = 0;
         void receiveControl(const MidiControlInternal& control);
         // won't have to call it regularly, so it's fine just returning a copy
-        CANT_NODISCARD virtual Stream<byte_m> getControllerIds() const = 0;
+        CANT_NODISCARD virtual Stream<id_u8> getControllerIds() const = 0;
 
     protected:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiController(size_m numberVoices);
+        CANT_EXPLICIT MidiController(size_u numberVoices);
         // event functions
         virtual void beforeControlProcess(const MidiControlInternal& control) = 0;
         /**

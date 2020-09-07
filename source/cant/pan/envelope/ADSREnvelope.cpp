@@ -12,7 +12,7 @@ namespace cant::pan
     UPtr<VelocityEnvelope>
     ADSREnvelope::
     make(
-            const size_m numberVoices,
+            const size_u numberVoices,
             const ADSRState::ArrayLengths &lengths,
             const ADSRState::ArrayVelocityRatios &velocities
             )
@@ -22,7 +22,7 @@ namespace cant::pan
 
     ADSREnvelope::
     ADSREnvelope(
-            const size_m numberVoices,
+            const size_u numberVoices,
             const ADSRState::ArrayLengths& lengths,
             const ADSRState::ArrayVelocityRatios& velocities
             )
@@ -41,9 +41,9 @@ namespace cant::pan
     checkLengths(const ADSRState::ArrayLengths &lengths)
     {
         if (
-                (lengths.at(ADSRState::eAttack) < static_cast<time_m>(0.))
-                ||(lengths.at(ADSRState::eDecay) < static_cast<time_m>(0.))
-                || (lengths.at(ADSRState::eRelease) < static_cast<time_m>(0.))
+                (lengths.at(ADSRState::eAttack) < static_cast<time_d>(0.))
+                ||(lengths.at(ADSRState::eDecay) < static_cast<time_d>(0.))
+                || (lengths.at(ADSRState::eRelease) < static_cast<time_d>(0.))
                 )
         {
             /* todo: better message */
@@ -51,15 +51,15 @@ namespace cant::pan
         }
     }
 
-    vel_m
+    vel_d
     ADSREnvelope::
-    getBarycentre(const time_m lambda, const vel_m v1, const vel_m v2)
+    getBarycentre(const time_d lambda, const vel_d v1, const vel_d v2)
     {
-        if(lambda > static_cast<time_m>(1.) || lambda < static_cast<time_m>(0.))
+        if(lambda > static_cast<time_d>(1.) || lambda < static_cast<time_d>(0.))
         {
             throw PANTOUFLE_EXCEPTION("Lambda out of range.");
         }
-        return (static_cast<time_m>(1.) - lambda) * v1 + lambda * v2;
+        return (static_cast<time_d>(1.) - lambda) * v1 + lambda * v2;
     }
 
     void
@@ -67,16 +67,16 @@ namespace cant::pan
     setCallbacks()
     {
         m_callbacks.at(ADSRState::eAttack) =
-                [this](const time_m t) -> float_m
+                [this](const time_d t) -> type_d
                 {
                     return getBarycentre(
                             t / m_lengths.at(ADSRState::eAttack),
-                            static_cast<float_m>(0),
+                            static_cast<type_d>(0),
                             m_velocityRatios.at(ADSRState::eAttack)
                             );
                 };
         m_callbacks.at(ADSRState::eDecay) =
-                [this](const time_m t) -> float_m
+                [this](const time_d t) -> type_d
                 {
                     return getBarycentre(
                             t / m_lengths.at(ADSRState::eDecay),
@@ -85,17 +85,17 @@ namespace cant::pan
                             );
                 };
         m_callbacks.at(ADSRState::eSustain) =
-                [this](const time_m t) -> float_m
+                [this](const time_d t) -> type_d
                 {
                     return m_velocityRatios.at(ADSRState::eSustain);
                 };
         m_callbacks.at(ADSRState::eRelease) =
-                [this](const time_m t) -> float_m
+                [this](const time_d t) -> type_d
                 {
                     return getBarycentre(
                             t / m_lengths.at(ADSRState::eRelease),
                             m_velocityRatios.at(ADSRState::eSustain),
-                            static_cast<float_m>(0.)
+                            static_cast<type_d>(0.)
                             );
                 };
     }
@@ -123,27 +123,27 @@ namespace cant::pan
     ADSRState::
     isSustainFinite(const ArrayLengths& lengths)
     {
-        return lengths.at(ADSRStateType::eSustain) >= static_cast<time_m>(0.);
+        return lengths.at(ADSRStateType::eSustain) >= static_cast<time_d>(0.);
     }
 
 
-    time_m
+    time_d
     ADSRState::
-    getLength(const time_m tCurrent) const
+    getLength(const time_d tCurrent) const
     {
         return tCurrent - m_tStart;
     }
 
-    time_m
+    time_d
     ADSRState::
-    computeTimeStart(const time_m tCurrent, const time_m length)
+    computeTimeStart(const time_d tCurrent, const time_d length)
     {
         return tCurrent - length;
     }
 
     void
     ADSRState::
-    set(const ADSRStateType type, const time_m tStart)
+    set(const ADSRStateType type, const time_d tStart)
     {
         if (type != m_type)
         {
@@ -155,14 +155,14 @@ namespace cant::pan
 
     void
     ADSRState::
-    setFromLength(const time_m tCurrent, const ADSRStateType type, const time_m length)
+    setFromLength(const time_d tCurrent, const ADSRStateType type, const time_d length)
     {
         set(type, computeTimeStart(tCurrent, length));
     }
 
     void
     ADSRState::
-    update(const time_m tCurrent, const MidiNoteInternal &note, const ArrayLengths& lengths)
+    update(const time_d tCurrent, const MidiNoteInternal &note, const ArrayLengths& lengths)
     {
         if (note.justChangedPlaying())
         {
@@ -183,9 +183,9 @@ namespace cant::pan
 
     void
     ADSRState::
-    apply(const time_m tCurrent, MidiNoteInternal &note, const ArrayCallbacks& callbacks) const
+    apply(const time_d tCurrent, MidiNoteInternal &note, const ArrayCallbacks& callbacks) const
     {
-        const float_m velocityRatio = getVelocityRatio(tCurrent, callbacks);
+        const type_d velocityRatio = getVelocityRatio(tCurrent, callbacks);
         note.setVelocity(note.getVelocity() * velocityRatio);
         note.setPlaying(this->isPlaying());
         note.setChangedPlaying(this->justChangedPlaying());
@@ -228,10 +228,10 @@ namespace cant::pan
 
     void
     ADSRState::
-    compute(const time_m tCurrent, const ArrayLengths& lengths)
+    compute(const time_d tCurrent, const ArrayLengths& lengths)
     {
         ADSRStateType type = m_type;
-        time_m length = getLength(tCurrent);
+        time_d length = getLength(tCurrent);
         /* starting values */
         ADSRState::REC_compute(type, length, lengths);
         setFromLength(tCurrent, type, length);
@@ -239,7 +239,7 @@ namespace cant::pan
 
     void
     ADSRState::
-    REC_compute(ADSRStateType& type, time_m& length, const ArrayLengths& lengths)
+    REC_compute(ADSRStateType& type, time_d& length, const ArrayLengths& lengths)
     {
         switch (type)
         {
@@ -283,13 +283,13 @@ namespace cant::pan
         REC_compute(type, length, lengths);
     }
 
-    float_m
+    type_d
     ADSRState::
-    getVelocityRatio(const time_m tCurrent, const ArrayCallbacks& callbacks) const
+    getVelocityRatio(const time_d tCurrent, const ArrayCallbacks& callbacks) const
     {
         if (!isPlaying())
         {
-            return static_cast<float_m>(0);
+            return static_cast<type_d>(0);
         }
         return callbacks.at(m_type)(getLength(tCurrent));
     }
@@ -307,7 +307,7 @@ namespace cant::pan
          * to go back.
          */
         ADSRState& state = m_states.at(note.getVoice());
-        const time_m tCurrent = getCurrentTime();
+        const time_d tCurrent = getCurrentTime();
         state.update(tCurrent, note, m_lengths);
         state.apply(tCurrent, note, m_callbacks);
     }

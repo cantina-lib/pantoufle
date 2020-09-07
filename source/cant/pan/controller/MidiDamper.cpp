@@ -7,7 +7,7 @@
 namespace cant::pan
 {
     MidiDamper::
-    MidiDamper(const size_m numberVoices, const byte_m channel, const byte_m controllerId)
+    MidiDamper(const size_u numberVoices, const id_u8 channel, const id_u8 controllerId)
     : MultiMidiController<1>(numberVoices, channel, { controllerId }),
       _shouldHoldNotes(numberVoices, false),
       _isMemoryPlaying(numberVoices, false)
@@ -39,7 +39,7 @@ namespace cant::pan
          */
         for (auto& shouldHold : _shouldHoldNotes)
         {
-            shouldHold = static_cast<byte_m>(
+            shouldHold = static_cast<id_u8>(
                     static_cast<bool>(shouldHold)
                     && isOn(incomingControl)
                     );
@@ -50,9 +50,9 @@ namespace cant::pan
     MidiDamper::
     beforeNoteProcess(const MidiNoteInternal& incomingNote)
     {
-        const size_m voice = incomingNote.getVoice();
+        const size_u voice = incomingNote.getVoice();
         _isMemoryPlaying.at(voice) = getMemory(voice).isPlaying();
-        _shouldHoldNotes.at(voice) = static_cast<byte_m>(
+        _shouldHoldNotes.at(voice) = static_cast<id_u8>(
                 isOn()
                 && (static_cast<bool>(_isMemoryPlaying.at(voice)) || incomingNote.isPlaying())
                 );
@@ -62,7 +62,7 @@ namespace cant::pan
     MidiDamper::
     IMPL_process(MidiNoteInternal &note) const
     {
-        const size_m voice = note.getVoice();
+        const size_u voice = note.getVoice();
         const bool shouldHold = static_cast<bool>(_shouldHoldNotes.at(voice));
         note.setPlaying(note.isPlaying() || shouldHold);
         /*
@@ -76,14 +76,14 @@ namespace cant::pan
 
     void
     MidiDamper::
-    update(time_m tCurrent)
+    update(time_d tCurrent)
     {
         /* nothing to d-d-d-dd-dooo */
     }
 
     UPtr<MidiController>
     MidiDamper::
-    make(const size_m numberVoices, const byte_m channel, const byte_m controllerId)
+    make(const size_u numberVoices, const id_u8 channel, const id_u8 controllerId)
     {
         return UPtr<MidiController>(new MidiDamper(numberVoices, channel, controllerId));
     }

@@ -22,27 +22,27 @@ namespace cant::pan
     public:
         /** -- internal structures -- **/
         enum ADSRStateType { eAttack=0, eDecay=2, eSustain=1, eRelease=3, eNotPlaying=4 };
-        typedef Array<time_m, 4> ArrayLengths;
-        typedef Array<float_m , 2> ArrayVelocityRatios;
-        typedef Array<timefunc_m<float_m>, 4> ArrayCallbacks;
+        typedef Array<time_d, 4> ArrayLengths;
+        typedef Array<type_d , 2> ArrayVelocityRatios;
+        typedef Array<timecallback_f<type_d>, 4> ArrayCallbacks;
 
         /** -- methods -- **/
         ADSRState();
 
-        void update(time_m tCurrent, const MidiNoteInternal& note, const ArrayLengths& lengths);
-        void apply(time_m tCurrent, MidiNoteInternal& note, const ArrayCallbacks& callbacks) const;
+        void update(time_d tCurrent, const MidiNoteInternal& note, const ArrayLengths& lengths);
+        void apply(time_d tCurrent, MidiNoteInternal& note, const ArrayCallbacks& callbacks) const;
         void flushChange();
 
-        CANT_NODISCARD time_m getLength(time_m tCurrent) const;
+        CANT_NODISCARD time_d getLength(time_d tCurrent) const;
     private:
         /** -- methods -- **/
 
-        CANT_NODISCARD float_m getVelocityRatio(time_m tCurrent, const ADSRState::ArrayCallbacks& callbacks) const;
+        CANT_NODISCARD type_d getVelocityRatio(time_d tCurrent, const ADSRState::ArrayCallbacks& callbacks) const;
 
-        void compute(time_m tCurrent, const ArrayLengths& lengths);
+        void compute(time_d tCurrent, const ArrayLengths& lengths);
 
-        void set(ADSRStateType type, time_m tStart);
-        void setFromLength(time_m tCurrent, ADSRStateType type, time_m length);
+        void set(ADSRStateType type, time_d tStart);
+        void setFromLength(time_d tCurrent, ADSRStateType type, time_d length);
 
 
         void raiseFlagChanged();
@@ -52,13 +52,13 @@ namespace cant::pan
         CANT_NODISCARD bool justChangedPlaying() const;
 
         // static methods
-        CANT_NODISCARD static time_m computeTimeStart(time_m tCurrent, time_m length);
+        CANT_NODISCARD static time_d computeTimeStart(time_d tCurrent, time_d length);
         CANT_NODISCARD static bool isSustainFinite(const ArrayLengths& lengths);
-        static void REC_compute(ADSRStateType& type, time_m& length, const ArrayLengths& lengths);
+        static void REC_compute(ADSRStateType& type, time_d& length, const ArrayLengths& lengths);
 
         /** -- fields -- **/
         ADSRStateType m_type;
-        time_m m_tStart;
+        time_d m_tStart;
         bool m_flagChangePlaying;
     };
 
@@ -68,7 +68,7 @@ namespace cant::pan
         /** -- methods -- **/
         // factory method
         static UPtr<VelocityEnvelope> make(
-                size_m numberVoices,
+                size_u numberVoices,
                 const ADSRState::ArrayLengths& lengths = ADSREnvelope::c_defaultADSRLengths,
                 const ADSRState::ArrayVelocityRatios& velocities = ADSREnvelope::c_defaultADSRVelocities
         );
@@ -78,12 +78,12 @@ namespace cant::pan
         void flushChange() override;
     private:
         /** -- methods -- **/
-        ADSREnvelope(size_m numberVoices, const ADSRState::ArrayLengths& lengths, const ADSRState::ArrayVelocityRatios& velocities);
+        ADSREnvelope(size_u numberVoices, const ADSRState::ArrayLengths& lengths, const ADSRState::ArrayVelocityRatios& velocities);
         ADSREnvelope(const ADSREnvelope& adsr) = default;
 
         void setCallbacks();
         static void checkLengths(const ADSRState::ArrayLengths& lengths);
-        static vel_m getBarycentre(time_m lambda,  vel_m v1, vel_m v2);
+        static vel_d getBarycentre(time_d lambda, vel_d v1, vel_d v2);
 
         /** -- fields -- **/
         /* 0: attack time

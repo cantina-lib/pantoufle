@@ -19,9 +19,9 @@
 namespace cant::pan
 {
     Pantoufle::
-    Pantoufle(const size_m numberVoices, const byte_m channel)
+    Pantoufle(const size_u numberVoices, const id_u8 channel)
     : m_controllerChain(std::make_unique<MidiControllerChain>(numberVoices)),
-      m_envelopeLayer(std::make_unique<MidiEnvelopeLayer>(numberVoices, channel)),
+      m_envelopePair(std::make_unique<MidiEnvelopePair>(numberVoices, channel)),
       m_poly(std::make_unique<MidiNoteInputPoly>(numberVoices, channel)),
       m_processedNoteInternal(std::make_unique<MidiNoteInternalLayer>(numberVoices)),
       m_processedNoteOutput(std::make_unique<MidiNoteOutputLayer>(numberVoices))
@@ -40,7 +40,7 @@ namespace cant::pan
     Pantoufle::
     update()
     {
-        const time_m tCurrent = getCurrentTime();
+        const time_d tCurrent = getCurrentTime();
         updateControlChain(tCurrent);
         updateEnvelopeLayer(tCurrent);
         processAll();
@@ -56,7 +56,7 @@ namespace cant::pan
          * each time we update, so no need to process them individually
          * when they are received.
          */
-        for (size_m i = 0; i < getNumberVoices(); ++i)
+        for (size_u i = 0; i < getNumberVoices(); ++i)
         {
             process(i);
         }
@@ -82,31 +82,31 @@ namespace cant::pan
     Pantoufle::
     flushChangeEnvelopeLayer()
     {
-        m_envelopeLayer->flushChange();
+        m_envelopePair->flushChange();
     }
 
 
     void
     Pantoufle::
-    updateControlChain(const time_m tCurrent)
+    updateControlChain(const time_d tCurrent)
     {
         m_controllerChain->update(tCurrent);
     }
 
     void Pantoufle::
-    updateEnvelopeLayer(const time_m tCurrent)
+    updateEnvelopeLayer(const time_d tCurrent)
     {
-         m_envelopeLayer->update(tCurrent);
+         m_envelopePair->update(tCurrent);
     }
 
-    time_m
+    time_d
     Pantoufle::
     getCurrentTime() const
     {
         return m_timer->getCurrentTime();
     }
 
-    size_m
+    size_u
     Pantoufle::
     getNumberVoices() const
     {
@@ -133,7 +133,7 @@ namespace cant::pan
 
     void
     Pantoufle::
-    process(const size_m voice)
+    process(const size_u voice)
     {
         const MidiNoteInput& input = m_poly->getVoice(voice);
         m_processedNoteInternal->receive(input);
@@ -147,16 +147,16 @@ namespace cant::pan
 
     void
     Pantoufle::
-    processControllerChainVoice(const size_m voice)
+    processControllerChainVoice(const size_u voice)
     {
         m_controllerChain->process(m_processedNoteInternal->getVoiceMutable(voice));
     }
 
     void
     Pantoufle::
-    processEnvelopeLayerVoice(const size_m voice)
+    processEnvelopeLayerVoice(const size_u voice)
     {
-        m_envelopeLayer->process(m_processedNoteInternal->getVoiceMutable(voice));
+        m_envelopePair->process(m_processedNoteInternal->getVoiceMutable(voice));
     }
 
 

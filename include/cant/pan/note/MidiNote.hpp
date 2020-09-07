@@ -26,23 +26,23 @@ namespace cant::pan
          * probably has to do with template, when instantiating it... whatever,
          * it'll have to be concrete.
          */
-        MidiNote(size_m voice, byte_m channel, tone_m tone, vel_m velocity);
-        CANT_EXPLICIT MidiNote(size_m voice);
+        MidiNote(size_u voice, id_u8 channel, tone_d tone, vel_d velocity);
+        CANT_EXPLICIT MidiNote(size_u voice);
 
         CANT_NODISCARD const Data_T& getData() const;
 
-        CANT_NODISCARD size_m getVoice() const;
+        CANT_NODISCARD size_u getVoice() const;
 
-        CANT_NODISCARD byte_m getChannel() const override;
-        CANT_NODISCARD tone_m getTone() const override;
-        CANT_NODISCARD vel_m getVelocity() const override;
+        CANT_NODISCARD id_u8 getChannel() const override;
+        CANT_NODISCARD tone_d getTone() const override;
+        CANT_NODISCARD vel_d getVelocity() const override;
 
-        CANT_NODISCARD time_m getStartingTime() const override;
+        CANT_NODISCARD time_d getStartingTime() const override;
     protected:
         /** -- fields -- **/
         Data_T m_data;
-        size_m m_voice;
-        time_m m_tStart;
+        size_u m_voice;
+        time_d m_tStart;
     };
 
 
@@ -50,9 +50,9 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiNoteInput(size_m voice);
+        CANT_EXPLICIT MidiNoteInput(size_u voice);
 
-        void set(time_m tCurrent, const MidiNoteInputData& data);
+        void set(time_d tCurrent, const MidiNoteInputData& data);
 
         void flushChange();
 
@@ -61,7 +61,7 @@ namespace cant::pan
         CANT_NODISCARD bool justChangedTone() const override;
     private:
         /** -- methods -- **/
-        MidiNoteInput(size_m voice, byte_m channel, tone_m tone, vel_m velocity, bool isPressed);
+        MidiNoteInput(size_u voice, id_u8 channel, tone_d tone, vel_d velocity, bool isPressed);
         CANT_NODISCARD  MidiNoteInput& operator=(const MidiNoteInput&);
 
         void raiseFlagChangedPlaying();
@@ -79,21 +79,21 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiNoteInternal(size_m voice);
+        CANT_EXPLICIT MidiNoteInternal(size_u voice);
 
         void set(const MidiNoteInput& input);
 
-        CANT_NODISCARD time_m getLength(time_m tCurrent) const override;
+        CANT_NODISCARD time_d getLength(time_d tCurrent) const override;
 
         void setPlaying(bool isPlaying);
         void setChangedPlaying(bool justChanged);
         void setChangedTone(bool justChanged);
 
-        void setTone(tone_m tone) override;
-        void setVelocity(vel_m velocity) override;
-        void setPan(pan_m pan) override;
+        void setTone(tone_d tone) override;
+        void setVelocity(vel_d velocity) override;
+        void setPan(pan_d pan) override;
 
-        CANT_NODISCARD pan_m getPan() const override;
+        CANT_NODISCARD pan_d getPan() const override;
 
         CANT_NODISCARD bool isPlaying() const override;
         CANT_NODISCARD bool justChangedPlaying() const override;
@@ -112,16 +112,16 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiNoteOutput(size_m voice);
+        CANT_EXPLICIT MidiNoteOutput(size_u voice);
 
         void set(const MidiNoteInternal& internal);
 
-        CANT_NODISCARD time_m getLength(time_m tCurrent) const override;
+        CANT_NODISCARD time_d getLength(time_d tCurrent) const override;
 
-        CANT_NODISCARD vel_m getVelocityPlaying() const override;
-        CANT_NODISCARD Array<vel_m, 2> getVelocityPanned() const override;
+        CANT_NODISCARD vel_d getVelocityPlaying() const override;
+        CANT_NODISCARD Array<vel_d, 2> getVelocityPanned() const override;
 
-        CANT_NODISCARD pan_m getPan() const override;
+        CANT_NODISCARD pan_d getPan() const override;
 
         CANT_NODISCARD bool isPlaying() const override;
         CANT_NODISCARD bool justChangedPlaying() const override;
@@ -131,7 +131,7 @@ namespace cant::pan
         CANT_NODISCARD bool justStopped() const;
     private:
         /** -- methods -- **/
-        CANT_NODISCARD vel_m getVelocity() const override;
+        CANT_NODISCARD vel_d getVelocity() const override;
 
         /** -- fields -- **/
         bool m_isPlaying;

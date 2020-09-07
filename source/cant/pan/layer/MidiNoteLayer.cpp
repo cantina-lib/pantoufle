@@ -9,7 +9,7 @@
 namespace cant::pan
 {
     MidiNoteInputLayer::
-    MidiNoteInputLayer(size_m numberVoices)
+    MidiNoteInputLayer(size_u numberVoices)
         : MidiNoteLayer<MidiNoteInput>(numberVoices)
     {
     }

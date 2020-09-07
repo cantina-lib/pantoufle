@@ -9,18 +9,18 @@ namespace cant::pan
 {
 
     MidiNoteInput::
-    MidiNoteInput(size_m voice, byte_m channel, tone_m tone, vel_m velocity, bool isPressed)
+    MidiNoteInput(size_u voice, id_u8 channel, tone_d tone, vel_d velocity, bool isPressed)
     : MidiNote(voice, channel, tone, velocity),
     _isPressed(isPressed),
     _flagChangedPlaying(true),
     _flagChangedTone(false)
     {
         CANTINA_ASSERT(
-                velocity > static_cast<vel_m>(0),
+                velocity > static_cast<vel_d>(0),
                "Velocity should not be null. Use changedPlaying if note is note is not playing.");
     }
 
-    MidiNoteInput::MidiNoteInput(const size_m voice)
+    MidiNoteInput::MidiNoteInput(const size_u voice)
     : MidiNote<MidiNoteInputData>(voice),
       _isPressed(false),
       _flagChangedPlaying(false),
@@ -38,7 +38,7 @@ namespace cant::pan
 
     void
     MidiNoteInput::
-    set(const time_m tCurrent, const MidiNoteInputData &data)
+    set(const time_d tCurrent, const MidiNoteInputData &data)
     {
         const bool isInputPressed = data.isPressed();
         const bool isToneDifferent = data.getTone() != getTone();
@@ -83,7 +83,7 @@ namespace cant::pan
 
 
     MidiNoteInternal::
-    MidiNoteInternal(const size_m voice)
+    MidiNoteInternal(const size_u voice)
     : MidiNote<MidiNoteInternalData>(voice),
       m_isPlaying(false),
       m_justChangedPlaying(false),
@@ -105,7 +105,7 @@ namespace cant::pan
 
 
     MidiNoteOutput::
-    MidiNoteOutput(const size_m voice)
+    MidiNoteOutput(const size_u voice)
     : MidiNote<MidiNoteOutputData>(voice),
       m_isPlaying(false),
       m_justChangedPlaying(false),

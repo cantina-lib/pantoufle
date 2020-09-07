@@ -24,7 +24,7 @@ include_directories(
 )
 
 # flags
-set(CMAKE_CXX_FLAGS "-Wall -Werror -fPIC")
+set(CMAKE_CXX_FLAGS "-Wall -Werror -pedantic -fPIC")
 
 
 set(PANTOUFLE_FILES
@@ -44,7 +44,7 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/control/MidiControlData.cpp
         ### processor
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiControllerChain.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiEnvelopeLayer.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiEnvelopePair.cpp
         ### controller
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiController.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiDamper.cpp
@@ -85,7 +85,7 @@ set(PANTOUFLE_FILES
         ### processor
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/processor.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiControllerChain.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiEnvelopeLayer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiEnvelopePair.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.inl
         ### control

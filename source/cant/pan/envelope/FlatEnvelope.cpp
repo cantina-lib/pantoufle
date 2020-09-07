@@ -8,7 +8,7 @@ namespace cant::pan
 {
 
     FlatToneEnvelope::
-    FlatToneEnvelope(const size_m numberVoices)
+    FlatToneEnvelope(const size_u numberVoices)
     : ToneEnvelope(numberVoices)
     {
 
@@ -16,7 +16,7 @@ namespace cant::pan
 
     UPtr<ToneEnvelope>
     FlatToneEnvelope::
-    make(const size_m numberVoices)
+    make(const size_u numberVoices)
     {
         return UPtr<ToneEnvelope>(new FlatToneEnvelope(numberVoices));
     }

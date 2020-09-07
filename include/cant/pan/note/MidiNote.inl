@@ -7,12 +7,14 @@
 
 #pragma once
 
+#include <cant/pan/common/types.hpp>
+
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
     template<class Data_T>
     MidiNote<Data_T>::
-    MidiNote(size_m voice, byte_m channel, tone_m tone, vel_m velocity)
+    MidiNote(size_u voice, id_u8 channel, tone_d tone, vel_d velocity)
             : m_data(channel, tone, velocity), m_voice(voice), m_tStart()
     {
 
@@ -20,7 +22,7 @@ namespace cant::pan
 
     template<class Data_T>
     MidiNote<Data_T>::
-    MidiNote(size_m voice)
+    MidiNote(size_u voice)
             : m_data(), m_voice(voice), m_tStart()
     {
 
@@ -35,35 +37,35 @@ namespace cant::pan
 
     template<class Data_T>
     CANT_NODISCARD CANT_INLINE
-    size_m
+    size_u
     MidiNote<Data_T>::
     getVoice() const
     { return m_voice; }
 
     template<class Data_T>
     CANT_NODISCARD CANT_INLINE
-    byte_m
+    id_u8
     MidiNote<Data_T>::
     getChannel() const
     { return m_data.getChannel(); }
 
     template<class Data_T>
     CANT_NODISCARD CANT_INLINE
-    tone_m
+    tone_d
     MidiNote<Data_T>::
     getTone() const
     { return m_data.getTone(); }
 
     template<class Data_T>
     CANT_NODISCARD CANT_INLINE
-    vel_m
+    vel_d
     MidiNote<Data_T>::
     getVelocity() const
     { return m_data.getVelocity(); }
 
     template<class Data_T>
     CANT_NODISCARD CANT_INLINE
-    time_m
+    time_d
     MidiNote<Data_T>::
     getStartingTime() const
     { return m_tStart; }
@@ -93,9 +95,9 @@ namespace cant::pan
 
 
     CANT_NODISCARD CANT_INLINE
-    time_m
+    time_d
     MidiNoteInternal::
-    getLength(const time_m tCurrent) const
+    getLength(const time_d tCurrent) const
     { return tCurrent - m_tStart; }
 
     CANT_INLINE
@@ -118,23 +120,23 @@ namespace cant::pan
     CANT_INLINE
     void
     MidiNoteInternal::
-    setTone(const tone_m tone)
+    setTone(const tone_d tone)
     { m_data.setTone(tone); }
 
     CANT_INLINE
     void
     MidiNoteInternal::
-    setVelocity(const vel_m velocity)
+    setVelocity(const vel_d velocity)
     { m_data.setVelocity(velocity); }
 
     CANT_INLINE
     void
     MidiNoteInternal::
-    setPan(const pan_m pan)
+    setPan(const pan_d pan)
     { m_data.setPan(pan); }
 
     CANT_NODISCARD CANT_INLINE
-    pan_m
+    pan_d
     MidiNoteInternal::
     getPan() const
     { return m_data.getPan(); }
@@ -157,34 +159,34 @@ namespace cant::pan
     { return m_justChangedTone; }
 
     CANT_NODISCARD CANT_INLINE
-    vel_m
+    vel_d
     MidiNoteOutput::
     getVelocity() const
     { return m_data.getVelocity(); }
 
 
     CANT_NODISCARD CANT_INLINE
-    vel_m
+    vel_d
     MidiNoteOutput::
     getVelocityPlaying() const
     {
-        return isPlaying() ? getVelocity() : static_cast<vel_m>(0);
+        return isPlaying() ? getVelocity() : static_cast<vel_d>(0);
     }
 
     CANT_NODISCARD CANT_INLINE
-    time_m
+    time_d
     MidiNoteOutput::
-    getLength(const time_m tCurrent) const
+    getLength(const time_d tCurrent) const
     { return tCurrent - m_tStart; }
 
     CANT_NODISCARD CANT_INLINE
-    Array<vel_m, 2>
+    Array<vel_d, 2>
     MidiNoteOutput::
     getVelocityPanned() const
     { return m_data.getVelocityPanned(); }
 
     CANT_NODISCARD CANT_INLINE
-    pan_m
+    pan_d
     MidiNoteOutput::
     getPan() const
     { return m_data.getPan(); }
