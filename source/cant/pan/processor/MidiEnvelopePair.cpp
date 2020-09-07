@@ -7,7 +7,7 @@
 namespace cant::pan
 {
     MidiEnvelopeLayer::
-    MidiEnvelopeLayer(const size_m numberVoices, const byte_m channel)
+    MidiEnvelopeLayer(const size_u numberVoices, const id_u8 channel)
     : MidiProcessorMemory(numberVoices),
       m_toneEnvelope(FlatToneEnvelope::make(numberVoices)),
       m_velocityEnvelope(ADSREnvelope::make(numberVoices))
@@ -17,7 +17,7 @@ namespace cant::pan
 
     void
     MidiEnvelopeLayer::
-    update(time_m tCurrent)
+    update(time_d tCurrent)
     {
         m_toneEnvelope->update(tCurrent);
         m_velocityEnvelope->update(tCurrent);
