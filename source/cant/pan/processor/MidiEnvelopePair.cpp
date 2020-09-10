@@ -10,7 +10,8 @@ namespace cant::pan
     MidiEnvelopePair(const size_u numberVoices, const id_u8 channel)
     : MidiProcessorMemory(numberVoices),
       m_toneEnvelope(FlatToneEnvelope::make(numberVoices)),
-      m_velocityEnvelope(ADSREnvelope::make(numberVoices))
+      m_velocityEnvelope(ADSREnvelope::make(numberVoices)),
+      m_channel(channel)
     {
 
     }

@@ -20,13 +20,13 @@ namespace cant::pan
     {
     public:
         /** -- methods -- **/
-        CANT_CONSTEXPR MidiNoteData();
+        MidiNoteData();
         MidiNoteData(id_u8 channel, Tone_T tone, Vel_T velocity);
+
         template <typename Tone_U, typename Vel_U>
         CANT_EXPLICIT MidiNoteData(const MidiNoteData<Tone_U, Vel_U>& other);
-        MidiNoteData(const MidiNoteData &);
 
-        // Shouldn't be used with tone_m/vel_m
+        // Shouldn't be used with  tone_d/vel_d version of note data
         CANT_NODISCARD bool operator==(const MidiNoteData& data) const;
         CANT_NODISCARD bool operator!=(const MidiNoteData& data) const;
 
@@ -34,7 +34,6 @@ namespace cant::pan
         CANT_NODISCARD tone_d getTone() const override;
         CANT_NODISCARD vel_d getVelocity() const override;
 
-        CANT_NODISCARD bool isPressed() const override;
     protected:
         /** -- fields -- **/
         id_u8 m_channel;
@@ -43,7 +42,18 @@ namespace cant::pan
     };
 
 
-    typedef MidiNoteData<tone_u8, vel_u8> MidiNoteInputData;
+    class MidiNoteInputData : public MidiNoteData<tone_u8, vel_u8>
+    {
+    public:
+        /** -- methods -- **/
+        MidiNoteInputData();
+        MidiNoteInputData(id_u8 channel, tone_u8 tone, vel_u8 velocity);
+
+        MidiNoteInputData(const MidiNoteInputData& other);
+        MidiNoteInputData& operator=(const MidiNoteInputData& other);
+
+        CANT_NODISCARD bool isPressed() const;
+    };
 
     class MidiNoteInternalData : public MidiNoteData<tone_d, vel_d>
     {
@@ -78,7 +88,6 @@ namespace cant::pan
     };
 
 }
-
 #include <cant/common/undef_macro.hpp>
 
 #include "MidiNoteData.inl"

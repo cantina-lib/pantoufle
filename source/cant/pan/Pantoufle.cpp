@@ -68,7 +68,7 @@ namespace cant::pan
     flushChange()
     {
         flushChangeNoteInput();
-        flushChangeEnvelopeLayer();
+        flushChangeEnvelopePair();
     }
 
     void
@@ -80,7 +80,7 @@ namespace cant::pan
 
     void
     Pantoufle::
-    flushChangeEnvelopeLayer()
+    flushChangeEnvelopePair()
     {
         m_envelopePair->flushChange();
     }
@@ -136,12 +136,24 @@ namespace cant::pan
     process(const size_u voice)
     {
         const MidiNoteInput& input = m_poly->getVoice(voice);
+        const MidiNoteInternal& internal = m_processedNoteInternal->getVoice(voice);
         m_processedNoteInternal->receive(input);
         /* processing controllers and envelope layer */
+        if (!voice)
+        {
+            CANT_MAYBEUNUSED int i = 0;
+        }
         processControllerChainVoice(voice);
-        processEnvelopeLayerVoice(voice);
+        if (!voice)
+        {
+            CANT_MAYBEUNUSED int i = 0;
+        }
+        processEnvelopePairVoice(voice);
+        if (!voice)
+        {
+            CANT_MAYBEUNUSED int i = 0;
+        }
         /* */
-        const MidiNoteInternal& internal = m_processedNoteInternal->getVoice(voice);
         m_processedNoteOutput->receive(internal);
     }
 
@@ -154,7 +166,7 @@ namespace cant::pan
 
     void
     Pantoufle::
-    processEnvelopeLayerVoice(const size_u voice)
+    processEnvelopePairVoice(const size_u voice)
     {
         m_envelopePair->process(m_processedNoteInternal->getVoiceMutable(voice));
     }

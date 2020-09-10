@@ -8,6 +8,8 @@
 #pragma once
 
 #include <cant/common/macro.hpp>
+#include "MidiNoteData.hpp"
+
 
 namespace cant::pan
 {
@@ -15,35 +17,31 @@ namespace cant::pan
     CANT_INLINE
     MidiNoteData<Tone_T, Vel_T>::
     MidiNoteData(id_u8 channel, Tone_T tone, Vel_T velocity)
-            : m_channel(channel), m_tone(tone), m_velocity(velocity)
+            : m_channel(channel),
+            m_tone(tone),
+            m_velocity(velocity)
     {
 
     }
 
-    template<typename Tone_T, typename Vel_T>
-    template<typename Tone_U, typename Vel_U>
-    CANT_INLINE
+    template <typename Tone_T, typename Vel_T>
+    template <typename Tone_U, typename Vel_U>
     MidiNoteData<Tone_T, Vel_T>::
-    MidiNoteData(const MidiNoteData <Tone_U, Vel_U> &other)
+    MidiNoteData(const MidiNoteData<Tone_U, Vel_U> &other)
             : m_channel(other.getChannel()),
               m_tone(static_cast<Tone_T>(other.getTone())),
               m_velocity(static_cast<Vel_T>(other.getVelocity()))
-    {
+    {}
 
-    }
-
-    template<typename Tone_T, typename Vel_T>
-    CANT_CONSTEXPR
+    template <typename Tone_T, typename Vel_T>
+    CANT_INLINE
     MidiNoteData<Tone_T, Vel_T>::
     MidiNoteData()
-            : m_channel(), m_tone(), m_velocity()
-    {
+        : m_channel(),
+        m_tone(),
+        m_velocity()
+    {}
 
-    }
-
-    template<typename Tone_T, typename Vel_T>
-    MidiNoteData<Tone_T, Vel_T>::
-    MidiNoteData(const MidiNoteData &) = default;
 
     template<typename Tone_T, typename Vel_T>
     CANT_NODISCARD CANT_INLINE
@@ -86,12 +84,12 @@ namespace cant::pan
     getVelocity() const
     { return static_cast<vel_d>(m_velocity); }
 
-    template<typename Tone_T, typename Vel_T>
     CANT_NODISCARD CANT_INLINE
     bool
-    MidiNoteData<Tone_T, Vel_T>::
+    MidiNoteInputData::
     isPressed() const
     { return static_cast<bool>(m_velocity); }
+
 
     CANT_INLINE
     void

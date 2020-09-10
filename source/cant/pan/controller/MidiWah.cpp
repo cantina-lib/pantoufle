@@ -6,12 +6,12 @@
 
 namespace cant::pan
 {
-    void MidiWah::beforeControlProcess(const MidiControlInternal &incomingControl)
+    void MidiWah::beforeControlProcess(const MidiControlInternal &)
     {
 
     }
 
-    void MidiWah::beforeNoteProcess(const MidiNoteInternal &incomingNote)
+    void MidiWah::beforeNoteProcess(const MidiNoteInternal &)
     {
 
     }
@@ -25,16 +25,16 @@ namespace cant::pan
 
     void
     MidiWah::
-    IMPL_process(MidiNoteInternal &note) const
+    IMPL_process(MidiNoteInternal &) const
     {
 
     }
 
     void
     MidiWah::
-    update(time_d tCurrent)
+    update(const time_d)
     {
-        MultiMidiController::update(tCurrent);
+
     }
 
     UPtr<MidiController>

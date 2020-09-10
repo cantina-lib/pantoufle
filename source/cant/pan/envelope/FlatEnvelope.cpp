@@ -4,6 +4,7 @@
 
 #include <cant/pan/envelope/FlatEnvelope.hpp>
 
+#include <cant/common/macro.hpp>
 namespace cant::pan
 {
 
@@ -24,7 +25,7 @@ namespace cant::pan
 
     void
     FlatToneEnvelope::
-    process(MidiNoteInternal &note)
+    process(CANT_MAYBEUNUSED MidiNoteInternal &note)
     {
         /* nothing to doooo */
     }

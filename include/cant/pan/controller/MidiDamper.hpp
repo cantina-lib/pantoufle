@@ -38,7 +38,7 @@ namespace cant::pan
          * Can't be bool, since Stream are actually std::vector, and c++ does summat
          * funky with std::vector<bool> template specialisation.
          */
-        Stream<id_u8> _shouldHoldNotes;
+        Stream<id_u8> m_shouldHoldNotes;
         /*
          * It's not necessary to use this additional vector,
          * we could just use getMemory(iVoice).isPlaying().
@@ -48,7 +48,7 @@ namespace cant::pan
          * function beforeNoteProcess(), where I get insurance
          * that this code will be executed *before* any new processing is done.
          */
-        Stream<id_u8> _isMemoryPlaying;
+        Stream<id_u8> m_isMemoryPlaying;
     };
 }
 

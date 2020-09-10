@@ -8,23 +8,11 @@
 namespace cant::pan
 {
 
-    MidiNoteInput::
-    MidiNoteInput(size_u voice, id_u8 channel, tone_d tone, vel_d velocity, bool isPressed)
-    : MidiNote(voice, channel, tone, velocity),
-    _isPressed(isPressed),
-    _flagChangedPlaying(true),
-    _flagChangedTone(false)
-    {
-        CANTINA_ASSERT(
-                velocity > static_cast<vel_d>(0),
-               "Velocity should not be null. Use changedPlaying if note is note is not playing.");
-    }
-
     MidiNoteInput::MidiNoteInput(const size_u voice)
     : MidiNote<MidiNoteInputData>(voice),
-      _isPressed(false),
-      _flagChangedPlaying(false),
-      _flagChangedTone(false)
+      m_isPressed(false),
+      m_flagChangedPressed(false),
+      m_flagChangedTone(false)
     {
 
     }
@@ -40,44 +28,28 @@ namespace cant::pan
     MidiNoteInput::
     set(const time_d tCurrent, const MidiNoteInputData &data)
     {
-        const bool isInputPressed = data.isPressed();
-        const bool isToneDifferent = data.getTone() != getTone();
+        const bool wasPlaying = isPlaying();
+        const tone_u8 lastTone = getTone();
 
-        if (isInputPressed)
+        m_isPressed = data.isPressed();
+
+        if (data.isPressed())
         {
-            if (!m_data.isPressed())
+            if (!wasPlaying)
             {
                 // a note is born!
                 m_tStart = tCurrent;
-               raiseFlagChangedPlaying();
-            }
-            if (isToneDifferent)
-            {
-                raiseFlagChangedNote();
             }
             m_data = data;
         }
-        else
-        {
-            raiseFlagChangedPlaying();
-        }
-        _isPressed = isInputPressed;
-    }
-
-    void MidiNoteInput::raiseFlagChangedPlaying()
-    {
-        _flagChangedPlaying = true;
-    }
-
-    void MidiNoteInput::raiseFlagChangedNote()
-    {
-        _flagChangedTone = true;
+        m_flagChangedPressed = isPlaying() != wasPlaying;
+        m_flagChangedTone = getTone() != lastTone;
     }
 
     void MidiNoteInput::discardAllChangeFlags()
     {
-        _flagChangedPlaying = false;
-        _flagChangedTone = false;
+        m_flagChangedPressed = false;
+        m_flagChangedTone = false;
     }
 
 
@@ -98,7 +70,7 @@ namespace cant::pan
     {
         m_data = MidiNoteInternalData(input.getData());
         m_tStart = input.getStartingTime();
-        m_isPlaying = input.isPressed(); // at input stage, playing if and only if pressed
+        m_isPlaying = input.isPlaying(); // at input stage, playing if and only if pressed
         m_justChangedPlaying = input.justChangedPlaying();
         m_justChangedTone = input.justChangedTone();
     }
@@ -122,6 +94,7 @@ namespace cant::pan
         m_tStart = internal.getStartingTime();
         m_isPlaying = internal.isPlaying();
         m_justChangedPlaying = internal.justChangedPlaying();
+        m_justChangedTone = internal.justChangedTone();
     }
 
 

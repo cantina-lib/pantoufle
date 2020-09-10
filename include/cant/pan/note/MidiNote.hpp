@@ -16,7 +16,7 @@
 namespace cant::pan
 {
 
-    template <class Data_T>
+    template <typename Data_T>
     class MidiNote : MidiNoteCompatible
     {
     public:
@@ -26,11 +26,12 @@ namespace cant::pan
          * probably has to do with template, when instantiating it... whatever,
          * it'll have to be concrete.
          */
-        MidiNote(size_u voice, id_u8 channel, tone_d tone, vel_d velocity);
         CANT_EXPLICIT MidiNote(size_u voice);
 
-        CANT_NODISCARD const Data_T& getData() const;
+        MidiNote(const MidiNote&);
+        MidiNote& operator=(const MidiNote&);
 
+        CANT_NODISCARD const Data_T& getData() const;
         CANT_NODISCARD size_u getVoice() const;
 
         CANT_NODISCARD id_u8 getChannel() const override;
@@ -56,22 +57,19 @@ namespace cant::pan
 
         void flushChange();
 
-        CANT_NODISCARD bool isPressed() const override;
+        CANT_NODISCARD bool isPlaying() const override;
         CANT_NODISCARD bool justChangedPlaying() const override;
         CANT_NODISCARD bool justChangedTone() const override;
     private:
         /** -- methods -- **/
-        MidiNoteInput(size_u voice, id_u8 channel, tone_d tone, vel_d velocity, bool isPressed);
         CANT_NODISCARD  MidiNoteInput& operator=(const MidiNoteInput&);
 
-        void raiseFlagChangedPlaying();
-        void raiseFlagChangedNote();
         void discardAllChangeFlags();
 
         /** -- fields -- **/
-        bool _isPressed;
-        bool _flagChangedPlaying;
-        bool _flagChangedTone;
+        bool m_isPressed;
+        bool m_flagChangedPressed;
+        bool m_flagChangedTone;
     };
 
 
@@ -80,6 +78,8 @@ namespace cant::pan
     public:
         /** -- methods -- **/
         CANT_EXPLICIT MidiNoteInternal(size_u voice);
+        MidiNoteInternal(const MidiNoteInternal& other);
+        MidiNoteInternal& operator=(const MidiNoteInternal& other);
 
         void set(const MidiNoteInput& input);
 
@@ -137,7 +137,6 @@ namespace cant::pan
         bool m_isPlaying;
         bool m_justChangedPlaying;
         bool m_justChangedTone;
-
     };
 }
 

@@ -10,22 +10,37 @@
 #include <cant/pan/common/types.hpp>
 
 #include <cant/common/macro.hpp>
+#include "MidiNote.hpp"
+
 namespace cant::pan
 {
     template<class Data_T>
     MidiNote<Data_T>::
-    MidiNote(size_u voice, id_u8 channel, tone_d tone, vel_d velocity)
-            : m_data(channel, tone, velocity), m_voice(voice), m_tStart()
+    MidiNote(size_u voice)
+            : m_data(),
+            m_voice(voice),
+            m_tStart()
+    { }
+
+    template <typename Data_T>
+    MidiNote<Data_T>::
+    MidiNote(const MidiNote<Data_T>& other)
+        : m_data(other.m_data),
+        m_voice(other.m_voice),
+        m_tStart(other.m_tStart)
     {
 
     }
 
-    template<class Data_T>
+    template <typename Data_T>
+    MidiNote<Data_T>&
     MidiNote<Data_T>::
-    MidiNote(size_u voice)
-            : m_data(), m_voice(voice), m_tStart()
+    operator=(const MidiNote &other)
     {
-
+        m_data = other.m_data;
+        m_voice = other.m_voice;
+        m_tStart = other.m_tStart;
+        return *this;
     }
 
     template<class Data_T>
@@ -72,27 +87,36 @@ namespace cant::pan
 
 
     CANT_NODISCARD CANT_INLINE
-    MidiNoteInput&
-    MidiNoteInput::operator=(const MidiNoteInput&) = default;
-
-    CANT_NODISCARD CANT_INLINE
     bool
     MidiNoteInput::
-    isPressed() const
-    { return _isPressed; }
+    isPlaying() const
+    { return m_isPressed; }
 
     CANT_NODISCARD CANT_INLINE
     bool
     MidiNoteInput::
     justChangedPlaying() const
-    { return _flagChangedPlaying; }
+    { return m_flagChangedPressed; }
 
     CANT_NODISCARD CANT_INLINE
     bool
     MidiNoteInput::
     justChangedTone() const
-    { return _flagChangedTone; }
+    { return m_flagChangedTone; }
 
+    CANT_INLINE
+    MidiNoteInternal::
+    MidiNoteInternal(const MidiNoteInternal &other)
+    : MidiNote<MidiNoteInternalData>(other),
+    m_isPlaying(other.m_isPlaying),
+    m_justChangedPlaying(other.m_justChangedPlaying),
+    m_justChangedTone(other.m_justChangedTone)
+    {}
+
+    CANT_INLINE
+    MidiNoteInternal
+    &MidiNoteInternal::
+    operator=(const MidiNoteInternal &other) = default;
 
     CANT_NODISCARD CANT_INLINE
     time_d
@@ -157,6 +181,8 @@ namespace cant::pan
     MidiNoteInternal::
     justChangedTone() const
     { return m_justChangedTone; }
+
+
 
     CANT_NODISCARD CANT_INLINE
     vel_d

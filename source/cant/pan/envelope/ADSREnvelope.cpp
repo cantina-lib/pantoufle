@@ -6,6 +6,8 @@
 
 #include <cant/pan/common/PantoufleException.hpp>
 
+#include <cant/maths/maths.hpp>
+
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
@@ -51,17 +53,6 @@ namespace cant::pan
         }
     }
 
-    vel_d
-    ADSREnvelope::
-    getBarycentre(const time_d lambda, const vel_d v1, const vel_d v2)
-    {
-        if(lambda > static_cast<time_d>(1.) || lambda < static_cast<time_d>(0.))
-        {
-            throw PANTOUFLE_EXCEPTION("Lambda out of range.");
-        }
-        return (static_cast<time_d>(1.) - lambda) * v1 + lambda * v2;
-    }
-
     void
     ADSREnvelope::
     setCallbacks()
@@ -69,34 +60,34 @@ namespace cant::pan
         m_callbacks.at(ADSRState::eAttack) =
                 [this](const time_d t) -> type_d
                 {
-                    return getBarycentre(
-                            t / m_lengths.at(ADSRState::eAttack),
+                    return maths::barycentre(
                             static_cast<type_d>(0),
-                            m_velocityRatios.at(ADSRState::eAttack)
-                            );
+                            m_velocityRatios.at(ADSRState::eAttack),
+                            t / m_lengths.at(ADSRState::eAttack)
+                    );
                 };
         m_callbacks.at(ADSRState::eDecay) =
                 [this](const time_d t) -> type_d
                 {
-                    return getBarycentre(
-                            t / m_lengths.at(ADSRState::eDecay),
+                    return maths::barycentre(
                             m_velocityRatios.at(ADSRState::eAttack),
-                            m_velocityRatios.at(ADSRState::eSustain)
-                            );
+                            m_velocityRatios.at(ADSRState::eSustain),
+                            t / m_lengths.at(ADSRState::eDecay)
+                    );
                 };
         m_callbacks.at(ADSRState::eSustain) =
-                [this](const time_d t) -> type_d
+                [this](const time_d) -> type_d
                 {
                     return m_velocityRatios.at(ADSRState::eSustain);
                 };
         m_callbacks.at(ADSRState::eRelease) =
                 [this](const time_d t) -> type_d
                 {
-                    return getBarycentre(
-                            t / m_lengths.at(ADSRState::eRelease),
+                    return maths::barycentre(
                             m_velocityRatios.at(ADSRState::eSustain),
-                            static_cast<type_d>(0.)
-                            );
+                            static_cast<type_d>(0.),
+                            t / m_lengths.at(ADSRState::eRelease)
+                    );
                 };
     }
 
@@ -132,6 +123,12 @@ namespace cant::pan
     getLength(const time_d tCurrent) const
     {
         return tCurrent - m_tStart;
+    }
+
+    ADSRState::ADSRStateType
+    ADSRState::getType() const
+    {
+        return m_type;
     }
 
     time_d
@@ -291,7 +288,8 @@ namespace cant::pan
         {
             return static_cast<type_d>(0);
         }
-        return callbacks.at(m_type)(getLength(tCurrent));
+        const time_d length = getLength(tCurrent);
+        return callbacks.at(m_type)(length);
     }
 
 
@@ -303,8 +301,6 @@ namespace cant::pan
          * There used to be a concept of 'extendability'
          * where a note could be extended by the envelope or not
          * now assuming every note is extendable.
-         * You'd need to add a _isExtendable field to MidiNoteInternal
-         * to go back.
          */
         ADSRState& state = m_states.at(note.getVoice());
         const time_d tCurrent = getCurrentTime();

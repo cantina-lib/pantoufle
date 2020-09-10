@@ -34,6 +34,7 @@ namespace cant::pan
         void flushChange();
 
         CANT_NODISCARD time_d getLength(time_d tCurrent) const;
+        CANT_NODISCARD ADSRStateType getType() const;
     private:
         /** -- methods -- **/
 
@@ -43,7 +44,6 @@ namespace cant::pan
 
         void set(ADSRStateType type, time_d tStart);
         void setFromLength(time_d tCurrent, ADSRStateType type, time_d length);
-
 
         void raiseFlagChanged();
         void discardFlagChanged();
@@ -83,7 +83,6 @@ namespace cant::pan
 
         void setCallbacks();
         static void checkLengths(const ADSRState::ArrayLengths& lengths);
-        static vel_d getBarycentre(time_d lambda, vel_d v1, vel_d v2);
 
         /** -- fields -- **/
         /* 0: attack time

@@ -8,6 +8,7 @@ set(PANTOUFLE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS ${CANTINA_MAIN_CXX_FLAGS})
 
 set(CANTINA_COMMON_DIR ${PROJECT_SOURCE_DIR}/cantina_common)
 add_subdirectory(${CANTINA_COMMON_DIR})
@@ -22,10 +23,6 @@ set(PANTOUFLE_INCLUDE_DIRS
 include_directories(
         ${PANTOUFLE_INCLUDE_DIRS}
 )
-
-# flags
-set(CMAKE_CXX_FLAGS "-Wall -Werror -pedantic -fPIC")
-
 
 set(PANTOUFLE_FILES
         ## source

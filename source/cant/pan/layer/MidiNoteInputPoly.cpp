@@ -53,12 +53,12 @@ namespace cant::pan
             size_u& closestIndex,
             bool force) -> bool
     {
-        tone_u8 closestDist;
+        tone_u8 closestDist = c_midiMaxTone;
         bool foundClosest = false;
         size_u i = 0;
         for (const auto& note : notes)
         {
-            if (!note.isPressed() || force)
+            if (!note.isPlaying() || force)
             {
                 const tone_u8 dist = std::abs(note.getTone() - inputData.getTone());
                 if (!foundClosest || dist < closestDist)

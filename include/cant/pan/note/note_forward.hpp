@@ -14,7 +14,7 @@ namespace cant::pan
     template <typename Tone_T, typename Vel_T>
     class MidiNoteData;
 
-    using MidiNoteInputData = MidiNoteData<tone_u8, vel_u8>;
+    class MidiNoteInputData;
     class MidiNoteInternalData;
     class MidiNoteOutputData;
 

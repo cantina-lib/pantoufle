@@ -29,6 +29,7 @@ namespace cant::pan
         /** -- fields -- **/
         UPtr<ToneEnvelope> m_toneEnvelope;
         UPtr<VelocityEnvelope> m_velocityEnvelope;
+        id_u8 m_channel;
     };
 }
 
