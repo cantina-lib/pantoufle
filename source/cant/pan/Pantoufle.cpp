@@ -139,20 +139,8 @@ namespace cant::pan
         const MidiNoteInternal& internal = m_processedNoteInternal->getVoice(voice);
         m_processedNoteInternal->receive(input);
         /* processing controllers and envelope layer */
-        if (!voice)
-        {
-            CANT_MAYBEUNUSED int i = 0;
-        }
         processControllerChainVoice(voice);
-        if (!voice)
-        {
-            CANT_MAYBEUNUSED int i = 0;
-        }
         processEnvelopePairVoice(voice);
-        if (!voice)
-        {
-            CANT_MAYBEUNUSED int i = 0;
-        }
         /* */
         m_processedNoteOutput->receive(internal);
     }

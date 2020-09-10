@@ -34,7 +34,7 @@ namespace cant::pan
         /** -- methods -- **/
         void process(size_u iVoice);
         void processControllerChainVoice(size_u iVoice);
-        void processEnvelopePairVoice(const size_u voice);
+        void processEnvelopePairVoice(size_u voice);
         void processAll();
 
         void flushChange();
