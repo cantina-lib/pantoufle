@@ -49,7 +49,7 @@ namespace cant::pan
                 )
         {
             /* todo: better message */
-            throw PANTOUFLE_EXCEPTION("ADSR length invalid, is negative but not sustain.");
+            throw PANTOUFLE_EXCEPTION("NOooo");
         }
     }
 

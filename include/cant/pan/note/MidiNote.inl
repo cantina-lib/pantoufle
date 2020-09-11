@@ -8,12 +8,12 @@
 #pragma once
 
 #include <cant/pan/common/types.hpp>
+#include <cant/common/memory.hpp>
 
 #include <cant/common/macro.hpp>
-#include "MidiNote.hpp"
-
 namespace cant::pan
 {
+
     template<class Data_T>
     MidiNote<Data_T>::
     MidiNote(size_u voice)
@@ -103,6 +103,22 @@ namespace cant::pan
     MidiNoteInput::
     justChangedTone() const
     { return m_flagChangedTone; }
+
+    CANT_NODISCARD CANT_INLINE
+    tone_i8
+    MidiNoteInput::
+    getToneNative() const
+    {
+        return m_data.getToneNative();
+    }
+
+    CANT_NODISCARD CANT_INLINE
+    vel_i8
+    MidiNoteInput::
+    getVelocityNative() const
+    {
+       return m_data.getVelocityNative();
+    }
 
     CANT_INLINE
     MidiNoteInternal::
@@ -206,7 +222,7 @@ namespace cant::pan
     { return tCurrent - m_tStart; }
 
     CANT_NODISCARD CANT_INLINE
-    Array<vel_d, 2>
+    ArrayPan
     MidiNoteOutput::
     getVelocityPanned() const
     { return m_data.getVelocityPanned(); }

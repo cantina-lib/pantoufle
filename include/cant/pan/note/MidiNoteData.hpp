@@ -41,16 +41,20 @@ namespace cant::pan
         Vel_T m_velocity;
     };
 
+    typedef Array<vel_d, 2> ArrayPan;
 
-    class MidiNoteInputData : public MidiNoteData<tone_u8, vel_u8>
+    class MidiNoteInputData : public MidiNoteData<tone_i8, vel_i8>
     {
     public:
         /** -- methods -- **/
         MidiNoteInputData();
-        MidiNoteInputData(id_u8 channel, tone_u8 tone, vel_u8 velocity);
+        MidiNoteInputData(id_u8 channel, tone_i8 tone, vel_i8 velocity);
 
         MidiNoteInputData(const MidiNoteInputData& other);
         MidiNoteInputData& operator=(const MidiNoteInputData& other);
+
+        CANT_NODISCARD tone_i8 getToneNative() const;
+        CANT_NODISCARD vel_i8 getVelocityNative() const;
 
         CANT_NODISCARD bool isPressed() const;
     };
@@ -79,7 +83,7 @@ namespace cant::pan
         MidiNoteOutputData();
         CANT_EXPLICIT MidiNoteOutputData(const MidiNoteInternalData& internal);
 
-        CANT_NODISCARD Array<vel_d, 2> getVelocityPanned() const;
+        CANT_NODISCARD ArrayPan getVelocityPanned() const;
 
         CANT_NODISCARD pan_d getPan() const;
     private:

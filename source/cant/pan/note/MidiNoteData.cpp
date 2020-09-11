@@ -4,7 +4,7 @@
 
 #include <cant/pan/note/MidiNoteData.hpp>
 
-#include <algorithm>
+#include <cant/maths/maths.hpp>
 
 namespace cant::pan
 {
@@ -12,8 +12,8 @@ namespace cant::pan
     MidiNoteInputData() = default;
 
     MidiNoteInputData::
-    MidiNoteInputData(id_u8 channel, tone_u8 tone, vel_u8 velocity)
-    : MidiNoteData<tone_u8, vel_u8>(channel, tone, velocity)
+    MidiNoteInputData(id_u8 channel, tone_i8 tone, vel_i8 velocity)
+    : MidiNoteData<tone_i8, vel_i8>(channel, tone, velocity)
     {}
 
     MidiNoteInputData::
@@ -51,7 +51,7 @@ namespace cant::pan
 
     }
 
-    Array<vel_d, 2>
+    ArrayPan
     MidiNoteOutputData::
     getVelocityPanned() const
     {

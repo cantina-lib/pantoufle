@@ -60,6 +60,9 @@ namespace cant::pan
         CANT_NODISCARD bool isPlaying() const override;
         CANT_NODISCARD bool justChangedPlaying() const override;
         CANT_NODISCARD bool justChangedTone() const override;
+
+        CANT_NODISCARD tone_i8 getToneNative() const;
+        CANT_NODISCARD vel_i8  getVelocityNative() const;
     private:
         /** -- methods -- **/
         CANT_NODISCARD  MidiNoteInput& operator=(const MidiNoteInput&);
@@ -119,7 +122,7 @@ namespace cant::pan
         CANT_NODISCARD time_d getLength(time_d tCurrent) const override;
 
         CANT_NODISCARD vel_d getVelocityPlaying() const override;
-        CANT_NODISCARD Array<vel_d, 2> getVelocityPanned() const override;
+        CANT_NODISCARD ArrayPan getVelocityPanned() const override;
 
         CANT_NODISCARD pan_d getPan() const override;
 

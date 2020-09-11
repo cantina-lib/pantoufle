@@ -72,7 +72,10 @@ namespace cant::pan
          * to decide whether it has changed.
          * It's pretty overkill, but it gets the work done.
          */
-        note.setChangedPlaying(note.isPlaying() != m_isMemoryPlaying.at(voice));
+        note.setChangedPlaying(
+                note.isPlaying()
+                != static_cast<bool>(m_isMemoryPlaying.at(voice))
+                );
     }
 
     void

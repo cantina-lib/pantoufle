@@ -29,7 +29,7 @@ namespace cant::pan
     set(const time_d tCurrent, const MidiNoteInputData &data)
     {
         const bool wasPlaying = isPlaying();
-        const tone_u8 lastTone = getTone();
+        const tone_i8 lastTone = m_data.getToneNative();
 
         m_isPressed = data.isPressed();
 

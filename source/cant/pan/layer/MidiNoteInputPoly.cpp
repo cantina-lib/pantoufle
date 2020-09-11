@@ -53,14 +53,14 @@ namespace cant::pan
             size_u& closestIndex,
             bool force) -> bool
     {
-        tone_u8 closestDist = c_midiMaxTone;
+        tone_i8 closestDist = c_midiMaxTone;
         bool foundClosest = false;
         size_u i = 0;
         for (const auto& note : notes)
         {
             if (!note.isPlaying() || force)
             {
-                const tone_u8 dist = std::abs(note.getTone() - inputData.getTone());
+                const tone_i8 dist = note.getToneNative() - inputData.getToneNative();
                 if (!foundClosest || dist < closestDist)
                 {
                     closestDist = dist;
@@ -78,7 +78,7 @@ namespace cant::pan
     chooseVoice(size_u &voice, const MidiNoteInputData &data)
     {
         const bool inputIsPressed = data.isPressed();
-        const tone_u8 inputTone = data.getTone();
+        const tone_i8 inputTone = data.getToneNative();
 
         /*
          * The way it works in Pure Data when a note is received by the poly object is:
@@ -101,7 +101,7 @@ namespace cant::pan
             size_u i = 0;
             for (const auto& note : m_notes)
             {
-                const bool noteIsSame = note.getTone() == inputTone;
+                const bool noteIsSame = note.getToneNative() == inputTone;
                 if (noteIsSame)
                 {
                     voice = i;

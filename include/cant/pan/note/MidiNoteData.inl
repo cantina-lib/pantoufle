@@ -7,10 +7,9 @@
 
 #pragma once
 
+#include <cant/maths/maths.hpp>
+
 #include <cant/common/macro.hpp>
-#include "MidiNoteData.hpp"
-
-
 namespace cant::pan
 {
     template<typename Tone_T, typename Vel_T>
@@ -83,6 +82,22 @@ namespace cant::pan
     MidiNoteData<Tone_T, Vel_T>::
     getVelocity() const
     { return static_cast<vel_d>(m_velocity); }
+
+    CANT_NODISCARD CANT_INLINE
+    tone_i8
+    MidiNoteInputData::
+    getToneNative() const
+    {
+        return m_tone;
+    }
+
+    CANT_NODISCARD CANT_INLINE
+    vel_i8
+    MidiNoteInputData::
+    getVelocityNative() const
+    {
+        return m_velocity;
+    }
 
     CANT_NODISCARD CANT_INLINE
     bool
