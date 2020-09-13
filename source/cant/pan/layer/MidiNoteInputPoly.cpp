@@ -60,7 +60,10 @@ namespace cant::pan
         {
             if (!note.isPlaying() || force)
             {
-                const tone_i8 dist = note.getToneNative() - inputData.getToneNative();
+                const auto dist = static_cast<tone_i8>(
+                        static_cast<cant::type_i>(note.getToneNative())
+                        - static_cast<cant::type_i>(inputData.getToneNative())
+                );
                 if (!foundClosest || dist < closestDist)
                 {
                     closestDist = dist;
