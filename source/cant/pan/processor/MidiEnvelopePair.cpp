@@ -4,6 +4,8 @@
 
 #include <cant/pan/processor/MidiEnvelopePair.hpp>
 
+#include <cant/pan/envelope/envelope.hpp>
+
 namespace cant::pan
 {
     MidiEnvelopePair::

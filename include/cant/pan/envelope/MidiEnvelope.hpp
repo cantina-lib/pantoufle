@@ -65,6 +65,6 @@ namespace cant::pan
 }
 #include <cant/common/undef_macro.hpp>
 
-#include "MidiEnvelope.inl"
+#include "../../../../inline/cant/pan/envelope/MidiEnvelope.inl"
 
 #endif //PANTOUFLEENVELOPE_HPP

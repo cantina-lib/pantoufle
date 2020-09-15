@@ -43,6 +43,6 @@ namespace cant::pan
 
 #include <cant/common/undef_macro.hpp>
 
-#include "MidiProcessor.inl"
+#include "../../../../inline/cant/pan/processor/MidiProcessor.inl"
 
 #endif //CANTINA_MIDIPROCESSOR_HPP

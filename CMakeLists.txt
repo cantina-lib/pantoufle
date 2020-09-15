@@ -5,6 +5,7 @@ project(pantoufle)
 
 set(PANTOUFLE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/source)
 set(PANTOUFLE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+set(PANTOUFLE_INLINE_DIR ${PROJECT_SOURCE_DIR}/inline)
 
 set(CANTINA_COMMON_DIR ${PROJECT_SOURCE_DIR}/cantina_common)
 add_subdirectory(${CANTINA_COMMON_DIR})
@@ -14,6 +15,7 @@ set(CMAKE_CXX_FLAGS ${CANTINA_MAIN_CXX_FLAGS})
 
 set(PANTOUFLE_INCLUDE_DIRS
         ${PANTOUFLE_INCLUDE_DIR}
+        ${PANTOUFLE_INLINE_DIR}
         ${CANTINA_COMMON_INCLUDE_DIRS}
         CACHE INTERNAL
         "List of include directories for Pantoufle"
@@ -56,25 +58,20 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/note_forward.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.inl
         ### io layers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/layer.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteLayer.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteLayer.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteInputPoly.hpp
         ### env
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/envelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/MidiEnvelope.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/MidiEnvelope.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/FlatEnvelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/ADSREnvelope.hpp
         ### controller
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/controller.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiController.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MultiMidiController.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MultiMidiController.inl
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiDamper.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiPan.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiWah.hpp
@@ -83,7 +80,6 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiControllerChain.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiEnvelopePair.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.inl
         ### control
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control_forward.hpp
@@ -91,7 +87,21 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlData.hpp
         ### time
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/MidiTimer.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/MidiTimer.inl
+
+        ## inline
+        ### note
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNoteData.inl
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNote.inl
+        ### layer
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/layer/MidiNoteLayer.inl
+        ### envelope
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/envelope/MidiEnvelope.inl
+        ### controller
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/controller/MultiMidiController.inl
+        ### processor
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/processor/MidiProcessor.inl
+        ### time
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/time/MidiTimer.inl
         )
 
 

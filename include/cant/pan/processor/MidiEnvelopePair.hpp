@@ -8,7 +8,7 @@
 
 #include <cant/pan/common/types.hpp>
 
-#include <cant/pan/envelope/envelope.hpp>
+#include <cant/pan/envelope/MidiEnvelope.hpp>
 
 #include <cant/pan/processor/MidiProcessor.hpp>
 

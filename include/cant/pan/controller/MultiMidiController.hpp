@@ -56,6 +56,6 @@ namespace cant::pan
 
 #include <cant/common/undef_macro.hpp>
 
-#include "MultiMidiController.inl"
+#include "../../../../inline/cant/pan/controller/MultiMidiController.inl"
 
 #endif //CANTINA_MIDICONTROLLER_HPP

@@ -6,7 +6,7 @@
 
 #include <cant/pan/common/PantoufleException.hpp>
 
-#include <cant/maths/maths.hpp>
+#include <cant/maths/utils.hpp>
 
 #include <cant/common/macro.hpp>
 namespace cant::pan

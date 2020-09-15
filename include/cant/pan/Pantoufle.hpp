@@ -15,7 +15,6 @@
 #include <cant/common/macro.hpp>
 namespace cant::pan
 {
-
     class Pantoufle
     {
     public:

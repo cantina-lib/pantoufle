@@ -34,12 +34,9 @@ namespace cant::pan
         id_u8 m_value;
 
     };
-
-
 }
-
 #include <cant/common/undef_macro.hpp>
 
-#include "MidiControlData.inl"
+#include "../../../../inline/cant/pan/control/MidiControlData.inl"
 
 #endif //CANTINA_MIDICONTROLDATA_HPP

@@ -8,7 +8,6 @@
 #include <cant/pan/layer/layer.hpp>
 
 #include <cant/pan/controller/MidiController.hpp>
-#include <cant/pan/control/MidiControlData.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 #include <cant/pan/note/MidiNoteData.hpp>
 #include <cant/pan/time/MidiTimer.hpp>
@@ -33,6 +32,7 @@ namespace cant::pan
     Pantoufle::
     getProcessedOutputData() const
     {
+        CANT_MAYBEUNUSED const pan::Pantoufle pantt(1, 1);
         return m_processedNoteOutput->getNotes();
     }
 

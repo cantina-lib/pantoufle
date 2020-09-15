@@ -145,6 +145,6 @@ namespace cant::pan
 
 #include <cant/common/undef_macro.hpp>
 
-#include "MidiNote.inl"
+#include "../../../../inline/cant/pan/note/MidiNote.inl"
 
 #endif //CANTINA_TILDE_MIDINOTE_HPP

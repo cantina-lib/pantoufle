@@ -94,6 +94,6 @@ namespace cant::pan
 }
 #include <cant/common/undef_macro.hpp>
 
-#include "MidiNoteData.inl"
+#include "../../../../inline/cant/pan/note/MidiNoteData.inl"
 
 #endif //CANTINA_MIDINOTEDATA_HPP

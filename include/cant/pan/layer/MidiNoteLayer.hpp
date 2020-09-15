@@ -65,6 +65,6 @@ namespace cant::pan
 
 #include <cant/common/undef_macro.hpp>
 
-#include "MidiNoteLayer.inl"
+#include "../../../../inline/cant/pan/layer/MidiNoteLayer.inl"
 
 #endif //CANTINA_TILDE_MIDINOTELAYER_HPP
