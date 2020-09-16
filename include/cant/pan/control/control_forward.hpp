@@ -15,8 +15,6 @@ namespace cant::pan
     typedef MidiControlInputData MidiControlInput;
 
     typedef MidiControlInput MidiControlInternal;
-    /* has had no meaning so far */
-    // using MidiControlOutputData = MidiControlData;
 }
 
 #endif //CANTINA_TILDE_CONTROL_FORWARD_HPP

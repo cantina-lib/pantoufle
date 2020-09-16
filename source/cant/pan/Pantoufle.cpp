@@ -7,11 +7,6 @@
 #include <cant/pan/processor/processor.hpp>
 #include <cant/pan/layer/layer.hpp>
 
-#include <cant/pan/controller/MidiController.hpp>
-#include <cant/pan/note/MidiNote.hpp>
-#include <cant/pan/note/MidiNoteData.hpp>
-#include <cant/pan/time/MidiTimer.hpp>
-
 #include <cant/pan/common/PantoufleException.hpp>
 
 #include <cant/common/macro.hpp>
@@ -28,107 +23,22 @@ namespace cant::pan
 
     }
 
-    const Stream<MidiNoteOutput>&
-    Pantoufle::
-    getProcessedOutputData() const
-    {
-        CANT_MAYBEUNUSED const pan::Pantoufle pantt(1, 1);
-        return m_processedNoteOutput->getNotes();
-    }
-
-    void
-    Pantoufle::
-    update()
-    {
-        const time_d tCurrent = getCurrentTime();
-        updateControlChain(tCurrent);
-        updateEnvelopeLayer(tCurrent);
-        processAll();
-        flushChange();
-    }
-
-    void
-    Pantoufle::
-    processAll()
-    {
-        /*
-         * Whatever the case, we will have to process the notes
-         * each time we update, so no need to process them individually
-         * when they are received.
-         */
-        for (size_u i = 0; i < getNumberVoices(); ++i)
-        {
-            process(i);
-        }
-
-    }
-
-    void
-    Pantoufle::
-    flushChange()
-    {
-        flushChangeNoteInput();
-        flushChangeEnvelopePair();
-    }
-
-    void
-    Pantoufle::
-    flushChangeNoteInput()
-    {
-        m_poly->flushChange();
-    }
-
-    void
-    Pantoufle::
-    flushChangeEnvelopePair()
-    {
-        m_envelopePair->flushChange();
-    }
-
-
-    void
-    Pantoufle::
-    updateControlChain(const time_d tCurrent)
-    {
-        m_controllerChain->update(tCurrent);
-    }
-
-    void Pantoufle::
-    updateEnvelopeLayer(const time_d tCurrent)
-    {
-         m_envelopePair->update(tCurrent);
-    }
-
-    time_d
-    Pantoufle::
-    getCurrentTime() const
-    {
-        return m_timer->getCurrentTime();
-    }
-
-    size_u
-    Pantoufle::
-    getNumberVoices() const
-    {
-        return m_poly->getNumberVoices();
-    }
-
     void
     Pantoufle::
     setController(UPtr<MidiController> controller)
     {
         PANTOUFLE_TRY_RETHROW({
-                                  m_controllerChain->addController(std::move(controller));
+              m_controllerChain->addController(std::move(controller));
         })
     }
 
 
-    void
+    Optional<size_u>
     Pantoufle::
     receiveInputNoteData(const MidiNoteInputData& inputData)
     {
-        m_poly->receive(getCurrentTime(), inputData);
         /* processing will be done when time comes to update. */
+        return m_poly->receive(getCurrentTime(), inputData);
     }
 
     void
@@ -145,26 +55,4 @@ namespace cant::pan
         m_processedNoteOutput->receive(internal);
     }
 
-    void
-    Pantoufle::
-    processControllerChainVoice(const size_u voice)
-    {
-        m_controllerChain->process(m_processedNoteInternal->getVoiceMutable(voice));
-    }
-
-    void
-    Pantoufle::
-    processEnvelopePairVoice(const size_u voice)
-    {
-        m_envelopePair->process(m_processedNoteInternal->getVoiceMutable(voice));
-    }
-
-
-    void
-    Pantoufle::
-    receiveRawControlData(const MidiControlInputData &controlData)
-    {
-        const auto control = MidiControlInternal(controlData);
-        m_controllerChain->receiveControl(control);
-    }
 }

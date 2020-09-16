@@ -77,14 +77,16 @@ namespace cant::pan
         /** -- methods -- **/
         virtual ~MidiNoteOutputCompatible() = default;
 
+
         CANT_NODISCARD virtual vel_d getPan() const = 0;
+
+        CANT_NODISCARD virtual bool isSet() const = 0;
 
         CANT_NODISCARD virtual bool isPlaying() const = 0;
 
         CANT_NODISCARD virtual time_d getLength(time_d tCurrent) const = 0;
 
         CANT_NODISCARD virtual vel_d getVelocityPlaying() const = 0;
-        CANT_NODISCARD virtual Array<vel_d, 2> getVelocityPanned() const = 0;
     };
 
 }

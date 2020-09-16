@@ -51,16 +51,5 @@ namespace cant::pan
 
     }
 
-    ArrayPan
-    MidiNoteOutputData::
-    getVelocityPanned() const
-    {
-        const vel_d velocity = getVelocity();
-        const pan_d pan = getPan();
-        const type_d left = (1 - pan) / 2;
-        const type_d right = (1 + pan) / 2;
-        /* -1 is full left, 1 is full right, 0 is balanced. */
-        return { velocity * left, velocity * right };
-    }
 
 }

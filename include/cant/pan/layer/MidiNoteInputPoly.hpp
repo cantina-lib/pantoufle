@@ -23,10 +23,10 @@ namespace cant::pan
 
         void flushChange();
 
-        void receive(time_d tCurrent, const MidiNoteInputData& data) override;
+        Optional<size_u> receive(time_d tCurrent, const MidiNoteInputData& data) override;
     private:
         /** -- methods -- **/
-        CANT_NODISCARD virtual bool chooseVoice(size_u &voice, const MidiNoteInputData &data);
+        CANT_NODISCARD virtual Optional <size_u> chooseVoice(const MidiNoteInputData &data);
 
         /** -- fields **/
         id_u8 m_channel;

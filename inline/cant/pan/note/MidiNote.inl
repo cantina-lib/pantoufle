@@ -44,67 +44,67 @@ namespace cant::pan
     }
 
     template<class Data_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     const Data_T&
     MidiNote<Data_T>::
     getData() const
     { return m_data; }
 
     template<class Data_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     size_u
     MidiNote<Data_T>::
     getVoice() const
     { return m_voice; }
 
     template<class Data_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     id_u8
     MidiNote<Data_T>::
     getChannel() const
     { return m_data.getChannel(); }
 
     template<class Data_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     tone_d
     MidiNote<Data_T>::
     getTone() const
     { return m_data.getTone(); }
 
     template<class Data_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     vel_d
     MidiNote<Data_T>::
     getVelocity() const
     { return m_data.getVelocity(); }
 
     template<class Data_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     time_d
     MidiNote<Data_T>::
     getStartingTime() const
     { return m_tStart; }
 
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteInput::
     isPlaying() const
     { return m_isPressed; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteInput::
     justChangedPlaying() const
     { return m_flagChangedPressed; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteInput::
     justChangedTone() const
     { return m_flagChangedTone; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     tone_i8
     MidiNoteInput::
     getToneNative() const
@@ -112,7 +112,7 @@ namespace cant::pan
         return m_data.getToneNative();
     }
 
-    CANT_NODISCARD CANT_INLINE
+     CANT_INLINE
     vel_i8
     MidiNoteInput::
     getVelocityNative() const
@@ -134,7 +134,7 @@ namespace cant::pan
     &MidiNoteInternal::
     operator=(const MidiNoteInternal &other) = default;
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     time_d
     MidiNoteInternal::
     getLength(const time_d tCurrent) const
@@ -175,39 +175,37 @@ namespace cant::pan
     setPan(const pan_d pan)
     { m_data.setPan(pan); }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     pan_d
     MidiNoteInternal::
     getPan() const
     { return m_data.getPan(); }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteInternal::isPlaying() const
     { return m_isPlaying; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteInternal::
     justChangedPlaying() const
     { return m_justChangedPlaying; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteInternal::
     justChangedTone() const
     { return m_justChangedTone; }
 
-
-
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     vel_d
     MidiNoteOutput::
     getVelocity() const
     { return m_data.getVelocity(); }
 
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     vel_d
     MidiNoteOutput::
     getVelocityPlaying() const
@@ -215,49 +213,49 @@ namespace cant::pan
         return isPlaying() ? getVelocity() : static_cast<vel_d>(0);
     }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     time_d
     MidiNoteOutput::
     getLength(const time_d tCurrent) const
     { return tCurrent - m_tStart; }
 
-    CANT_NODISCARD CANT_INLINE
-    ArrayPan
+    CANT_INLINE
+    bool
     MidiNoteOutput::
-    getVelocityPanned() const
-    { return m_data.getVelocityPanned(); }
+    isSet() const
+    { return m_isSet; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     pan_d
     MidiNoteOutput::
     getPan() const
     { return m_data.getPan(); }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteOutput::
     isPlaying() const
     { return m_isPlaying; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteOutput::
     justChangedPlaying() const
     { return m_justChangedPlaying; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteOutput::
     justChangedTone() const
     { return m_justChangedTone; }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool
     MidiNoteOutput::
     justStarted() const
     { return m_justChangedPlaying && isPlaying(); }
 
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     bool MidiNoteOutput::
     justStopped() const
     { return m_justChangedPlaying && !isPlaying(); }

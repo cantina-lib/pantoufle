@@ -29,7 +29,7 @@ namespace cant::pan
         }
     }
 
-    void
+    Optional<size_u>
     MidiNoteInputPoly::
     receive(const time_d tCurrent, const MidiNoteInputData &data)
     {
@@ -37,12 +37,12 @@ namespace cant::pan
          * in this case, there is no getVoice(),
          * we have to choose it instead.
          */
-        size_u voice;
-        bool isChosen = chooseVoice(voice, data);
-        if (isChosen)
+        Optional<size_u> optVoice = chooseVoice(data);
+        if (optVoice)
         {
-            m_notes.at(voice).set(tCurrent, data);
+            m_notes.at(optVoice.value()).set(tCurrent, data);
         }
+        return optVoice;
     }
 
     CANT_CONSTEXPR
@@ -50,11 +50,11 @@ namespace cant::pan
     findClosestToneIndex = [](
             const Stream<MidiNoteInput>& notes,
             const MidiNoteInputData& inputData,
-            size_u& closestIndex,
-            bool force) -> bool
+            bool force) -> Optional<size_u>
     {
         tone_i8 closestDist = c_midiMaxTone;
         bool foundClosest = false;
+        size_u closestIndex = 0;
         size_u i = 0;
         for (const auto& note : notes)
         {
@@ -73,12 +73,12 @@ namespace cant::pan
             }
             ++i;
         }
-        return foundClosest;
+        return foundClosest ? Optional<size_u>(closestIndex) : std::nullopt;
     };
 
-    bool
+    Optional <size_u>
     MidiNoteInputPoly::
-    chooseVoice(size_u &voice, const MidiNoteInputData &data)
+    chooseVoice(const MidiNoteInputData &data)
     {
         const bool inputIsPressed = data.isPressed();
         const tone_i8 inputTone = data.getToneNative();
@@ -107,16 +107,15 @@ namespace cant::pan
                 const bool noteIsSame = note.getToneNative() == inputTone;
                 if (noteIsSame)
                 {
-                    voice = i;
-                    return true;
+                    return Optional<size_u>(i);
                 }
                 ++i;
             }
         }
         // Second pass, taking ownership of note with closest tone.
-        if (findClosestToneIndex(m_notes, data, voice, false))
+        if (auto optVoice = findClosestToneIndex(m_notes, data, false))
         {
-            return true;
+            return optVoice;
         }
         /*
          * by this time, if input is not pressed and there was no note to signal,
@@ -124,10 +123,9 @@ namespace cant::pan
          */
         if (!inputIsPressed)
         {
-            return false;
+            return std::nullopt;
         }
         /* forced pass -> stealing */
-        findClosestToneIndex(m_notes, data, voice, true);
-        return true;
+        return findClosestToneIndex(m_notes, data, true);
     }
 }

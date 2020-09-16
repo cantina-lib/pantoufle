@@ -9,6 +9,7 @@
 
 #include <cant/pan/common/types.hpp>
 #include <cant/common/memory.hpp>
+#include <cant/common/option.hpp>
 
 #include <cant/pan/pan_forward.hpp>
 
@@ -23,16 +24,19 @@ namespace cant::pan
 
         void update();
 
-        void setController(UPtr<MidiController> controller);
-        void receiveInputNoteData(const MidiNoteInputData& inputData);
-        void receiveRawControlData(const MidiControlData &controlData);
+        CANT_NODISCARD const Stream<MidiNoteOutput>& getProcessedNoteOutput() const;
+        CANT_NODISCARD const MidiNoteOutput& getProcessedVoice(size_u voice) const;
 
-        CANT_NODISCARD const Stream<MidiNoteOutput>& getProcessedOutputData() const;
+        void setController(UPtr<MidiController> controller);
+
+        Optional<size_u> receiveInputNoteData(const MidiNoteInputData& inputData);
+        void             receiveRawControlData(const MidiControlData &controlData);
+
         CANT_NODISCARD size_u getNumberVoices() const;
     private:
         /** -- methods -- **/
-        void process(size_u iVoice);
-        void processControllerChainVoice(size_u iVoice);
+        void process(size_u voice);
+        void processControllerChainVoice(size_u voice);
         void processEnvelopePairVoice(size_u voice);
         void processAll();
 
@@ -58,6 +62,8 @@ namespace cant::pan
         mutable UPtr<MidiNoteOutputLayer> m_processedNoteOutput;
     };
 }
-
 #include <cant/common/undef_macro.hpp>
+
+#include <cant/pan/Pantoufle.inl>
+
 #endif //CANTINA_MIDIMACHINE_HPP

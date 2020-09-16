@@ -89,6 +89,7 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/MidiTimer.hpp
 
         ## inline
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/Pantoufle.inl
         ### note
         ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNoteData.inl
         ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNote.inl

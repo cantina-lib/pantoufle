@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include <cant/common/memory.hpp>
 #include <cant/pan/common/types.hpp>
+#include <cant/common/memory.hpp>
+#include <cant/common/option.hpp>
 
 #include <cant/pan/note/note_forward.hpp>
 
@@ -40,7 +41,7 @@ namespace cant::pan
     public:
         /** -- methods  -- **/
         CANT_EXPLICIT MidiNoteInputLayer(size_u numberVoices);
-        virtual void receive(time_d tCurrent, const MidiNoteInputData &data) = 0;
+        virtual Optional<size_u> receive(time_d tCurrent, const MidiNoteInputData &data) = 0;
     };
 
 

@@ -122,9 +122,10 @@ namespace cant::pan
         CANT_NODISCARD time_d getLength(time_d tCurrent) const override;
 
         CANT_NODISCARD vel_d getVelocityPlaying() const override;
-        CANT_NODISCARD ArrayPan getVelocityPanned() const override;
 
         CANT_NODISCARD pan_d getPan() const override;
+
+        CANT_NODISCARD bool isSet() const override;
 
         CANT_NODISCARD bool isPlaying() const override;
         CANT_NODISCARD bool justChangedPlaying() const override;
@@ -140,6 +141,7 @@ namespace cant::pan
         bool m_isPlaying;
         bool m_justChangedPlaying;
         bool m_justChangedTone;
+        bool m_isSet;
     };
 }
 

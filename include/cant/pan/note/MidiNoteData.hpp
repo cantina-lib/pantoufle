@@ -83,8 +83,6 @@ namespace cant::pan
         MidiNoteOutputData();
         CANT_EXPLICIT MidiNoteOutputData(const MidiNoteInternalData& internal);
 
-        CANT_NODISCARD ArrayPan getVelocityPanned() const;
-
         CANT_NODISCARD pan_d getPan() const;
     private:
         /** -- fields -- **/

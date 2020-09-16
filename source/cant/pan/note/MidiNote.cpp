@@ -81,7 +81,8 @@ namespace cant::pan
     : MidiNote<MidiNoteOutputData>(voice),
       m_isPlaying(false),
       m_justChangedPlaying(false),
-      m_justChangedTone(false)
+      m_justChangedTone(false),
+      m_isSet(false)
     {
 
     }
@@ -95,6 +96,7 @@ namespace cant::pan
         m_isPlaying = internal.isPlaying();
         m_justChangedPlaying = internal.justChangedPlaying();
         m_justChangedTone = internal.justChangedTone();
+        m_isSet = true;
     }
 
 
