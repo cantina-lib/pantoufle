@@ -7,23 +7,22 @@
 
 #pragma once
 
-#include <cant/pan/layer/MidiNoteLayer.hpp>
+#include <cant/pan/note/note_forward.hpp>
+#include <cant/pan/control/control_forward.hpp>
+#include <cant/pan/layer/layer_forward.hpp>
 
-namespace cant::pan
-{
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiControllerChain;
     class MidiEnvelopePair;
     class MidiTimer;
 
-    template <typename T>
-    class MidiNoteLayer;
-    class MidiNoteInputPoly;
-
     class MidiController;
-    class MidiControlData;
-    template <typename T, typename V>
-    class MidiNoteData;
-    class MidiNoteOutput;
-}
+
+    class Pantoufle;
+
+CANTINA_PAN_NAMESPACE_END
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_PAN_FORWARD_HPP

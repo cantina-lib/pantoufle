@@ -10,8 +10,8 @@
 #include <cant/pan/note/note_forward.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     template<class Note_T>
     void
     MidiNoteLayer<Note_T>::
@@ -34,7 +34,7 @@ namespace cant::pan
     }
 
     template<class Note_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     const Note_T &
     MidiNoteLayer<Note_T>::
     getVoice(size_u voice) const
@@ -43,7 +43,7 @@ namespace cant::pan
     }
 
     template<class Note_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     size_u
     MidiNoteLayer<Note_T>::
     getNumberVoices() const
@@ -81,7 +81,7 @@ namespace cant::pan
     }
 
     template<class Note_T, class PreviousLayerNote_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     Note_T &
     MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::getVoiceMutable(size_u voice)
     {
@@ -89,13 +89,21 @@ namespace cant::pan
     }
 
     template<class Note_T, class PreviousLayerNote_T>
-    CANT_NODISCARD CANT_INLINE
+    CANT_INLINE
     const Stream <Note_T> &
     MidiNoteInternalOutputLayer<Note_T, PreviousLayerNote_T>::getNotes() const
     {
         return this->m_notes;
     }
-}
 
+    CANT_INLINE
+    MidiNoteInputLayer::
+    MidiNoteInputLayer(size_u numberVoices)
+            : MidiNoteLayer<MidiNoteInput>(numberVoices)
+    {
+    }
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_TILDE_MIDINOTELAYER_INL

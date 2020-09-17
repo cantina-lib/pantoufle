@@ -4,8 +4,9 @@
 
 #include <cant/pan/processor/MidiControllerChain.hpp>
 
-namespace cant::pan
-{
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
+
     MidiControllerChain::
     MidiControllerChain(size_u numberVoices)
     : m_numberVoices(numberVoices),
@@ -80,4 +81,5 @@ namespace cant::pan
         allocateControls(controller->getControllerIds());
         m_controllers.push_back(std::move(controller));
     }
-}
+
+CANTINA_PAN_NAMESPACE_END

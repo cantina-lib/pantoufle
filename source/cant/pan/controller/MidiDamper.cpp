@@ -5,8 +5,8 @@
 #include <cant/pan/controller/MidiDamper.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     MidiDamper::
     MidiDamper(const size_u numberVoices, const id_u8 channel, const id_u8 controllerId)
     : MultiMidiController<1>(numberVoices, channel, { controllerId }),
@@ -91,5 +91,4 @@ namespace cant::pan
         return UPtr<MidiController>(new MidiDamper(numberVoices, channel, controllerId));
     }
 
-
-}
+CANTINA_PAN_NAMESPACE_END

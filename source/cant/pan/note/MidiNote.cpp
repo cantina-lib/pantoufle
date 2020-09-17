@@ -5,8 +5,7 @@
 #include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     MidiNoteInput::MidiNoteInput(const size_u voice)
     : MidiNote<MidiNoteInputData>(voice),
@@ -99,5 +98,4 @@ namespace cant::pan
         m_isSet = true;
     }
 
-
-}
+CANTINA_PAN_NAMESPACE_END

@@ -16,8 +16,8 @@
 #include <cant/pan/controller/MultiMidiController.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiControllerChain final : public MidiProcessor
     {
     public:
@@ -51,7 +51,8 @@ namespace cant::pan
         // constants
         static CANT_CONSTEXPR size_u c_controllerStartingSize = 50;
     };
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_MIDICONTROLPROCESSOR_HPP

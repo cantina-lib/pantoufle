@@ -4,14 +4,19 @@
 
 #include <cant/pan/controller/MidiWah.hpp>
 
-namespace cant::pan
-{
-    void MidiWah::beforeControlProcess(const MidiControlInternal &)
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
+
+    void
+    MidiWah::
+    beforeControlProcess(const MidiControlInternal &)
     {
 
     }
 
-    void MidiWah::beforeNoteProcess(const MidiNoteInternal &)
+    void
+    MidiWah::
+    beforeNoteProcess(const MidiNoteInternal &)
     {
 
     }
@@ -43,4 +48,5 @@ namespace cant::pan
     {
         return cant::UPtr<MidiController>(new MidiWah(numberVoices, channel, wahwah));
     }
-}
+
+CANTINA_PAN_NAMESPACE_END

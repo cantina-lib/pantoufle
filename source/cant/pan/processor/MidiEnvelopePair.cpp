@@ -6,8 +6,9 @@
 
 #include <cant/pan/envelope/envelope.hpp>
 
-namespace cant::pan
-{
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
+
     MidiEnvelopePair::
     MidiEnvelopePair(const size_u numberVoices, const id_u8 channel)
     : MidiProcessorMemory(numberVoices),
@@ -41,4 +42,5 @@ namespace cant::pan
         m_toneEnvelope->flushChange();
         m_velocityEnvelope->flushChange();
     }
-}
+
+CANTINA_PAN_NAMESPACE_END

@@ -10,8 +10,8 @@
 #include <cant/maths/maths.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     template<typename Tone_T, typename Vel_T>
     CANT_INLINE
     MidiNoteData<Tone_T, Vel_T>::
@@ -145,7 +145,8 @@ namespace cant::pan
     {
         return m_pan;
     }
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_TILDE_MIDINOTEDATA_INL

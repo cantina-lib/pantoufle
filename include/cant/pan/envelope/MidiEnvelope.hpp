@@ -12,8 +12,7 @@
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     /**
      * Envelopes should not have internal states
@@ -62,7 +61,8 @@ namespace cant::pan
 
         void flushChange() override = 0;
     };
-}
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #include "../../../../inline/cant/pan/envelope/MidiEnvelope.inl"

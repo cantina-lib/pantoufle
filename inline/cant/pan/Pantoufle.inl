@@ -7,17 +7,19 @@
 
 #include <cant/pan/time/MidiTimer.hpp>
 #include <cant/pan/layer/MidiNoteInputPoly.hpp>
+#include <cant/pan/layer/MidiNoteLayer.hpp>
 #include <cant/pan/processor/MidiEnvelopePair.hpp>
 #include <cant/pan/processor/MidiControllerChain.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     CANT_INLINE
     void
     Pantoufle::
     update()
     {
+        updateTimer();
         const time_d tCurrent = getCurrentTime();
         updateControlChain(tCurrent);
         updateEnvelopeLayer(tCurrent);
@@ -100,6 +102,15 @@ namespace cant::pan
     }
 
     CANT_INLINE
+    void
+    Pantoufle::
+    updateTimer()
+    {
+        m_timer->update();
+    }
+
+
+    CANT_INLINE
     time_d
     Pantoufle::
     getCurrentTime() const
@@ -139,7 +150,8 @@ namespace cant::pan
         const auto control = MidiControlInternal(controlData);
         m_controllerChain->receiveControl(control);
     }
-}
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_PANTOUFLE_INL

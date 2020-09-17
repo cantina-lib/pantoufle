@@ -13,8 +13,8 @@
 #include <cant/pan/control/control_forward.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiController : public MidiProcessorMemory
     {
     public:
@@ -44,8 +44,8 @@ namespace cant::pan
         virtual void IMPL_process(MidiNoteInternal& note) const = 0;
 
     };
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_MIDICONTROLLER_HPP

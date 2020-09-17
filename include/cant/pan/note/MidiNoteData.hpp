@@ -13,8 +13,7 @@
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
     template <typename Tone_T, typename Vel_T>
     class MidiNoteData : MidiNoteDataCompatible
     {
@@ -89,9 +88,9 @@ namespace cant::pan
         pan_d m_pan;
     };
 
-}
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#include "../../../../inline/cant/pan/note/MidiNoteData.inl"
+#include <cant/pan/note/MidiNoteData.inl>
 
 #endif //CANTINA_MIDINOTEDATA_HPP

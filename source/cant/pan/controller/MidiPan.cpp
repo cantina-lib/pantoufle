@@ -5,8 +5,8 @@
 #include <cant/pan/controller/MidiPan.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     MidiPan::
     MidiPan(size_u numberVoices, id_u8 channel, id_u8 controllerId)
     : MultiMidiController<1>(numberVoices, channel, { controllerId })
@@ -55,4 +55,5 @@ namespace cant::pan
     {
         return cant::UPtr<MidiController>(new MidiPan(numberVoices, channel, controllerId));
     }
-}
+
+CANTINA_PAN_NAMESPACE_END

@@ -8,8 +8,8 @@
 #pragma once
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     template<typename T>
     CANT_NODISCARD CANT_INLINE
     time_d
@@ -37,7 +37,7 @@ namespace cant::pan
         m_tCurrent = tCurrent;
     }
 
-}
-
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_TILDE_MIDIENVELOPE_INL

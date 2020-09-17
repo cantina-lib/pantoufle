@@ -10,7 +10,7 @@ set(PANTOUFLE_INLINE_DIR ${PROJECT_SOURCE_DIR}/inline)
 set(CANTINA_COMMON_DIR ${PROJECT_SOURCE_DIR}/cantina_common)
 add_subdirectory(${CANTINA_COMMON_DIR})
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD ${CANTINA_CXX_STANDARD})
 set(CMAKE_CXX_FLAGS ${CANTINA_MAIN_CXX_FLAGS})
 
 set(PANTOUFLE_INCLUDE_DIRS
@@ -33,13 +33,10 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNote.cpp
         ### io layers
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteInputPoly.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteLayer.cpp
         ### env
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/MidiEnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSREnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/FlatEnvelope.cpp
-        ### control
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/control/MidiControlData.cpp
         ### processor
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiControllerChain.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiEnvelopePair.cpp
@@ -61,6 +58,7 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.hpp
         ### io layers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/layer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/layer_forward.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteLayer.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteInputPoly.hpp
         ### env
@@ -86,7 +84,10 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlData.hpp
         ### time
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/time.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/MidiTimer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/SystemMidiTimer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/CustomMidiTimer.hpp
 
         ## inline
         ${PANTOUFLE_INLINE_DIR}/cant/pan/Pantoufle.inl
@@ -103,6 +104,8 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INLINE_DIR}/cant/pan/processor/MidiProcessor.inl
         ### time
         ${PANTOUFLE_INLINE_DIR}/cant/pan/time/MidiTimer.inl
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/time/SystemMidiTimer.inl
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/time/CustomMidiTimer.inl
         )
 
 

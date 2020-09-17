@@ -1,5 +1,5 @@
 //
-// Created by binabik on 01/09/2020.
+// Created by binabik on 17/09/2020.
 //
 
 #ifndef CANTINA_TILDE_MIDITIMER_INL
@@ -8,32 +8,63 @@
 #pragma once
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
-    CANT_INLINE
-    std::chrono::time_point<std::chrono::steady_clock> MidiTimer::s_mainTStart = std::chrono::steady_clock::now();
+CANTINA_PAN_NAMESPACE_BEGIN
 
     CANT_INLINE
     MidiTimer::
-    MidiTimer() = default;
+    MidiTimer()
+            : m_isStarted(false)
+    {}
+
+    CANT_INLINE
+    MidiTimer::
+    ~MidiTimer() = default;
+
+    CANT_INLINE
+    type_d
+    MidiTimer::
+    getCurrentTime() const
+    {
+        return c_inMilliseconds * getCurrentTimeInternal();
+    }
+
+    CANT_INLINE
+    type_d
+    MidiTimer::
+    getDeltaTime() const
+    {
+        return c_inMilliseconds * getDeltaTimeInternal();
+    }
 
     CANT_INLINE
     void
     MidiTimer::
-    update()
+    start()
     {
+        if (!isStarted())
+        {
+            reset();
+            m_isStarted = true;
+        }
     }
 
     CANT_INLINE
-    time_d
+    void
     MidiTimer::
-    getCurrentTime() const
+    stop()
     {
-        auto t = std::chrono::steady_clock::now();
-        std::chrono::duration<time_d> dur = t - s_mainTStart;
-        return dur.count() * 1000;
+        m_isStarted = false;
     }
-}
 
+    CANT_INLINE
+    bool
+    MidiTimer::
+    isStarted() const
+    {
+        return m_isStarted;
+    }
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_TILDE_MIDITIMER_INL

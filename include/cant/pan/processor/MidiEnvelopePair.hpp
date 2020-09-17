@@ -13,8 +13,8 @@
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiEnvelopePair: public MidiProcessorMemory
     {
     public:
@@ -31,7 +31,8 @@ namespace cant::pan
         UPtr<VelocityEnvelope> m_velocityEnvelope;
         id_u8 m_channel;
     };
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_MIDIENVELOPELAYER_HPP

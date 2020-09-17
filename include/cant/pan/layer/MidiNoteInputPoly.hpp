@@ -13,8 +13,8 @@
 #include <cant/pan/layer/MidiNoteLayer.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiNoteInputPoly : public MidiNoteInputLayer
     {
     public:
@@ -31,7 +31,8 @@ namespace cant::pan
         /** -- fields **/
         id_u8 m_channel;
     };
-}
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_MIDINOTEINPUTPOLY_HPP

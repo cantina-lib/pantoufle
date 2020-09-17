@@ -13,8 +13,7 @@
 #include <cant/pan/note/MidiNoteData.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     template <typename Data_T>
     class MidiNote : MidiNoteCompatible
@@ -143,10 +142,10 @@ namespace cant::pan
         bool m_justChangedTone;
         bool m_isSet;
     };
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#include "../../../../inline/cant/pan/note/MidiNote.inl"
+#include <cant/pan/note/MidiNote.inl>
 
 #endif //CANTINA_TILDE_MIDINOTE_HPP

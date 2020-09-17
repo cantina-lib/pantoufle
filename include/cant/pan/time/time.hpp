@@ -9,4 +9,7 @@
 
 #include "MidiTimer.hpp"
 
+#include "SystemMidiTimer.hpp"
+#include "CustomMidiTimer.hpp"
+
 #endif //CANTINA_TILDE_TIME_HPP

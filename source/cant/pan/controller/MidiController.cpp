@@ -7,8 +7,8 @@
 #include <cant/pan/control/MidiControlData.hpp>
 #include <cant/pan/note/MidiNote.hpp>
 
-namespace cant::pan
-{
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
 
     MidiController::
     MidiController(const size_u numberVoices)
@@ -42,7 +42,4 @@ namespace cant::pan
         IMPL_receiveControl(control);
     }
 
-
-
-}
-
+CANTINA_PAN_NAMESPACE_END

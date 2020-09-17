@@ -13,9 +13,7 @@
 #include <cant/pan/controller/MidiController.hpp>
 
 #include <cant/common/macro.hpp>
-
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     class MidiNoteInternal;
 
@@ -51,11 +49,9 @@ namespace cant::pan
         Array<MidiControlInternal, numberBindings> m_controls;
     };
 
-
-}
-
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#include "../../../../inline/cant/pan/controller/MultiMidiController.inl"
+#include <cant/pan/controller/MultiMidiController.inl>
 
 #endif //CANTINA_MIDICONTROLLER_HPP

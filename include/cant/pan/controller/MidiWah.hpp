@@ -12,8 +12,8 @@
 #include <cant/pan/controller/MultiMidiController.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiWah : MultiMidiController<2>
     {
     public:
@@ -33,6 +33,7 @@ namespace cant::pan
         void IMPL_process(MidiNoteInternal& note) const override;
     };
 
-}
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //wah!

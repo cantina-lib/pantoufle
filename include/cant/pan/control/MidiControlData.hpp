@@ -13,8 +13,8 @@
 #include <cant/pan/control/MidiControlCompatible.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiControlData : MidiControlCompatible
     {
     public:
@@ -34,9 +34,10 @@ namespace cant::pan
         id_u8 m_value;
 
     };
-}
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#include "../../../../inline/cant/pan/control/MidiControlData.inl"
+#include <cant/pan/control/MidiControlData.inl>
 
 #endif //CANTINA_MIDICONTROLDATA_HPP

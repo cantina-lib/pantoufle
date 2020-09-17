@@ -13,14 +13,19 @@
 
 #include <cant/pan/pan_forward.hpp>
 
+#include <cant/pan/time/time.hpp>
+
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class Pantoufle
     {
     public:
         /** -- methods -- **/
-        Pantoufle(size_u numberVoices, id_u8 channel);
+        Pantoufle(
+                size_u numberVoices,
+                id_u8 channel
+                );
 
         void update();
 
@@ -28,6 +33,8 @@ namespace cant::pan
         CANT_NODISCARD const MidiNoteOutput& getProcessedVoice(size_u voice) const;
 
         void setController(UPtr<MidiController> controller);
+
+        void setCurrentTimeGetter(CustomMidiTimer::CurrentTimeGetter currentTimeGetter);
 
         Optional<size_u> receiveInputNoteData(const MidiNoteInputData& inputData);
         void             receiveRawControlData(const MidiControlData &controlData);
@@ -44,6 +51,7 @@ namespace cant::pan
         void flushChangeNoteInput();
         void flushChangeEnvelopePair();
 
+        void updateTimer();
         void updateEnvelopeLayer(time_d tCurrent);
         void updateControlChain(time_d tCurrent);
 
@@ -54,14 +62,15 @@ namespace cant::pan
         UPtr<MidiEnvelopePair> m_envelopePair;
 
         UPtr<MidiNoteInputPoly> m_poly;
+        UPtr<MidiTimer> m_timer;
 
         UPtr<MidiNoteInternalLayer> m_processedNoteInternal;
-        UPtr<MidiTimer> m_timer;
 
         // mutable fields
         mutable UPtr<MidiNoteOutputLayer> m_processedNoteOutput;
     };
-}
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #include <cant/pan/Pantoufle.inl>

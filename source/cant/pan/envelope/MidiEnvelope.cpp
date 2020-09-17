@@ -3,8 +3,9 @@
 //
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
-namespace cant::pan
-{
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
+
     ToneEnvelope::
     ToneEnvelope(const size_u numberVoices)
     : MidiEnvelope<tone_d>(numberVoices)
@@ -18,4 +19,5 @@ namespace cant::pan
     {
 
     }
-}
+
+CANTINA_PAN_NAMESPACE_END

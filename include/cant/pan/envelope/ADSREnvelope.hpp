@@ -14,14 +14,20 @@
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     class ADSRState
     {
     public:
         /** -- internal structures -- **/
-        enum ADSRStateType { eAttack=0, eDecay=2, eSustain=1, eRelease=3, eNotPlaying=4 };
+        enum ADSRStateType
+        {
+            eAttack=0,
+            eDecay=2,
+            eSustain=1,
+            eRelease=3,
+            eNotPlaying=4
+        };
         typedef Array<time_d, 4> ArrayLengths;
         typedef Array<type_d , 2> ArrayVelocityRatios;
         typedef Array<timecallback_f<type_d>, 4> ArrayCallbacks;
@@ -82,6 +88,8 @@ namespace cant::pan
         ADSREnvelope(const ADSREnvelope& adsr) = default;
 
         void setCallbacks();
+
+        // static methods
         static void checkLengths(const ADSRState::ArrayLengths& lengths);
 
         /** -- fields -- **/
@@ -104,7 +112,7 @@ namespace cant::pan
         CANT_CONSTEXPR
         static
         ADSRState::ArrayLengths
-        c_defaultADSRLengths = {30., -1, 50., 80. };
+        c_defaultADSRLengths = {20., -1, 50., 20. };
 
 
         CANT_CONSTEXPR
@@ -113,7 +121,8 @@ namespace cant::pan
         c_defaultADSRVelocities = {1., 0.7 };
 
     };
-}
+
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_ADSRENVELOPE_HPP

@@ -8,8 +8,7 @@
 #include <cant/pan/note/MidiNoteData.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     MidiNoteInputPoly::
     MidiNoteInputPoly(size_u numberVoices, id_u8 channel)
@@ -128,4 +127,5 @@ namespace cant::pan
         /* forced pass -> stealing */
         return findClosestToneIndex(m_notes, data, true);
     }
-}
+
+CANTINA_PAN_NAMESPACE_END

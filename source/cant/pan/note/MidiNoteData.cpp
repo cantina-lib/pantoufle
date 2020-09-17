@@ -6,8 +6,9 @@
 
 #include <cant/maths/maths.hpp>
 
-namespace cant::pan
-{
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
+
     MidiNoteInputData::
     MidiNoteInputData() = default;
 
@@ -51,5 +52,4 @@ namespace cant::pan
 
     }
 
-
-}
+CANTINA_PAN_NAMESPACE_END

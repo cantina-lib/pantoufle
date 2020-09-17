@@ -9,8 +9,9 @@
 
 #include <cant/pan/common/types.hpp>
 
-namespace cant::pan
-{
+#include <cant/common/macro.hpp>
+CANTINA_PAN_NAMESPACE_BEGIN
+
     template <typename Tone_T, typename Vel_T>
     class MidiNoteData;
 
@@ -23,6 +24,8 @@ namespace cant::pan
     class MidiNoteInput;
     class MidiNoteInternal;
     class MidiNoteOutput;
-}
+
+CANTINA_PAN_NAMESPACE_END
+#include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_TILDE_NOTE_FORWARD_HPP

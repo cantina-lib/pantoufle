@@ -5,8 +5,7 @@
 #include <cant/pan/envelope/FlatEnvelope.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     FlatToneEnvelope::
     FlatToneEnvelope(const size_u numberVoices)
@@ -36,5 +35,5 @@ namespace cant::pan
     {
 
     }
-}
 
+CANTINA_PAN_NAMESPACE_END

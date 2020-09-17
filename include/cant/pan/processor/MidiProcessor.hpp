@@ -13,8 +13,8 @@
 #include <cant/pan/layer/MidiNoteLayer.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiProcessor
     {
     public:
@@ -39,8 +39,8 @@ namespace cant::pan
         /** -- fields -- **/
         MidiNoteInternalLayer m_memory;
     };
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #include "../../../../inline/cant/pan/processor/MidiProcessor.inl"

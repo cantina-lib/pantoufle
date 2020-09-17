@@ -9,8 +9,8 @@
 #include <cant/maths/utils.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     UPtr<VelocityEnvelope>
     ADSREnvelope::
     make(
@@ -307,5 +307,5 @@ namespace cant::pan
         state.update(tCurrent, note, m_lengths);
         state.apply(tCurrent, note, m_callbacks);
     }
-}
 
+CANTINA_PAN_NAMESPACE_END

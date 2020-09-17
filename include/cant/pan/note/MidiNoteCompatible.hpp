@@ -11,8 +11,8 @@
 #include <cant/pan/common/types.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiNoteDataCompatible
     {
     public:
@@ -89,7 +89,7 @@ namespace cant::pan
         CANT_NODISCARD virtual vel_d getVelocityPlaying() const = 0;
     };
 
-}
-
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_MIDIPLAYABLE_HPP

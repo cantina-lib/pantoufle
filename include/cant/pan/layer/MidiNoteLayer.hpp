@@ -11,11 +11,13 @@
 #include <cant/common/memory.hpp>
 #include <cant/common/option.hpp>
 
+#include <cant/pan/layer/layer_forward.hpp>
+
 #include <cant/pan/note/note_forward.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     template <class Note_T>
     class MidiNoteLayer
     {
@@ -59,13 +61,9 @@ namespace cant::pan
         CANT_NODISCARD const Stream<Note_T>& getNotes() const;
     };
 
-
-    using MidiNoteInternalLayer = MidiNoteInternalOutputLayer<MidiNoteInternal, MidiNoteInput>;
-    using MidiNoteOutputLayer = MidiNoteInternalOutputLayer<MidiNoteOutput, MidiNoteInternal>;
-}
-
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#include "../../../../inline/cant/pan/layer/MidiNoteLayer.inl"
+#include <cant/pan/layer/MidiNoteLayer.inl>
 
 #endif //CANTINA_TILDE_MIDINOTELAYER_HPP

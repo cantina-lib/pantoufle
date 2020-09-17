@@ -13,8 +13,7 @@
 #include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     template<size_u numberBindings>
     void
@@ -73,7 +72,8 @@ namespace cant::pan
     {
         return Stream<id_u8>(m_controllerIds.begin(), m_controllerIds.end());
     }
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_TILDE_MULTIMIDICONTROLLER_INL

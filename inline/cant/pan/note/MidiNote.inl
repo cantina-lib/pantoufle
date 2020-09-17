@@ -11,8 +11,7 @@
 #include <cant/common/memory.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
 
     template<class Data_T>
     MidiNote<Data_T>::
@@ -260,7 +259,7 @@ namespace cant::pan
     justStopped() const
     { return m_justChangedPlaying && !isPlaying(); }
 
-}
-
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_TILDE_MIDINOTE_INL

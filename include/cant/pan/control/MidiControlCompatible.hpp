@@ -10,8 +10,8 @@
 #include <cant/pan/common/types.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
+CANTINA_PAN_NAMESPACE_BEGIN
+
     class MidiControlCompatible
     {
     public:
@@ -22,7 +22,8 @@ namespace cant::pan
         CANT_NODISCARD virtual id_u8 getId() const = 0;
         CANT_NODISCARD virtual id_u8 getValue() const = 0;
     };
-}
 
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
+
 #endif //CANTINA_MIDICONTROLCOMPATIBLE_HPP
