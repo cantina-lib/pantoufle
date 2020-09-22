@@ -10,7 +10,7 @@
 #include "MidiEnvelope.hpp"
 
 #include "ADSREnvelope.hpp"
-#include "FlatEnvelope.hpp"
+#include "FlatToneEnvelope.hpp"
 
 
 #endif //CANTINA_MIDIENVELOPE_HPP

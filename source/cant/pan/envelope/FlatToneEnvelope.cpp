@@ -2,23 +2,16 @@
 // Created by binabik on 30/05/2020.
 //
 
-#include <cant/pan/envelope/FlatEnvelope.hpp>
+#include <cant/pan/envelope/FlatToneEnvelope.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    FlatToneEnvelope::
-    FlatToneEnvelope(const size_u numberVoices)
-    : ToneEnvelope(numberVoices)
-    {
-
-    }
-
     UPtr<ToneEnvelope>
     FlatToneEnvelope::
-    make(const size_u numberVoices)
+    make()
     {
-        return UPtr<ToneEnvelope>(new FlatToneEnvelope(numberVoices));
+        return UPtr<ToneEnvelope>(new FlatToneEnvelope());
     }
 
 
@@ -31,7 +24,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
     void
     FlatToneEnvelope::
-    flushChange()
+    updateDelta(time_d)
     {
 
     }

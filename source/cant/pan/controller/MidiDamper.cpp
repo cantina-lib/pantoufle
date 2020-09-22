@@ -78,12 +78,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
                 );
     }
 
-    void
-    MidiDamper::
-    update(time_d)
-    {
-    }
-
     UPtr<MidiController>
     MidiDamper::
     make(const size_u numberVoices, const id_u8 channel, const id_u8 controllerId)

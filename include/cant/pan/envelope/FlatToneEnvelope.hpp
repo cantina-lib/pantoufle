@@ -2,8 +2,8 @@
 // Created by binabik on 30/05/2020.
 //
 
-#ifndef CANTINA_FLATENVELOPE_HPP
-#define CANTINA_FLATENVELOPE_HPP
+#ifndef CANTINA_PAN_FLATTONEENVELOPE_HPP
+#define CANTINA_PAN_FLATTONEENVELOPE_HPP
 
 #pragma once
 
@@ -17,17 +17,18 @@ namespace cant::pan
     public:
         /** -- methods -- **/
         // factory method
-        static UPtr<ToneEnvelope> make(size_u numberVoices);
+        static UPtr<ToneEnvelope> make();
 
         void process(MidiNoteInternal& note) override;
 
-        void flushChange() override;
     private:
         /** -- methods -- **/
-        CANT_EXPLICIT FlatToneEnvelope(size_u numberVoices);
+        //private inheritance
+        void updateDelta(time_d tDelta) override;
+
     };
 }
 #include <cant/common/undef_macro.hpp>
 
 
-#endif //CANTINA_FLATENVELOPE_HPP
+#endif //CANTINA_PAN_FLATTONEENVELOPE_HPP

@@ -3,10 +3,11 @@
 //
 
 #include <cant/pan/envelope/ADSREnvelope.hpp>
+#include <cant/pan/envelope/ADSRState.hpp>
+
+#include <cant/pan/note/MidiNoteInternalOutput.hpp>
 
 #include <cant/pan/common/PantoufleException.hpp>
-
-#include <cant/maths/utils.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
@@ -15,8 +16,8 @@ CANTINA_PAN_NAMESPACE_BEGIN
     ADSREnvelope::
     make(
             const size_u numberVoices,
-            const ADSRState::ArrayLengths &lengths,
-            const ADSRState::ArrayVelocityRatios &velocities
+            const adsr::ArrayLengths &lengths,
+            const adsr::ArrayVelocityRatios &velocities
             )
     {
         return UPtr<VelocityEnvelope>(new ADSREnvelope(numberVoices, lengths, velocities));
@@ -25,22 +26,21 @@ CANTINA_PAN_NAMESPACE_BEGIN
     ADSREnvelope::
     ADSREnvelope(
             const size_u numberVoices,
-            const ADSRState::ArrayLengths& lengths,
-            const ADSRState::ArrayVelocityRatios& velocities
+            const adsr::ArrayLengths& lengths,
+            const adsr::ArrayVelocityRatios& velocities
             )
 
-    : VelocityEnvelope(numberVoices),
-      m_lengths(lengths),
+    : m_lengths(lengths),
       m_velocityRatios(velocities),
+      m_speeds(computeSpeeds(m_lengths, m_velocityRatios)),
       m_states(numberVoices)
     {
-        checkLengths(lengths);
-        setCallbacks();
+        checkLengths(m_lengths);
     }
 
     void
     ADSREnvelope::
-    checkLengths(const ADSRState::ArrayLengths &lengths)
+    checkLengths(const adsr::ArrayLengths &lengths)
     {
         if (
                 (lengths.at(ADSRState::eAttack) < static_cast<time_d>(0.))
@@ -53,245 +53,36 @@ CANTINA_PAN_NAMESPACE_BEGIN
         }
     }
 
-    void
+
+    bool
     ADSREnvelope::
-    setCallbacks()
+    isSustainFinite(const adsr::ArrayLengths& lengths)
     {
-        m_callbacks.at(ADSRState::eAttack) =
-                [this](const time_d t) -> type_d
-                {
-                    return maths::barycentre(
-                            static_cast<type_d>(0),
-                            m_velocityRatios.at(ADSRState::eAttack),
-                            t / m_lengths.at(ADSRState::eAttack)
-                    );
-                };
-        m_callbacks.at(ADSRState::eDecay) =
-                [this](const time_d t) -> type_d
-                {
-                    return maths::barycentre(
-                            m_velocityRatios.at(ADSRState::eAttack),
-                            m_velocityRatios.at(ADSRState::eSustain),
-                            t / m_lengths.at(ADSRState::eDecay)
-                    );
-                };
-        m_callbacks.at(ADSRState::eSustain) =
-                [this](const time_d) -> type_d
-                {
-                    return m_velocityRatios.at(ADSRState::eSustain);
-                };
-        m_callbacks.at(ADSRState::eRelease) =
-                [this](const time_d t) -> type_d
-                {
-                    return maths::barycentre(
-                            m_velocityRatios.at(ADSRState::eSustain),
-                            static_cast<type_d>(0.),
-                            t / m_lengths.at(ADSRState::eRelease)
-                    );
-                };
+        return lengths.at(ADSRState::ADSRStateType::eSustain) >= static_cast<time_d>(0.);
     }
 
-    void ADSREnvelope::
-    flushChange()
+    adsr::ArraySpeeds
+    ADSREnvelope::
+    computeSpeeds(const adsr::ArrayLengths &lengths, const adsr::ArrayVelocityRatios &ratios)
+    {
+        adsr::ArraySpeeds speeds;
+        speeds.at(ADSRState::eAttack) = ratios.at(ADSRState::eAttack) / lengths.at(ADSRState::eAttack);
+        speeds.at(ADSRState::eDecay)
+            = std::abs(ratios.at(ADSRState::eAttack) - ratios.at(ADSRState::eSustain))
+                    / lengths.at(ADSRState::eDecay);
+        speeds.at(ADSRState::eRelease) = ratios.at(ADSRState::eSustain) / lengths.at(ADSRState::eRelease);
+        return speeds;
+    }
+
+    void
+    ADSREnvelope::
+    updateDelta(time_d tDelta)
     {
         for (auto& state : m_states)
         {
-            state.flushChange();
+            state.update(this, tDelta);
         }
     }
-
-    ADSRState::
-    ADSRState()
-    : m_type(ADSRStateType::eNotPlaying),
-      m_tStart(),
-      m_flagChangePlaying(false)
-    {
-
-    }
-
-
-    bool
-    ADSRState::
-    isSustainFinite(const ArrayLengths& lengths)
-    {
-        return lengths.at(ADSRStateType::eSustain) >= static_cast<time_d>(0.);
-    }
-
-
-    time_d
-    ADSRState::
-    getLength(const time_d tCurrent) const
-    {
-        return tCurrent - m_tStart;
-    }
-
-    ADSRState::ADSRStateType
-    ADSRState::getType() const
-    {
-        return m_type;
-    }
-
-    time_d
-    ADSRState::
-    computeTimeStart(const time_d tCurrent, const time_d length)
-    {
-        return tCurrent - length;
-    }
-
-    void
-    ADSRState::
-    set(const ADSRStateType type, const time_d tStart)
-    {
-        if (type != m_type)
-        {
-            raiseFlagChanged();
-        }
-        m_type = type;
-        m_tStart = tStart;
-    }
-
-    void
-    ADSRState::
-    setFromLength(const time_d tCurrent, const ADSRStateType type, const time_d length)
-    {
-        set(type, computeTimeStart(tCurrent, length));
-    }
-
-    void
-    ADSRState::
-    update(const time_d tCurrent, const MidiNoteInternal &note, const ArrayLengths& lengths)
-    {
-        if (note.justChangedPlaying())
-        {
-            if (note.isPlaying())
-            {
-                set(ADSRStateType::eAttack, tCurrent);
-            }
-            else
-            {
-                set(ADSRStateType::eRelease, tCurrent);
-            }
-        }
-        else
-        {
-            compute(tCurrent, lengths);
-        }
-    }
-
-    void
-    ADSRState::
-    apply(const time_d tCurrent, MidiNoteInternal &note, const ArrayCallbacks& callbacks) const
-    {
-        const type_d velocityRatio = getVelocityRatio(tCurrent, callbacks);
-        note.setVelocity(note.getVelocity() * velocityRatio);
-        note.setPlaying(this->isPlaying());
-        note.setChangedPlaying(this->justChangedPlaying());
-    }
-
-    void
-    ADSRState::
-    flushChange()
-    {
-        discardFlagChanged();
-    }
-
-    bool
-    ADSRState::
-    isPlaying() const
-    {
-        return m_type != ADSRStateType::eNotPlaying;
-    }
-
-    bool
-    ADSRState::
-    justChangedPlaying() const
-    {
-        return m_flagChangePlaying;
-    }
-
-    void
-    ADSRState::
-    raiseFlagChanged()
-    {
-        m_flagChangePlaying = true;
-    }
-
-    void
-    ADSRState::
-    discardFlagChanged()
-    {
-        m_flagChangePlaying = false;
-    }
-
-    void
-    ADSRState::
-    compute(const time_d tCurrent, const ArrayLengths& lengths)
-    {
-        ADSRStateType type = m_type;
-        time_d length = getLength(tCurrent);
-        /* starting values */
-        ADSRState::REC_compute(type, length, lengths);
-        setFromLength(tCurrent, type, length);
-    }
-
-    void
-    ADSRState::
-    REC_compute(ADSRStateType& type, time_d& length, const ArrayLengths& lengths)
-    {
-        switch (type)
-        {
-            case ADSRStateType::eAttack:
-                if (length > lengths.at(eAttack))
-                {
-                    /* */
-                    type = ADSRStateType::eDecay;
-                    length -= lengths.at(eAttack);
-                    break;
-                }
-                return;
-            case ADSRStateType::eDecay:
-                if (length > lengths.at(eDecay))
-                {
-                    type = ADSRStateType::eSustain;
-                    length -= lengths.at(eDecay);
-                    break;
-                }
-                return;
-            case ADSRStateType::eSustain:
-                if (isSustainFinite(lengths) && (length > lengths.at(eSustain)))
-                {
-                    type = ADSRStateType::eRelease;
-                    length -= lengths.at(eSustain);
-                    break;
-                }
-                return;
-            case ADSRStateType::eRelease:
-                if (length > lengths.at(eRelease))
-                {
-                    type = ADSRStateType::eNotPlaying;
-                    length -= lengths.at(eRelease);
-                    break;
-                }
-                return;
-            case ADSRStateType::eNotPlaying:
-                /* nothing to do */
-                return;
-        }
-        REC_compute(type, length, lengths);
-    }
-
-    type_d
-    ADSRState::
-    getVelocityRatio(const time_d tCurrent, const ArrayCallbacks& callbacks) const
-    {
-        if (!isPlaying())
-        {
-            return static_cast<type_d>(0);
-        }
-        const time_d length = getLength(tCurrent);
-        return callbacks.at(m_type)(length);
-    }
-
 
     void
     ADSREnvelope::
@@ -303,9 +94,30 @@ CANTINA_PAN_NAMESPACE_BEGIN
          * now assuming every note is extendable.
          */
         ADSRState& state = m_states.at(note.getVoice());
-        const time_d tCurrent = getCurrentTime();
-        state.update(tCurrent, note, m_lengths);
-        state.apply(tCurrent, note, m_callbacks);
+        state.update(this, note);
+        state.apply(note);
     }
+
+    void
+    ADSREnvelope::
+    subscribe(event::Ptr<MidiTimer> timer)
+    {
+        for (auto& state : m_states)
+        {
+            state.subscribe(timer->changeFlagModule.get());
+        }
+    }
+
+    void
+    ADSREnvelope::
+    unsubscribe(event::Ptr<MidiTimer> timer)
+    {
+        for (auto& state : m_states)
+        {
+            state.unsubscribe(timer->changeFlagModule.get());
+        }
+    }
+
+
 
 CANTINA_PAN_NAMESPACE_END

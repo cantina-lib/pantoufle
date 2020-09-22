@@ -19,7 +19,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
         // factory method
         static UPtr<MidiController> make(size_u numberVoices, id_u8 channel, id_u8 controllerId);
 
-        void update(time_d tCurrent) override;
     private:
         /** -- methods **/
         MidiDamper(size_u numberVoices, id_u8 channel, id_u8 controllerId);

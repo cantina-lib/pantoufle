@@ -2,8 +2,8 @@
 // Created by piptouque on 28/04/2020.
 //
 
-#ifndef CANTINA_MIDIMACHINE_HPP
-#define CANTINA_MIDIMACHINE_HPP
+#ifndef CANTINA_PAN_PANTOUFLE_HPP
+#define CANTINA_PAN_PANTOUFLE_HPP
 
 #pragma once
 
@@ -13,7 +13,13 @@
 
 #include <cant/pan/pan_forward.hpp>
 
-#include <cant/pan/time/time.hpp>
+// shouldn't have to include these....
+#include <cant/pan/processor/MidiControllerChain.hpp>
+#include <cant/pan/processor/MidiEnvelopePair.hpp>
+#include <cant/pan/layer/MidiNoteInputPoly.hpp>
+#include <cant/pan/layer/MidiNoteOutputLayer.hpp>
+
+#include <cant/pan/timer/MidiTimer.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
@@ -22,10 +28,8 @@ CANTINA_PAN_NAMESPACE_BEGIN
     {
     public:
         /** -- methods -- **/
-        Pantoufle(
-                size_u numberVoices,
-                id_u8 channel
-                );
+        // factory method
+        CANT_NODISCARD static UPtr<Pantoufle> make(size_u numberVoices, id_u8 channel);
 
         void update();
 
@@ -34,7 +38,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
         void setController(UPtr<MidiController> controller);
 
-        void setCurrentTimeGetter(CustomMidiTimer::CurrentTimeGetter currentTimeGetter);
+        void setCustomClock(time::AbsoluteTimeGetter absoluteTimeGetter);
 
         Optional<size_u> receiveInputNoteData(const MidiNoteInputData& inputData);
         void             receiveRawControlData(const MidiControlData &controlData);
@@ -42,27 +46,25 @@ CANTINA_PAN_NAMESPACE_BEGIN
         CANT_NODISCARD size_u getNumberVoices() const;
     private:
         /** -- methods -- **/
+        Pantoufle(
+                size_u numberVoices,
+                id_u8 channel
+        );
+
         void process(size_u voice);
         void processControllerChainVoice(size_u voice);
         void processEnvelopePairVoice(size_u voice);
         void processAll();
 
-        void flushChange();
-        void flushChangeNoteInput();
-        void flushChangeEnvelopePair();
-
-        void updateTimer();
-        void updateEnvelopeLayer(time_d tCurrent);
-        void updateControlChain(time_d tCurrent);
-
         CANT_NODISCARD time_d getCurrentTime() const;
 
         /** -- fields -- **/
+        UPtr<MidiTimer> m_timer;
+
         UPtr<MidiControllerChain> m_controllerChain;
         UPtr<MidiEnvelopePair> m_envelopePair;
 
         UPtr<MidiNoteInputPoly> m_poly;
-        UPtr<MidiTimer> m_timer;
 
         UPtr<MidiNoteInternalLayer> m_processedNoteInternal;
 
@@ -73,6 +75,4 @@ CANTINA_PAN_NAMESPACE_BEGIN
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#include <cant/pan/Pantoufle.inl>
-
-#endif //CANTINA_MIDIMACHINE_HPP
+#endif //CANTINA_PAN_PANTOUFLE_HPP

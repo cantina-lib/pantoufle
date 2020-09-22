@@ -58,24 +58,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
     void
     MidiControllerChain::
-    update(const time_d tCurrent)
-    {
-        // will notes need updating in processors?
-        // updateMidiNoteStream(_memory, tCurrent);
-
-        /*
-         * I mean, we could have a mechanic like,
-         * a control's value can decrease as time passes.
-         * Wait, there *are* controller like that..
-         */
-        for (auto& controller : m_controllers)
-        {
-            controller->update(tCurrent);
-        }
-    }
-
-    void
-    MidiControllerChain::
     addController(UPtr<MidiController> controller)
     {
         allocateControls(controller->getControllerIds());

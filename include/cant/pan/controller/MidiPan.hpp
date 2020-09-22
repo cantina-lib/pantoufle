@@ -21,8 +21,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
         /** -- methods -- **/
         // factory method
         static UPtr<MidiController> make(size_u numberVoices, id_u8 channel, id_u8 controllerId);
-
-        void update(time_d tCurrent) override;
     private:
         /** -- methods -- **/
         MidiPan(size_u numberVoices, id_u8 channel, id_u8 controllerId);

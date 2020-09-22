@@ -8,6 +8,7 @@
 #pragma once
 
 #include "MidiProcessor.hpp"
+#include "MidiProcessorMemory.hpp"
 
 #include "MidiControllerChain.hpp"
 #include "MidiEnvelopePair.hpp"

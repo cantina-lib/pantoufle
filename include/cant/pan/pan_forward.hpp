@@ -7,18 +7,22 @@
 
 #pragma once
 
-#include <cant/pan/note/note_forward.hpp>
-#include <cant/pan/control/control_forward.hpp>
-#include <cant/pan/layer/layer_forward.hpp>
-
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiControllerChain;
-    class MidiEnvelopePair;
-    class MidiTimer;
+    class MidiNoteOutput;
+    class MidiNoteInputData;
+
+    class MidiControlData;
 
     class MidiController;
+
+    class MidiControllerChain;
+    class MidiEnvelopePair;
+
+    class MidiNoteInputPoly;
+    class MidiNoteInternalLayer;
+    class MidiNoteOutputLayer;
 
     class Pantoufle;
 

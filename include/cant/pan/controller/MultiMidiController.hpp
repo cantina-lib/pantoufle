@@ -26,8 +26,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
     class MultiMidiController : protected MidiController
     {
     public:
-        void update(time_d tCurrent) override = 0;
-
         CANT_NODISCARD Stream<id_u8> getControllerIds() const override;
     protected:
         CANT_EXPLICIT MultiMidiController(size_u numberVoices, id_u8 channel, Array<id_u8, numberBindings> controllerIds);

@@ -18,6 +18,8 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
+    class Clock;
+
     class MidiControllerChain final : public MidiProcessor
     {
     public:
@@ -29,15 +31,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
         void addController(UPtr<MidiController> controller);
         void receiveControl(const MidiControlInternal& control);
 
-        // will notes need updating in processors?
-        // updateMidiNoteStream(_memory, tCurrent);
-
-        /*
-         * I mean, we could have a mechanic like,
-         * a control's value can decrease as time passes.
-         * whatever.
-         */
-        void update(time_d tCurrent) override;
     private:
         /** -- methods -- **/
         void allocateControls(const Stream<id_u8>& controllerIds);

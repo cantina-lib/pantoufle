@@ -4,7 +4,7 @@
 
 #include <cant/pan/note/MidiNoteData.hpp>
 
-#include <cant/maths/maths.hpp>
+#include <cant/maths/utils.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
@@ -29,6 +29,13 @@ CANTINA_PAN_NAMESPACE_BEGIN
     : MidiNoteData(),
       m_pan(static_cast<pan_d>(0)) // balanced pan
     {}
+
+    void
+    MidiNoteInternalData::
+    setPan(const pan_d pan)
+    {
+        m_pan = std::clamp(pan, static_cast<pan_d>(-1), static_cast<pan_d>(1));
+    }
 
     MidiNoteInternalData::
     MidiNoteInternalData(const MidiNoteInputData &input)

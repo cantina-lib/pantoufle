@@ -9,6 +9,10 @@
 
 #include "MidiNoteLayer.hpp"
 
+#include "MidiNoteInputLayer.hpp"
+#include "MidiNoteInternalLayer.hpp"
+#include "MidiNoteOutputLayer.hpp"
+
 #include "MidiNoteInputPoly.hpp"
 
 #endif //CANTINA_TILDE_LAYER_HPP

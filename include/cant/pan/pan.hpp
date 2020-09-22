@@ -9,7 +9,7 @@
 
 #include "Pantoufle.hpp"
 
-#include "time/time.hpp"
+#include "cant/time/time.hpp"
 
 #include "note/note.hpp"
 

@@ -9,6 +9,10 @@
 
 #include "MidiNoteCompatible.hpp"
 #include "MidiNoteData.hpp"
+
 #include "MidiNote.hpp"
+
+#include "MidiNoteInput.hpp"
+#include "MidiNoteInternalOutput.hpp"
 
 #endif //CANTINA_NOTE_HPP

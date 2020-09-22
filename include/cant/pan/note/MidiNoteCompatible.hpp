@@ -42,7 +42,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
         CANT_NODISCARD virtual time_d getStartingTime() const = 0;
 
         CANT_NODISCARD virtual bool justChangedPlaying() const = 0;
-        CANT_NODISCARD virtual bool justChangedTone() const = 0;
     };
 
     class MidiNoteInputCompatible

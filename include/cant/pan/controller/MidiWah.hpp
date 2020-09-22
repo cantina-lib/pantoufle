@@ -2,8 +2,8 @@
 // wah by wah on wah/wahh/waaaahhh
 //
 
-#ifndef CANTINA_WAH
-#define CANTINA_WAH
+#ifndef CANTINA_PAN_WAH_HPP
+#define CANTINA_PAN_WAH_HPP
 
 #pragma once
 
@@ -11,20 +11,37 @@
 
 #include <cant/pan/controller/MultiMidiController.hpp>
 
+#include <cant/pan/timer/TimeUpdatable.hpp>
+
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiWah : MultiMidiController<2>
+    class MidiTimer;
+
+    class MidiWah : MultiMidiController<2>, public DeltaTimeUpdatable
     {
     public:
         /** -- methods -- **/
         // factory method
-        static UPtr<MidiController> wah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah);
+        static UPtr<MidiController> wah
+        (
+                size_u numberVoices,
+                id_u8 channel,
+                Array<id_u8, 2> wahwah,
+                const UPtr<MidiTimer>& timer
+       );
 
-        void update(time_d tCurrent) override;
+        void updateDelta(time_d tDelta) override;
+
     private:
         /** -- methods -- **/
-        MidiWah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah);
+        MidiWah
+        (
+                size_u numberVoices,
+                id_u8 channel,
+                Array<id_u8, 2> wahwah,
+                const UPtr<MidiTimer>& timer
+        );
 
         // event functions
         void beforeControlProcess(const MidiControlInternal& incomingControl) override;

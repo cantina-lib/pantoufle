@@ -9,26 +9,29 @@
 #include <cant/pan/common/types.hpp>
 
 #include <cant/pan/envelope/MidiEnvelope.hpp>
-
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiEnvelopePair: public MidiProcessorMemory
+    class MidiTimer;
+
+    class MidiEnvelopePair: public MidiProcessor
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiEnvelopePair(size_u numberVoices, id_u8 channel);
+        MidiEnvelopePair
+        (
+                size_u numberVoices,
+                id_u8 channel,
+                const UPtr <MidiTimer> &timer
+        );
 
-        void update(time_d tCurrent) override;
         void process(MidiNoteInternal& note) override;
-
-        void flushChange();
     private:
         /** -- fields -- **/
-        UPtr<ToneEnvelope> m_toneEnvelope;
-        UPtr<VelocityEnvelope> m_velocityEnvelope;
+        UPtr<MidiEnvelopeWrapper> m_toneEnvelopeWrapper;
+        UPtr<MidiEnvelopeWrapper> m_velocityEnvelopeWrapper;
         id_u8 m_channel;
     };
 

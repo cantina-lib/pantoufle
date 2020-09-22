@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include <cant/maths/maths.hpp>
-
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
@@ -122,13 +120,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
         m_velocity = velocity;
     }
 
-    CANT_INLINE
-    void
-    MidiNoteInternalData::
-    setPan(const pan_d pan)
-    {
-        m_pan = std::clamp(pan, static_cast<pan_d>(-1), static_cast<pan_d>(1));
-    }
 
     CANT_NODISCARD CANT_INLINE
     pan_d

@@ -9,24 +9,29 @@
 
 #include <cant/pan/common/types.hpp>
 
-#include <cant/pan/note/note_forward.hpp>
-#include <cant/pan/layer/MidiNoteLayer.hpp>
+#include <cant/pan/layer/MidiNoteInputLayer.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
+
+    class MidiTimer;
 
     class MidiNoteInputPoly : public MidiNoteInputLayer
     {
     public:
         /** -- methods -- **/
-        CANT_EXPLICIT MidiNoteInputPoly(size_u numberVoices, id_u8 channel);
-
-        void flushChange();
+        CANT_EXPLICIT MidiNoteInputPoly
+        (
+                size_u numberVoices,
+                id_u8 channel,
+                const UPtr <MidiTimer> &timer
+        );
 
         Optional<size_u> receive(time_d tCurrent, const MidiNoteInputData& data) override;
+
     private:
         /** -- methods -- **/
-        CANT_NODISCARD virtual Optional <size_u> chooseVoice(const MidiNoteInputData &data);
+        CANT_NODISCARD Optional <size_u> chooseVoice(const MidiNoteInputData &data) const;
 
         /** -- fields **/
         id_u8 m_channel;

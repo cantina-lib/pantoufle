@@ -30,13 +30,18 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/Pantoufle.cpp
         ### note
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNoteData.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNote.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNoteInput.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/note/MidiNoteInternalOutput.cpp
         ### io layers
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteInputLayer.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteInternalLayer.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteOutputLayer.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteInputPoly.cpp
         ### env
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/MidiEnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSREnvelope.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/FlatEnvelope.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSRState.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/FlatToneEnvelope.cpp
         ### processor
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiControllerChain.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/processor/MidiEnvelopePair.cpp
@@ -45,6 +50,10 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiDamper.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiPan.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiWah.cpp
+        ### timer
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/timer/MidiTimer.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/timer/TimeUpdatable.cpp
+        ${PANTOUFLE_SOURCE_DIR}/cant/pan/timer/ChangeFlagUpdatable.cpp
 
         ## headers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/Pantoufle.hpp
@@ -56,16 +65,21 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteData.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNote.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteInput.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/note/MidiNoteInternalOutput.hpp
         ### io layers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/layer.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/layer_forward.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteLayer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteInputLayer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteInternalLayer.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/layer/MidiNoteInputPoly.hpp
         ### env
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/envelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/MidiEnvelope.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/FlatEnvelope.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/FlatToneEnvelope.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/ADSREnvelope.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/ADSRState.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/envelope/adsr_forward.hpp
         ### controller
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/controller.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/controller/MidiController.hpp
@@ -78,34 +92,30 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiControllerChain.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiEnvelopePair.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessor.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/processor/MidiProcessorMemory.hpp
         ### control
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/control_forward.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlData.hpp
-        ### time
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/time.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/MidiTimer.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/SystemMidiTimer.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/time/CustomMidiTimer.hpp
+        ### timer
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/timer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/MidiTimer.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/TimeUpdatable.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/ChangeFlagUpdatable.hpp
 
         ## inline
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/Pantoufle.inl
         ### note
         ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNoteData.inl
         ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNote.inl
         ### layer
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/layer/MidiNoteLayer.inl
         ### envelope
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/envelope/MidiEnvelope.inl
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/envelope/ADSRState.inl
+        ### layer
         ### controller
         ${PANTOUFLE_INLINE_DIR}/cant/pan/controller/MultiMidiController.inl
         ### processor
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/processor/MidiProcessor.inl
-        ### time
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/time/MidiTimer.inl
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/time/SystemMidiTimer.inl
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/time/CustomMidiTimer.inl
+        ${PANTOUFLE_INLINE_DIR}/cant/pan/processor/MidiProcessorMemory.inl
         )
 
 

@@ -2,12 +2,10 @@
 // Created by binabik on 24/08/2020.
 //
 
-#ifndef CANTINA_TILDE_MIDIPROCESSOR_INL
-#define CANTINA_TILDE_MIDIPROCESSOR_INL
+#ifndef CANTINA_TILDE_MIDIPROCESSORMEMORY_INL
+#define CANTINA_TILDE_MIDIPROCESSORMEMORY_INL
 
 #pragma once
-
-#include <cant/pan/note/MidiNote.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
@@ -29,4 +27,4 @@ CANTINA_PAN_NAMESPACE_BEGIN
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif //CANTINA_TILDE_MIDIPROCESSOR_INL
+#endif //CANTINA_TILDE_MIDIPROCESSORMEMORY_INL

@@ -42,12 +42,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
         note.setPan(getPan());
     }
 
-    void
-    MidiPan::
-    update(const time_d)
-    {
-
-    }
 
     UPtr<MidiController>
     MidiPan::

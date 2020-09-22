@@ -4,27 +4,25 @@
 
 #include <cant/pan/layer/MidiNoteInputPoly.hpp>
 
-#include <cant/pan/note/MidiNote.hpp>
-#include <cant/pan/note/MidiNoteData.hpp>
+#include <cant/pan/note/MidiNoteInput.hpp>
+#include <cant/pan/timer/MidiTimer.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
     MidiNoteInputPoly::
-    MidiNoteInputPoly(size_u numberVoices, id_u8 channel)
+    MidiNoteInputPoly
+    (
+            size_u numberVoices,
+            id_u8 channel,
+            const UPtr <MidiTimer> &timer
+    )
     : MidiNoteInputLayer(numberVoices),
       m_channel(channel)
     {
-
-    }
-
-    void
-    MidiNoteInputPoly::
-    flushChange()
-    {
-        for(auto& note : m_notes)
+        for (auto& note : this->m_inputNotes)
         {
-            note.flushChange();
+            note.subscribe(timer.get());
         }
     }
 
@@ -39,7 +37,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
         Optional<size_u> optVoice = chooseVoice(data);
         if (optVoice)
         {
-            m_notes.at(optVoice.value()).set(tCurrent, data);
+            m_inputNotes.at(optVoice.value()).set(tCurrent, data);
         }
         return optVoice;
     }
@@ -77,7 +75,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
     Optional <size_u>
     MidiNoteInputPoly::
-    chooseVoice(const MidiNoteInputData &data)
+    chooseVoice(const MidiNoteInputData &data) const
     {
         const bool inputIsPressed = data.isPressed();
         const tone_i8 inputTone = data.getToneNative();
@@ -99,9 +97,11 @@ CANTINA_PAN_NAMESPACE_BEGIN
          * Remember that tone, velocity can be compared because they are represented
          * by integer in InputData, but then go to floating-point in InternalData
          */
+
+        // First pass, todo explain!!! and check if necessery (for released notes, specifically.)
         {
             size_u i = 0;
-            for (const auto& note : m_notes)
+            for (const auto& note : m_inputNotes)
             {
                 const bool noteIsSame = note.getToneNative() == inputTone;
                 if (noteIsSame)
@@ -112,7 +112,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
             }
         }
         // Second pass, taking ownership of note with closest tone.
-        if (auto optVoice = findClosestToneIndex(m_notes, data, false))
+        if (auto optVoice = findClosestToneIndex(m_inputNotes, data, false))
         {
             return optVoice;
         }
@@ -125,7 +125,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
             return std::nullopt;
         }
         /* forced pass -> stealing */
-        return findClosestToneIndex(m_notes, data, true);
+        return findClosestToneIndex(m_inputNotes, data, true);
     }
 
 CANTINA_PAN_NAMESPACE_END

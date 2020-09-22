@@ -9,7 +9,8 @@
 
 #include <cant/pan/common/types.hpp>
 
-#include <cant/pan/processor/MidiProcessor.hpp>
+#include <cant/pan/processor/MidiProcessorMemory.hpp>
+
 #include <cant/pan/control/control_forward.hpp>
 
 #include <cant/common/macro.hpp>
@@ -20,7 +21,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
     public:
         /* -- methods -- */
         void process(MidiNoteInternal& internal) final;
-        void update(time_d tCurrent) override = 0;
         void receiveControl(const MidiControlInternal& control);
         // won't have to call it regularly, so it's fine just returning a copy
         CANT_NODISCARD virtual Stream<id_u8> getControllerIds() const = 0;
@@ -33,7 +33,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
         /**
          * State changes in the controller as side-effects should be called here.
          * Controller will not be allowed to mutate in IMPL_processVoice,
-         * but will be automatically updated in update.
+         * but will be automatically updated in updateDelta.
          **/
         virtual void beforeNoteProcess(const MidiNoteInternal& note) = 0;
     private:
