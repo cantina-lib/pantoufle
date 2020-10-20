@@ -17,9 +17,25 @@ CANTINA_PAN_NAMESPACE_BEGIN
     // Array
     namespace adsr
     {
-        typedef Array<time_d, 4> ArrayLengths;
-        typedef Array<type_d , 2> ArrayVelocityRatios;
+        /*
+         * 0: attack time
+         * 1: sustain time, can be infinite -> reserved value (negative)
+         * 2: decay time
+         * 3: release time
+         */
 
+        typedef Array<time_d, 4> ArrayLengths;
+        /*
+         * 0: attack peak velocity
+         * 1: sustain velocity
+         */
+        typedef Array<type_d , 2> ArrayVelocityRatios;
+        /*
+         * inferred from the other two
+         * The lengths won't actually be respected, they are only targets,
+         * and the velocity ratios will change at the specified rates.
+         * positive!!!!
+         */
         typedef Array<type_d, 4> ArraySpeeds;
     }
 

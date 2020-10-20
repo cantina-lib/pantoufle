@@ -8,36 +8,28 @@
 CANTINA_PAN_NAMESPACE_BEGIN
 
 
-    CANT_INLINE
-    void
-    ADSRState::
-    setTypeLengthManual(const ADSREnvelope *env, ADSRStateType type)
-    {
-        setTypeLength(env, type, static_cast<time_d>(0));
-    }
 
     CANT_INLINE
     void
     ADSRState::
-    setType(ADSRState::ADSRStateType type)
+    setType(const ADSREnvelope* env, ADSRState::ADSRStateType type)
     {
         const bool wasPlaying = isPlaying();
-        m_type = type;
+        const bool justChanged = type != m_type;
         const bool justChangedPlaying =  wasPlaying != isPlaying();
+
+        m_type = type;
+
         if (justChangedPlaying)
         {
             raiseFlagChangedPlaying();
         }
+        if (justChanged)
+        {
+            resetTarget(env);
+        }
     }
 
-
-    CANT_INLINE
-    void
-    ADSRState::
-    update(const ADSREnvelope *env, const time_d tDelta)
-    {
-        compute(env, tDelta);
-    }
 
     CANT_INLINE
     bool
@@ -61,7 +53,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
     ADSRState::
     getVelocityRatio() const
     {
-        return m_oscillator->operator()();
+        return m_object->getPosition().get<0>();
     }
 
     CANT_INLINE

@@ -5,6 +5,7 @@
 #include <cant/pan/envelope/ADSREnvelope.hpp>
 #include <cant/pan/envelope/ADSRState.hpp>
 
+
 #include <cant/pan/note/MidiNoteInternalOutput.hpp>
 
 #include <cant/pan/common/PantoufleException.hpp>
@@ -17,23 +18,22 @@ CANTINA_PAN_NAMESPACE_BEGIN
     make(
             const size_u numberVoices,
             const adsr::ArrayLengths &lengths,
-            const adsr::ArrayVelocityRatios &velocities
+            const adsr::ArrayVelocityRatios &ratios
             )
     {
-        return UPtr<VelocityEnvelope>(new ADSREnvelope(numberVoices, lengths, velocities));
+        return UPtr<VelocityEnvelope>(new ADSREnvelope(numberVoices, lengths, ratios));
     }
 
     ADSREnvelope::
     ADSREnvelope(
             const size_u numberVoices,
             const adsr::ArrayLengths& lengths,
-            const adsr::ArrayVelocityRatios& velocities
+            const adsr::ArrayVelocityRatios& ratios
             )
-
-    : m_lengths(lengths),
-      m_velocityRatios(velocities),
-      m_speeds(computeSpeeds(m_lengths, m_velocityRatios)),
-      m_states(numberVoices)
+        : m_lengths(lengths),
+        m_ratios(ratios),
+        m_speeds(computeSpeeds(m_lengths, ratios)),
+        m_states(numberVoices)
     {
         checkLengths(m_lengths);
     }
@@ -68,7 +68,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
         adsr::ArraySpeeds speeds;
         speeds.at(ADSRState::eAttack) = ratios.at(ADSRState::eAttack) / lengths.at(ADSRState::eAttack);
         speeds.at(ADSRState::eDecay)
-            = std::abs(ratios.at(ADSRState::eAttack) - ratios.at(ADSRState::eSustain))
+            = (ratios.at(ADSRState::eAttack) - ratios.at(ADSRState::eSustain))
                     / lengths.at(ADSRState::eDecay);
         speeds.at(ADSRState::eRelease) = ratios.at(ADSRState::eSustain) / lengths.at(ADSRState::eRelease);
         return speeds;
@@ -78,10 +78,13 @@ CANTINA_PAN_NAMESPACE_BEGIN
     ADSREnvelope::
     updateDelta(time_d tDelta)
     {
+        // update type and length of states
         for (auto& state : m_states)
         {
-            state.update(this, tDelta);
+            state.updateTypeLength(this, tDelta);
         }
+        // update the simulation with regards to the changes
+        // the simulation will itself update the velocity ratio.
     }
 
     void
@@ -94,8 +97,12 @@ CANTINA_PAN_NAMESPACE_BEGIN
          * now assuming every note is extendable.
          */
         ADSRState& state = m_states.at(note.getVoice());
-        state.update(this, note);
+        state.updateTypeLengthManual(this, note);
         state.apply(note);
+        if (!note.getVoice())
+        {
+            std::cout << "target: " << state.m_target->getPosition().get<0>() << "| ratio: " << state.getVelocityRatio() << std::endl;
+        }
     }
 
     void

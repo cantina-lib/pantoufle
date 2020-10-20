@@ -4,7 +4,7 @@
 
 #include <cant/pan/note/MidiNoteData.hpp>
 
-#include <cant/maths/utils.hpp>
+#include <cant/maths/approx.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN

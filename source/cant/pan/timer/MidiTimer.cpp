@@ -57,7 +57,8 @@ CANTINA_PAN_NAMESPACE_BEGIN
     MidiTimer::TimeModule::
     getDeltaTime() const
     {
-        return m_internalClock->getDeltaTime();
+        const time_d t = m_internalClock->getDeltaTime();
+        return t;
     }
 
     void

@@ -10,6 +10,7 @@
 #include <cant/pan/common/types.hpp>
 #include <cant/common/memory.hpp>
 
+
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
 #include <cant/pan/envelope/adsr_forward.hpp>
@@ -22,13 +23,14 @@ CANTINA_PAN_NAMESPACE_BEGIN
     class ADSREnvelope : private VelocityEnvelope
     {
     public:
+
         /** -- methods -- **/
         // factory method
         static UPtr<VelocityEnvelope> make
                 (
                         size_u numberVoices,
                         const adsr::ArrayLengths& lengths           = ADSREnvelope::c_defaultADSRLengths,
-                        const adsr::ArrayVelocityRatios& velocities = ADSREnvelope::c_defaultADSRVelocities
+                        const adsr::ArrayVelocityRatios& ratios = ADSREnvelope::c_defaultADSRVelocitiesRatios
                 );
         void process(MidiNoteInternal& note) override;
 
@@ -43,7 +45,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
                 (
                         size_u numberVoices,
                         const adsr::ArrayLengths& lengths,
-                        const adsr::ArrayVelocityRatios& velocities
+                        const adsr::ArrayVelocityRatios& ratios
                 );
 
         CANT_NODISCARD static adsr::ArraySpeeds computeSpeeds(const adsr::ArrayLengths& lengths, const adsr::ArrayVelocityRatios& ratios);
@@ -57,50 +59,31 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
 
         /** -- fields -- **/
-        /*
-         * 0: attack time
-         * 1: sustain time, can be infinite -> reserved value (negative)
-         * 2: decay time
-         * 3: release time
-         */
         adsr::ArrayLengths m_lengths;
-        /*
-         * 0: attack peak velocity
-         * 1: sustain velocity
-         */
-        adsr::ArrayVelocityRatios m_velocityRatios;
-
-        /*
-         * inferred from the other two
-         * The lengths won't actually be respected, they are only targets,
-         * and the velocity ratios will change at the rates in m_speeds.
-         * positive!!!!
-         */
+        adsr::ArrayVelocityRatios m_ratios;
         adsr::ArraySpeeds m_speeds;
+
 
         Stream<ADSRState> m_states;
 
         // constants
         CANT_CONSTEXPR static adsr::ArrayLengths c_defaultADSRLengths = {
-                // { ADSRState::ADSRStateType::eAttack,  100. },
-                // { ADSRState::ADSRStateType::eDecay,   50. },
-                // { ADSRState::ADSRStateType::eRelease, 100. }
-                30.,
-                -1.,
-                50.,
-                30.
+                30.,  // ADSRState::eAttack,
+                -1.,  // ADSRState::eSustain,
+                50.,  // ADSRState::eDecay,
+                30.   // ADSRState::eRelease,
         };
 
-        CANT_CONSTEXPR static adsr::ArrayVelocityRatios c_defaultADSRVelocities = {
-                // { ADSRState::ADSRStateType::eAttack, 1. },
-                // { ADSRState::ADSRStateType::eSustain, 0.7 }
-                1.,
-                0.7
+        CANT_CONSTEXPR static adsr::ArrayVelocityRatios c_defaultADSRVelocitiesRatios = {
+                1., // ADSRState::eAttack,
+                0.7 // ADSRState::eSustain
         };
+
 
         /** -- friends - **/
         friend class ADSRState;
     };
+
 
 
 CANTINA_PAN_NAMESPACE_END
