@@ -6,78 +6,69 @@
 
 #include <cant/time/common/types.hpp>
 
-#include <cant/pan/timer/TimeUpdatable.hpp>
-#include <cant/pan/timer/ChangeFlagUpdatable.hpp>
+#include <cant/patterns/Event.hpp>
 
-#include <cant/event/Listen.hpp>
+#include <cant/pan/timer/TimerUpdate.hpp>
 
+#include <cant/time/InternalClock.hpp>
 
-
-// shouldn't have to include this, only forward declaration. Oh well.
+#include <cant/common/macro.hpp>
 // Forward declaration of InternalClock in cant::time
 // can't do it inside pan because it will then be in cant::pan::time.
 // Reason is that with std::unique_ptr's, the type have to be complete.
 // this wouldn't be the case if we were using raw pointer.
 // but we won't.
-#include <cant/time/InternalClock.hpp>
-#include <cant/common/macro.hpp>
-/*
+/**
+ * This s don't work, yo.
 CANTINA_TIME_NAMESPACE_BEGIN
-    class InternalClock;
+class InternalClock;
 CANTINA_TIME_NAMESPACE_END
  */
+
 CANTINA_PAN_NAMESPACE_BEGIN
+class MidiTimer {
+public:
+  /** -- methods -- **/
+  /**
+   * @brief Construct a MidiTimer from a type of ExternalClock.
+   * @tparam ExternalClock_T : A child class of time::ExternalClock.
+   */
+  CANT_EXPLICIT MidiTimer(UPtr<time::InternalClock> clock);
+  CANT_EXPLICIT MidiTimer();
 
-    class MidiTimer : event::Lecturer
-    {
-    public:
-        /** -- structs -- **/
-        class TimeModule : public TimeUpdater
-        {
-        public:
-            /** -- methods -- **/
-            CANT_EXPLICIT TimeModule(UPtr<time::InternalClock> internalClock);
+  CANT_NODISCARD time_d getCurrentTime() const;
+  CANT_NODISCARD time_d getDeltaTime() const;
 
-            CANT_NODISCARD time_d getCurrentTime() const override;
-            CANT_NODISCARD time_d getDeltaTime() const override;
+  void setCustomTimeGetter(time::AbsoluteTimeGetter absoluteTimeGetter);
 
+  void start();
+  void stop();
+  void update();
+  void reset();
 
-        private:
-            /** -- fields -- **/
-            UPtr<time::InternalClock> m_internalClock;
+  CANT_NODISCARD bool isRunning() const;
 
-            /** -- friends -- **/
-            friend class MidiTimer;
-        };
+  void addOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener);
+  void addOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener);
+  void addOnTickListener(ShPtr<TickListener>& listener);
 
-        class ChangeFlagModule : public ChangeFlagUpdater
-        {
+  void removeOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener);
+  void removeOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener);
+  void removeOnTickListener(ShPtr<TickListener>& listener);
 
-        private:
-            /** -- friends -- **/
-            friend class MidiTimer;
+private:
 
-        };
+  /** -- fields -- **/
+  UPtr<time::InternalClock> m_internalClock;
 
+  // event
+  patterns::Event<time_d> m_deltaTimeUpdateEvent;
+  patterns::Event<time_d> m_currentTimeUpdateEvent;
+  patterns::Event<void*> m_tickEvent;
 
-        /** -- methods -- **/
-        MidiTimer();
-
-        void setCustomTimeGetter(time::AbsoluteTimeGetter absoluteTimeGetter);
-
-        void start();
-        void stop();
-        void update();
-        void reset();
-
-        CANT_NODISCARD bool isRunning() const;
-
-        /** -- fields -- **/
-        UPtr<TimeModule> timeModule;
-        UPtr<ChangeFlagModule> changeFlagModule;
-    };
+};
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif //PANTOUFLE_MIDITIMER_HPP
+#endif // PANTOUFLE_MIDITIMER_HPP

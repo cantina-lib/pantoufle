@@ -52,8 +52,6 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/controller/MidiWah.cpp
         ### timer
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/timer/MidiTimer.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/timer/TimeUpdatable.cpp
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/timer/ChangeFlagUpdatable.cpp
 
         ## headers
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/Pantoufle.hpp
@@ -99,23 +97,9 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlCompatible.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/control/MidiControlData.hpp
         ### timer
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/timer.hpp
         ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/MidiTimer.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/TimeUpdatable.hpp
-        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/ChangeFlagUpdatable.hpp
+        ${PANTOUFLE_INCLUDE_DIR}/cant/pan/timer/TimerUpdate.hpp
 
-        ## inline
-        ### note
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNoteData.inl
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/note/MidiNote.inl
-        ### layer
-        ### envelope
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/envelope/ADSRState.inl
-        ### layer
-        ### controller
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/controller/MultiMidiController.inl
-        ### processor
-        ${PANTOUFLE_INLINE_DIR}/cant/pan/processor/MidiProcessorMemory.inl
         )
 
 

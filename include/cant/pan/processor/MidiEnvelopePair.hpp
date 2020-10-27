@@ -24,14 +24,14 @@ CANTINA_PAN_NAMESPACE_BEGIN
         (
                 size_u numberVoices,
                 id_u8 channel,
-                const UPtr <MidiTimer> &timer
+                       UPtr<MidiTimer> &timer
         );
 
         void process(MidiNoteInternal& note) override;
     private:
         /** -- fields -- **/
-        UPtr<MidiEnvelopeWrapper> m_toneEnvelopeWrapper;
-        UPtr<MidiEnvelopeWrapper> m_velocityEnvelopeWrapper;
+        UPtr<ToneEnvelope> m_toneEnvelope;
+        UPtr<VelocityEnvelope> m_velocityEnvelope;
         id_u8 m_channel;
     };
 

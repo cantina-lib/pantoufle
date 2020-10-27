@@ -15,14 +15,14 @@ CANTINA_PAN_NAMESPACE_BEGIN
     (
             size_u numberVoices,
             id_u8 channel,
-            const UPtr <MidiTimer> &timer
+                 UPtr<MidiTimer> &timer
     )
     : MidiNoteInputLayer(numberVoices),
       m_channel(channel)
     {
         for (auto& note : this->m_inputNotes)
         {
-            note.subscribe(timer.get());
+            note.subscribe(timer);
         }
     }
 

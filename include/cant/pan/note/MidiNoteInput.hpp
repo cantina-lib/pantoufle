@@ -6,13 +6,12 @@
 
 #include <cant/pan/common/types.hpp>
 
+#include <cant/pan/timer/TimerUpdate.hpp>
+
 #include <cant/pan/note/MidiNoteCompatible.hpp>
 
 #include <cant/pan/note/MidiNote.hpp>
 #include <cant/pan/note/MidiNoteData.hpp>
-
-#include <cant/pan/timer/ChangeFlagUpdatable.hpp>
-#include <cant/pan/timer/TimeUpdatable.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
@@ -22,17 +21,10 @@ CANTINA_PAN_NAMESPACE_BEGIN
     class MidiNoteInput :
             public MidiNote<MidiNoteInputData>,
             public MidiNoteInputCompatible,
-            public event::Listener<MidiTimer>
+            public TimerTickUpdatable,
+            public TimerSubscribable
     {
     public:
-        /** -- structs -- **/
-        class ChangeFlagUpdateModule : public ChangeFlagUpdatable
-        {
-        private:
-            /** -- friends -- **/
-            friend class MidiNoteInput;
-        };
-
         /** -- methods -- **/
         CANT_EXPLICIT MidiNoteInput(size_u voice);
 
@@ -45,16 +37,20 @@ CANTINA_PAN_NAMESPACE_BEGIN
         CANT_NODISCARD tone_i8 getToneNative() const;
         CANT_NODISCARD vel_i8  getVelocityNative() const;
 
-        // Implemntation of ListenerInterface
-        void subscribe(event::Ptr<MidiTimer> timer) override;
-        void unsubscribe(event::Ptr<MidiTimer> timer) override;
+        void subscribe(UPtr<MidiTimer>& timer) override;
+        void unsubscribe(UPtr<MidiTimer>& timer) override;
 
     private:
         /** -- methods -- **/
+        void onTimerTick(void *) override;
 
         /** -- fields -- **/
-        UPtr<ChangeFlagUpdateModule> m_changeFlagUpdateModule;
         bool m_isPressed;
+
+        bool m_justChangedPlaying;
+
+        ShPtr<TickListener> m_tickListener;
+
     };
 
 CANTINA_PAN_NAMESPACE_END

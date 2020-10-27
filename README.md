@@ -1,14 +1,19 @@
 
-### Pantoufle
+## Pantoufle
 
-#### Whatever
+### MIDI processing toolchain.
+#### Through envelopes and controllers.
 
-doing
+##### Dependencies:
+* Cantina common
 
-* Done here. No joke, I won't be touching this stuff until the next bamboozle.
+##### Todo:
 
-todo:
+- [ ] Move ownership of MIDI controllers to the envelopes, make a controller manager to dispatch input commands.
 
-* EXPLAIN
+- [ ] Change handling of ADSR State velocity from Physics (too unstable) to a simple slider. (obvious in retrospect,
+but hey I got to learn some stuff before it turned into a nightmare.)
+
+- [ ] Backpropagate changes to Cantina.
 
 ###### ~ tut-tut-tut-tut-tulut-tut ~

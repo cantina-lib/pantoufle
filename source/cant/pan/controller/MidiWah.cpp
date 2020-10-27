@@ -28,13 +28,16 @@ CANTINA_PAN_NAMESPACE_BEGIN
     (
             size_u numberVoices,
             id_u8 channel,
-            Array<id_u8, 2> wahwah,
-            const UPtr<MidiTimer>& timer
+            Array<id_u8, 2> wahwah
     )
     : MultiMidiController(numberVoices, channel, wahwah),
-    DeltaTimeUpdatable()
+      m_timeListener()
     {
-        this->subscribe(timer->timeModule.get());
+      m_timeListener = std::make_shared<patterns::SelfEventListener<MidiWah, time_d>>(
+            this,
+        &MidiWah::onTimeUpdateDelta
+     );
+
     }
 
     void
@@ -46,7 +49,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
     void
     MidiWah::
-    updateDelta(const time_d)
+    onTimeUpdateDelta(CANT_MAYBEUNUSED time_d tDelta)
     {
         /* todo */
 
@@ -58,11 +61,10 @@ CANTINA_PAN_NAMESPACE_BEGIN
     (
             size_u numberVoices,
             id_u8 channel,
-            Array<id_u8, 2> wahwah,
-            const UPtr<MidiTimer>& timer
+            Array<id_u8, 2> wahwah
     )
     {
-        return cant::UPtr<MidiController>(new MidiWah(numberVoices, channel, wahwah, timer));
+        return static_cast<UPtr<MidiController>>(UPtr<MidiWah>(new MidiWah(numberVoices, channel, wahwah)));
     }
 
 CANTINA_PAN_NAMESPACE_END

@@ -20,7 +20,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
     MidiNoteInput::
     justChangedPlaying() const
     {
-        return m_changeFlagUpdateModule->justChanged();
+        return m_justChangedPlaying;
     }
 
     CANT_INLINE
@@ -39,9 +39,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
         return m_data.getVelocityNative();
     }
 
-
-
-CANTINA_PAN_NAMESPACE_END
+    CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #endif //CANTINA_PAN_MIDINOTEINPUT_INL

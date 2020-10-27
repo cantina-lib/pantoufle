@@ -20,6 +20,8 @@ CANTINA_PAN_NAMESPACE_BEGIN
             : m_type(ADSRStateType::eNotPlaying),
               m_length(),
               m_currentTargetVelocity(),
+              m_flagJustChangedPlaying(false),
+              m_tickListener(),
               m_physicsSimulation(std::make_unique<Simulation>()),
               m_object
               (
@@ -36,8 +38,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
                               std::make_unique<TargetState>(),
                               std::make_unique<Shape>(0., c_radius)
                       )
-              ),
-              m_changeFlagModule(std::make_unique<ChangeFlagUpdateModule>())
+              )
     {
 
         m_physicsSimulation->addRigidObject(m_object, static_cast<type_i>(0));
@@ -79,6 +80,12 @@ CANTINA_PAN_NAMESPACE_BEGIN
          */
     }
 
+
+    void
+    ADSRState::onTimerTick(void *)
+    {
+        m_flagJustChangedPlaying = false;
+    }
 
     void
     ADSRState::

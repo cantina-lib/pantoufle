@@ -13,26 +13,18 @@
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/pan/timer/MidiTimer.hpp>
-#include <cant/pan/timer/TimeUpdatable.hpp>
-
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiEnvelope
-            : public MidiProcessor,
-              public event::Listener<MidiTimer>
+    class MidiEnvelope : public MidiProcessor
     {
     public:
         /** -- methods -- **/
-        MidiEnvelope();
         // optional implementation of Listener interface
         // Is used by ADSR envelope (actually each states thereof)
-        void subscribe  (CANT_MAYBEUNUSED event::Ptr<MidiTimer> timer) override { }
-        void unsubscribe(CANT_MAYBEUNUSED event::Ptr<MidiTimer> timer) override { }
-
-        // managed by MidiEnvelopeTrait
-        virtual void updateDelta(time_d tDelta) = 0;
+        virtual void subscribe  (UPtr<MidiTimer>&) { }
+        virtual void unsubscribe(UPtr<MidiTimer>&) { }
 
         void process(MidiNoteInternal& note) override = 0;
     };
@@ -53,40 +45,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
         /** -- methods -- **/
         void process(MidiNoteInternal& note) override = 0;
     };
-
-
-    class MidiEnvelopeWrapper : public MidiProcessor, public event::Listener<MidiTimer>
-    {
-    public:
-        /** -- structs -- **/
-        class TimeUpdateModule : public DeltaTimeUpdatable
-        {
-        public:
-            /** -- methods -- **/
-            CANT_EXPLICIT TimeUpdateModule(UPtr<MidiEnvelope> envModule);
-
-            void updateDelta(time_d tDelta) override;
-
-            /** -- fields -- **/
-            UPtr<MidiEnvelope> env;
-        };
-
-        /** -- methods -- **/
-        CANT_EXPLICIT MidiEnvelopeWrapper(UPtr<MidiEnvelope> envMod);
-
-        // implementation of MidiEnvelope
-        void process(MidiNoteInternal& note) override;
-
-        // implementation of Listener interface
-        void subscribe(event::Ptr<MidiTimer> timer) override;
-        void unsubscribe(event::Ptr<MidiTimer> timer) override;
-
-    private:
-        /** -- fields -- **/
-        UPtr<TimeUpdateModule> m_timeUpdateModule;
-    };
-
-
 
 
 CANTINA_PAN_NAMESPACE_END

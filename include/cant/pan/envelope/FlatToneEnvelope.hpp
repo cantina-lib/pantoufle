@@ -21,11 +21,6 @@ namespace cant::pan
 
         void process(MidiNoteInternal& note) override;
 
-    private:
-        /** -- methods -- **/
-        //private inheritance
-        void updateDelta(time_d tDelta) override;
-
     };
 }
 #include <cant/common/undef_macro.hpp>

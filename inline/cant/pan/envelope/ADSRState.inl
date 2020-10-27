@@ -36,15 +36,15 @@ CANTINA_PAN_NAMESPACE_BEGIN
     ADSRState::
     justChangedPlaying() const
     {
-        return m_changeFlagModule->justChanged();
+      return m_flagJustChangedPlaying;
     }
 
     CANT_INLINE
     void
     ADSRState::
-    raiseFlagChangedPlaying() const
+    raiseFlagChangedPlaying()
     {
-        return m_changeFlagModule->raiseChangeFlag();
+      m_flagJustChangedPlaying = true;
     }
 
 

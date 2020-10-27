@@ -24,7 +24,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
         (
                 size_u numberVoices,
                 id_u8 channel,
-                const UPtr <MidiTimer> &timer
+                                      UPtr<MidiTimer> &timer
         );
 
         Optional<size_u> receive(time_d tCurrent, const MidiNoteInputData& data) override;

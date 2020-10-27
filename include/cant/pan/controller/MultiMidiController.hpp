@@ -23,7 +23,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
      * It updates it, but can give a read-only ref.
      **/
      template <size_u numberBindings>
-    class MultiMidiController : protected MidiController
+    class MultiMidiController : public MidiController
     {
     public:
         CANT_NODISCARD Stream<id_u8> getControllerIds() const override;

@@ -22,11 +22,4 @@ CANTINA_PAN_NAMESPACE_BEGIN
         /* nothing to doooo */
     }
 
-    void
-    FlatToneEnvelope::
-    updateDelta(time_d)
-    {
-
-    }
-
 CANTINA_PAN_NAMESPACE_END

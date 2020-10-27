@@ -11,6 +11,8 @@
 #include <cant/common/memory.hpp>
 
 
+#include <cant/pan/timer/TimerUpdate.hpp>
+
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
 #include <cant/pan/envelope/adsr_forward.hpp>
@@ -20,7 +22,11 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
     class ADSRState;
 
-    class ADSREnvelope : private VelocityEnvelope
+    class ADSREnvelope :
+        private VelocityEnvelope,
+        public TimerSubscribable,
+        public DeltaTimeUpdatable,
+        public TimerTickUpdatable
     {
     public:
 
@@ -36,8 +42,8 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
         // implementation of Listener interface
         // mentioned in MidiEnvelopeModule
-        void subscribe(event::Ptr<MidiTimer> timer) final;
-        void unsubscribe(event::Ptr<MidiTimer> timer) final;
+        void subscribe(UPtr<MidiTimer>& timer) final;
+        void unsubscribe(UPtr<MidiTimer>& timer) final;
 
     private:
         /** -- methods -- **/
@@ -50,8 +56,9 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
         CANT_NODISCARD static adsr::ArraySpeeds computeSpeeds(const adsr::ArrayLengths& lengths, const adsr::ArrayVelocityRatios& ratios);
 
-        // private inheritance
-        void updateDelta(time_d tDelta) override;
+        // Event functions
+        void onTimeUpdateDelta(time_d tDelta) override;
+        void onTimerTick(void *) override;
 
         // static methods
         static void checkLengths(const adsr::ArrayLengths& lengths);
@@ -63,6 +70,8 @@ CANTINA_PAN_NAMESPACE_BEGIN
         adsr::ArrayVelocityRatios m_ratios;
         adsr::ArraySpeeds m_speeds;
 
+          ShPtr<TimeListener> m_timeListener;
+          ShPtr<TickListener> m_tickListener;
 
         Stream<ADSRState> m_states;
 

@@ -36,6 +36,15 @@ CANTINA_PAN_NAMESPACE_BEGIN
         m_states(numberVoices)
     {
         checkLengths(m_lengths);
+
+        m_timeListener = std::make_shared<patterns::SelfEventListener<ADSREnvelope, time_d>>(
+            this,
+            &ADSREnvelope::onTimeUpdateDelta
+            );
+        m_tickListener = std::make_shared<patterns::SelfEventListener<ADSREnvelope, void*>>(
+          this,
+          &ADSREnvelope::onTimerTick
+      );
     }
 
     void
@@ -75,8 +84,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
     }
 
     void
-    ADSREnvelope::
-    updateDelta(time_d tDelta)
+    ADSREnvelope::onTimeUpdateDelta(time_d tDelta)
     {
         // update type and length of states
         for (auto& state : m_states)
@@ -107,24 +115,26 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
     void
     ADSREnvelope::
-    subscribe(event::Ptr<MidiTimer> timer)
+    subscribe(UPtr<MidiTimer>& timer)
     {
-        for (auto& state : m_states)
-        {
-            state.subscribe(timer->changeFlagModule.get());
-        }
+      timer->addOnTimeUpdateCurrentListener(m_timeListener);
+      timer->addOnTickListener(m_tickListener);
     }
 
     void
     ADSREnvelope::
-    unsubscribe(event::Ptr<MidiTimer> timer)
+    unsubscribe(UPtr<MidiTimer>& timer)
     {
-        for (auto& state : m_states)
-        {
-            state.unsubscribe(timer->changeFlagModule.get());
-        }
+      timer->removeOnTimeUpdateCurrentListener(m_timeListener);
+      timer->removeOnTickListener(m_tickListener);
     }
 
+    void ADSREnvelope::onTimerTick(void *)
+    {
+      for(auto& state : m_states)
+      {
+        state.onTimerTick(nullptr);
+      }
+    }
 
-
-CANTINA_PAN_NAMESPACE_END
+    CANTINA_PAN_NAMESPACE_END

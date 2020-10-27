@@ -12,9 +12,16 @@ CANTINA_PAN_NAMESPACE_BEGIN
     MidiNoteInput::
     MidiNoteInput(const size_u voice)
             : MidiNote<MidiNoteInputData>(voice),
-              m_changeFlagUpdateModule(std::make_unique<ChangeFlagUpdateModule>()),
-              m_isPressed(false)
-    { }
+              m_isPressed(false),
+      m_justChangedPlaying(false),
+      m_tickListener()
+    {
+      m_tickListener =
+          std::make_shared<patterns::SelfEventListener<MidiNoteInput, void*>>(
+              this,
+              &MidiNoteInput::onTimerTick
+          );
+    }
 
 
     void
@@ -36,23 +43,30 @@ CANTINA_PAN_NAMESPACE_BEGIN
         }
         if (isPlaying() != wasPlaying)
         {
-            m_changeFlagUpdateModule->raiseChangeFlag();
+          m_justChangedPlaying = true;
         }
     }
 
     void
     MidiNoteInput::
-    subscribe(event::Ptr <MidiTimer> timer)
+    subscribe(UPtr <MidiTimer>& timer)
     {
-        m_changeFlagUpdateModule->subscribe(timer->changeFlagModule.get());
+        timer->addOnTickListener(m_tickListener);
     }
 
     void
     MidiNoteInput::
-    unsubscribe(event::Ptr <MidiTimer> timer)
+    unsubscribe(UPtr <MidiTimer>& timer)
     {
-        m_changeFlagUpdateModule->unsubscribe(timer->changeFlagModule.get());
+        timer->removeOnTickListener(m_tickListener);
+    }
+
+    void
+    MidiNoteInput::onTimerTick(void *)
+    {
+      // reset flag changed!
+            m_justChangedPlaying = false;
     }
 
 
-CANTINA_PAN_NAMESPACE_END
+    CANTINA_PAN_NAMESPACE_END

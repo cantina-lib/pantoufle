@@ -5,7 +5,9 @@
 #pragma once
 
 
-#include <cant/pan/timer/ChangeFlagUpdatable.hpp>
+#include <cant/pan/common/types.hpp>
+
+#include <cant/pan/timer/TimerUpdate.hpp>
 
 #include <cant/physics/PhysicsSimulation.hpp>
 
@@ -18,7 +20,7 @@
 CANTINA_PAN_NAMESPACE_BEGIN
 
 
-    class ADSRState : public ChangeFlagUpdatable
+    class ADSRState : public TimerTickUpdatable
     {
     public:
         /** -- typedefs -- **/
@@ -39,14 +41,6 @@ CANTINA_PAN_NAMESPACE_BEGIN
             eSustain    = 1, // he won't throw sustain away
             eRelease    = 3,
             eNotPlaying = 4
-        };
-
-        // to flag changes
-        class ChangeFlagUpdateModule : public ChangeFlagUpdatable
-        {
-        public:
-            /** -- friends -- **/
-            friend class ADSRState;
         };
 
         /** -- methods -- **/
@@ -74,10 +68,12 @@ CANTINA_PAN_NAMESPACE_BEGIN
         void resetTarget(const ADSREnvelope* env);
 
         CANT_NODISCARD bool justChangedPlaying() const;
-        void raiseFlagChangedPlaying() const;
+        void raiseFlagChangedPlaying();
 
         CANT_NODISCARD bool isPlaying() const;
         CANT_NODISCARD bool isVarying() const;
+
+        void onTimerTick(void *) override;
 
 
         // static methods
@@ -95,13 +91,14 @@ CANTINA_PAN_NAMESPACE_BEGIN
         time_d m_length;
         type_d m_currentTargetVelocity;
 
+        bool m_flagJustChangedPlaying;
+
+        ShPtr<TickListener> m_tickListener;
+
         UPtr<Simulation> m_physicsSimulation;
 
         ShPtr<VelocityObject> m_object;
         ShPtr<TargetObject> m_target;
-
-
-        UPtr<ChangeFlagUpdateModule> m_changeFlagModule;
 
         /** -- constants -- **/
         static CANT_CONSTEXPR type_d c_strength = 10;

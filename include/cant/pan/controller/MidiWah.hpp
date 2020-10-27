@@ -11,14 +11,14 @@
 
 #include <cant/pan/controller/MultiMidiController.hpp>
 
-#include <cant/pan/timer/TimeUpdatable.hpp>
+#include <cant/pan/timer/TimerUpdate.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
     class MidiTimer;
 
-    class MidiWah : MultiMidiController<2>, public DeltaTimeUpdatable
+    class MidiWah : public MultiMidiController<2>, public DeltaTimeUpdatable
     {
     public:
         /** -- methods -- **/
@@ -27,11 +27,10 @@ CANTINA_PAN_NAMESPACE_BEGIN
         (
                 size_u numberVoices,
                 id_u8 channel,
-                Array<id_u8, 2> wahwah,
-                const UPtr<MidiTimer>& timer
+                Array<id_u8, 2> wahwah
        );
 
-        void updateDelta(time_d tDelta) override;
+        void onTimeUpdateDelta(time_d tDelta) override;
 
     private:
         /** -- methods -- **/
@@ -39,8 +38,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
         (
                 size_u numberVoices,
                 id_u8 channel,
-                Array<id_u8, 2> wahwah,
-                const UPtr<MidiTimer>& timer
+                Array<id_u8, 2> wahwah
         );
 
         // event functions
@@ -48,6 +46,9 @@ CANTINA_PAN_NAMESPACE_BEGIN
         void beforeNoteProcess(const MidiNoteInternal& incomingNote) override;
         // private inheritance
         void IMPL_process(MidiNoteInternal& note) const override;
+
+        /** -- fields -- **/
+        ShPtr<TimeListener> m_timeListener;
     };
 
 CANTINA_PAN_NAMESPACE_END

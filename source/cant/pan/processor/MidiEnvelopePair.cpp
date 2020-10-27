@@ -16,22 +16,22 @@ CANTINA_PAN_NAMESPACE_BEGIN
     (
             size_u numberVoices,
             id_u8 channel,
-            const UPtr <MidiTimer> &timer
+                                   UPtr<MidiTimer> &timer
     )
-    : m_toneEnvelopeWrapper(std::make_unique<MidiEnvelopeWrapper>(FlatToneEnvelope::make())),
-      m_velocityEnvelopeWrapper(std::make_unique<MidiEnvelopeWrapper>(ADSREnvelope::make(numberVoices))),
+    : m_toneEnvelope(FlatToneEnvelope::make()),
+      m_velocityEnvelope(ADSREnvelope::make(numberVoices)),
       m_channel(channel)
     {
-        m_toneEnvelopeWrapper->subscribe(timer.get());
-        m_velocityEnvelopeWrapper->subscribe(timer.get());
+        m_toneEnvelope->subscribe(timer);
+        m_velocityEnvelope->subscribe(timer);
     }
 
     void
     MidiEnvelopePair::
     process(MidiNoteInternal& note)
     {
-        m_toneEnvelopeWrapper->process(note);
-        m_velocityEnvelopeWrapper->process(note);
+        m_toneEnvelope->process(note);
+        m_velocityEnvelope->process(note);
     }
 
 CANTINA_PAN_NAMESPACE_END

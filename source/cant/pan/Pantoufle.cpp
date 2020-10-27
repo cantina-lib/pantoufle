@@ -6,14 +6,10 @@
 
 #include <cant/pan/note/MidiNoteInput.hpp>
 
-#include <cant/pan/processor/MidiControllerChain.hpp>
-#include <cant/pan/processor/MidiEnvelopePair.hpp>
-
-#include <cant/pan/layer/MidiNoteInputPoly.hpp>
-#include <cant/pan/layer/MidiNoteOutputLayer.hpp>
-
-
 #include <cant/pan/common/PantoufleException.hpp>
+
+// shouldn't have to include this..
+#include <cant/time/InternalClock.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
@@ -52,7 +48,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
     Pantoufle::
     getCurrentTime() const
     {
-        return m_timer->timeModule->getCurrentTime();
+        return m_timer->getCurrentTime();
     }
 
     size_u
