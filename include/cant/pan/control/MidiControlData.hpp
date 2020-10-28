@@ -12,6 +12,8 @@
 #include <cant/pan/common/types.hpp>
 #include <cant/pan/control/MidiControlCompatible.hpp>
 
+#include <cant/pan/control/control_forward.hpp>
+
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
