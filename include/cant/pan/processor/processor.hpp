@@ -13,4 +13,4 @@
 #include "MidiControllerChain.hpp"
 #include "MidiEnvelopePair.hpp"
 
-#endif //CANTINA_PROCESSOR_HPP
+#endif // CANTINA_PROCESSOR_HPP

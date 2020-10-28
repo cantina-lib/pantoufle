@@ -12,20 +12,18 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    template <typename Tone_T, typename Vel_T>
-    class MidiNoteData;
+template <typename Tone_T, typename Vel_T> class MidiNoteData;
 
-    class MidiNoteInputData;
-    class MidiNoteInternalData;
-    class MidiNoteOutputData;
+class MidiNoteInputData;
+class MidiNoteInternalData;
+class MidiNoteOutputData;
 
-    template <class Data_T>
-    class MidiNote;
-    class MidiNoteInput;
-    class MidiNoteInternal;
-    class MidiNoteOutput;
+template <class Data_T> class MidiNote;
+class MidiNoteInput;
+class MidiNoteInternal;
+class MidiNoteOutput;
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif //CANTINA_TILDE_NOTE_FORWARD_HPP
+#endif // CANTINA_TILDE_NOTE_FORWARD_HPP

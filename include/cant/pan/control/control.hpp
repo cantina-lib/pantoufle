@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "MidiControlData.hpp"
 #include "MidiControlCompatible.hpp"
+#include "MidiControlData.hpp"
 
-
-#endif //CANTINA_CONTROL_HPP
+#endif // CANTINA_CONTROL_HPP

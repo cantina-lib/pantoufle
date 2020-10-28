@@ -7,39 +7,21 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    CANT_INLINE
-    bool
-    MidiNoteInput::
-    isPlaying() const
-    {
-         return m_isPressed;
-    }
+CANT_INLINE
+bool MidiNoteInput::isPlaying() const { return m_isPressed; }
 
-    CANT_INLINE
-    bool
-    MidiNoteInput::
-    justChangedPlaying() const
-    {
-        return m_justChangedPlaying;
-    }
+CANT_INLINE
+bool MidiNoteInput::justChangedPlaying() const { return m_justChangedPlaying; }
 
-    CANT_INLINE
-    tone_i8
-    MidiNoteInput::
-    getToneNative() const
-    {
-        return m_data.getToneNative();
-    }
+CANT_INLINE
+tone_i8 MidiNoteInput::getToneNative() const { return m_data.getToneNative(); }
 
-    CANT_INLINE
-    vel_i8
-    MidiNoteInput::
-    getVelocityNative() const
-    {
-        return m_data.getVelocityNative();
-    }
+CANT_INLINE
+vel_i8 MidiNoteInput::getVelocityNative() const {
+  return m_data.getVelocityNative();
+}
 
-    CANTINA_PAN_NAMESPACE_END
+CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif //CANTINA_PAN_MIDINOTEINPUT_INL
+#endif // CANTINA_PAN_MIDINOTEINPUT_INL

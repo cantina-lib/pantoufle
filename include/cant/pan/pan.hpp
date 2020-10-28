@@ -23,4 +23,4 @@
 
 #include "processor/processor.hpp"
 
-#endif //CANTINA_MIDI_HPP
+#endif // CANTINA_MIDI_HPP

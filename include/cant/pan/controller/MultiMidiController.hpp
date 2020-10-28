@@ -15,41 +15,43 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiNoteInternal;
+class MidiNoteInternal;
 
-    /**
-     * MidiController should not grant unguarded access
-     * to its Processor _memory to child classes.
-     * It updates it, but can give a read-only ref.
-     **/
-     template <size_u numberBindings>
-    class MultiMidiController : public MidiController
-    {
-    public:
-        CANT_NODISCARD Stream<id_u8> getControllerIds() const override;
-    protected:
-        CANT_EXPLICIT MultiMidiController(size_u numberVoices, id_u8 channel, Array<id_u8, numberBindings> controllerIds);
+/**
+ * MidiController should not grant unguarded access
+ * to its Processor _memory to child classes.
+ * It updates it, but can give a read-only ref.
+ **/
+template <size_u numberBindings>
+class MultiMidiController : public MidiController {
+public:
+  CANT_NODISCARD Stream<id_u8> getControllerIds() const override;
 
-        CANT_NODISCARD const MidiNoteInternal& getMemory(size_u voice) const;
-        CANT_NODISCARD const MidiControlInternal& getControl(size_u iControl) const;
-    private:
-        /** -- methods -- **/
-        // event functions
-        void beforeControlProcess(const MidiControlInternal& control) override = 0;
-        void beforeNoteProcess(const MidiNoteInternal& note) override = 0;
-        // private inheritance
-        void IMPL_receiveControl(const MidiControlInternal& incomingControl) final;
-        void IMPL_process(MidiNoteInternal& note) const override = 0;
+protected:
+  CANT_EXPLICIT MultiMidiController(size_u numberVoices, id_u8 channel,
+                                    Array<id_u8, numberBindings> controllerIds);
 
-        /** -- fields -- **/
-        id_u8 m_channel;
-        Array<id_u8, numberBindings> m_controllerIds;
-        Array<MidiControlInternal, numberBindings> m_controls;
-    };
+  CANT_NODISCARD const MidiNoteInternal &getMemory(size_u voice) const;
+  CANT_NODISCARD const MidiControlInternal &getControl(size_u iControl) const;
+
+private:
+  /** -- methods -- **/
+  // event functions
+  void beforeControlProcess(const MidiControlInternal &control) override = 0;
+  void beforeNoteProcess(const MidiNoteInternal &note) override = 0;
+  // private inheritance
+  void IMPL_receiveControl(const MidiControlInternal &incomingControl) final;
+  void IMPL_process(MidiNoteInternal &note) const override = 0;
+
+  /** -- fields -- **/
+  id_u8 m_channel;
+  Array<id_u8, numberBindings> m_controllerIds;
+  Array<MidiControlInternal, numberBindings> m_controls;
+};
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #include <cant/pan/controller/MultiMidiController.inl>
 
-#endif //CANTINA_MIDICONTROLLER_HPP
+#endif // CANTINA_MIDICONTROLLER_HPP

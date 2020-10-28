@@ -15,4 +15,4 @@
 
 #include "MidiNoteInputPoly.hpp"
 
-#endif //CANTINA_TILDE_LAYER_HPP
+#endif // CANTINA_TILDE_LAYER_HPP

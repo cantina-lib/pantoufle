@@ -15,4 +15,4 @@
 #include "MidiNoteInput.hpp"
 #include "MidiNoteInternalOutput.hpp"
 
-#endif //CANTINA_NOTE_HPP
+#endif // CANTINA_NOTE_HPP

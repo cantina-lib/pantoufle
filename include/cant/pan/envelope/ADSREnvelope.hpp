@@ -7,9 +7,8 @@
 
 #pragma once
 
-#include <cant/pan/common/types.hpp>
 #include <cant/common/memory.hpp>
-
+#include <cant/pan/common/types.hpp>
 
 #include <cant/pan/timer/TimerUpdate.hpp>
 
@@ -20,82 +19,73 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class ADSRState;
+class ADSRState;
 
-    class ADSREnvelope :
-        private VelocityEnvelope,
-        public TimerSubscribable,
-        public DeltaTimeUpdatable,
-        public TimerTickUpdatable
-    {
-    public:
+class ADSREnvelope : private VelocityEnvelope,
+                     public TimerSubscribable,
+                     public DeltaTimeUpdatable,
+                     public TimerTickUpdatable {
+public:
+  /** -- methods -- **/
+  // factory method
+  static UPtr<VelocityEnvelope>
+  make(size_u numberVoices,
+       const adsr::ArrayLengths &lengths = ADSREnvelope::c_defaultADSRLengths,
+       const adsr::ArrayVelocityRatios &ratios =
+           ADSREnvelope::c_defaultADSRVelocitiesRatios);
+  void process(MidiNoteInternal &note) override;
 
-        /** -- methods -- **/
-        // factory method
-        static UPtr<VelocityEnvelope> make
-                (
-                        size_u numberVoices,
-                        const adsr::ArrayLengths& lengths           = ADSREnvelope::c_defaultADSRLengths,
-                        const adsr::ArrayVelocityRatios& ratios = ADSREnvelope::c_defaultADSRVelocitiesRatios
-                );
-        void process(MidiNoteInternal& note) override;
+  // implementation of Listener interface
+  // mentioned in MidiEnvelopeModule
+  void subscribe(UPtr<MidiTimer> &timer) final;
+  void unsubscribe(UPtr<MidiTimer> &timer) final;
 
-        // implementation of Listener interface
-        // mentioned in MidiEnvelopeModule
-        void subscribe(UPtr<MidiTimer>& timer) final;
-        void unsubscribe(UPtr<MidiTimer>& timer) final;
+private:
+  /** -- methods -- **/
+  ADSREnvelope(size_u numberVoices, const adsr::ArrayLengths &lengths,
+               const adsr::ArrayVelocityRatios &ratios);
 
-    private:
-        /** -- methods -- **/
-        ADSREnvelope
-                (
-                        size_u numberVoices,
-                        const adsr::ArrayLengths& lengths,
-                        const adsr::ArrayVelocityRatios& ratios
-                );
+  CANT_NODISCARD static adsr::ArraySpeeds
+  computeSpeeds(const adsr::ArrayLengths &lengths,
+                const adsr::ArrayVelocityRatios &ratios);
 
-        CANT_NODISCARD static adsr::ArraySpeeds computeSpeeds(const adsr::ArrayLengths& lengths, const adsr::ArrayVelocityRatios& ratios);
+  // Event functions
+  void onTimeUpdateDelta(time_d tDelta) override;
+  void onTimerTick(void *) override;
 
-        // Event functions
-        void onTimeUpdateDelta(time_d tDelta) override;
-        void onTimerTick(void *) override;
+  // static methods
+  static void checkLengths(const adsr::ArrayLengths &lengths);
+  CANT_NODISCARD static bool isSustainFinite(const adsr::ArrayLengths &lengths);
 
-        // static methods
-        static void checkLengths(const adsr::ArrayLengths& lengths);
-        CANT_NODISCARD static bool isSustainFinite(const adsr::ArrayLengths& lengths);
+  /** -- fields -- **/
+  adsr::ArrayLengths m_lengths;
+  adsr::ArrayVelocityRatios m_ratios;
+  adsr::ArraySpeeds m_speeds;
 
+  ShPtr<TimeListener> m_timeListener;
+  ShPtr<TickListener> m_tickListener;
 
-        /** -- fields -- **/
-        adsr::ArrayLengths m_lengths;
-        adsr::ArrayVelocityRatios m_ratios;
-        adsr::ArraySpeeds m_speeds;
+  Stream<ADSRState> m_states;
 
-          ShPtr<TimeListener> m_timeListener;
-          ShPtr<TickListener> m_tickListener;
+  // constants
+  CANT_CONSTEXPR static adsr::ArrayLengths c_defaultADSRLengths = {
+      30., // ADSRState::eAttack,
+      -1., // ADSRState::eSustain,
+      50., // ADSRState::eDecay,
+      30.  // ADSRState::eRelease,
+  };
 
-        Stream<ADSRState> m_states;
+  CANT_CONSTEXPR static adsr::ArrayVelocityRatios
+      c_defaultADSRVelocitiesRatios = {
+          1., // ADSRState::eAttack,
+          0.7 // ADSRState::eSustain
+      };
 
-        // constants
-        CANT_CONSTEXPR static adsr::ArrayLengths c_defaultADSRLengths = {
-                30.,  // ADSRState::eAttack,
-                -1.,  // ADSRState::eSustain,
-                50.,  // ADSRState::eDecay,
-                30.   // ADSRState::eRelease,
-        };
-
-        CANT_CONSTEXPR static adsr::ArrayVelocityRatios c_defaultADSRVelocitiesRatios = {
-                1., // ADSRState::eAttack,
-                0.7 // ADSRState::eSustain
-        };
-
-
-        /** -- friends - **/
-        friend class ADSRState;
-    };
-
-
+  /** -- friends - **/
+  friend class ADSRState;
+};
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif //CANTINA_PAN_ADSRENVELOPE_HPP
+#endif // CANTINA_PAN_ADSRENVELOPE_HPP

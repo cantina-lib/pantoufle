@@ -50,22 +50,20 @@ public:
 
   void addOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener);
   void addOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener);
-  void addOnTickListener(ShPtr<TickListener>& listener);
+  void addOnTickListener(ShPtr<TickListener> &listener);
 
   void removeOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener);
   void removeOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener);
-  void removeOnTickListener(ShPtr<TickListener>& listener);
+  void removeOnTickListener(ShPtr<TickListener> &listener);
 
 private:
-
   /** -- fields -- **/
   UPtr<time::InternalClock> m_internalClock;
 
   // event
   patterns::Event<time_d> m_deltaTimeUpdateEvent;
   patterns::Event<time_d> m_currentTimeUpdateEvent;
-  patterns::Event<void*> m_tickEvent;
-
+  patterns::Event<void *> m_tickEvent;
 };
 
 CANTINA_PAN_NAMESPACE_END

@@ -10,20 +10,16 @@
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
 #include <cant/common/macro.hpp>
-namespace cant::pan
-{
-    class FlatToneEnvelope final : protected ToneEnvelope
-    {
-    public:
-        /** -- methods -- **/
-        // factory method
-        static UPtr<ToneEnvelope> make();
+namespace cant::pan {
+class FlatToneEnvelope final : protected ToneEnvelope {
+public:
+  /** -- methods -- **/
+  // factory method
+  static UPtr<ToneEnvelope> make();
 
-        void process(MidiNoteInternal& note) override;
-
-    };
-}
+  void process(MidiNoteInternal &note) override;
+};
+} // namespace cant::pan
 #include <cant/common/undef_macro.hpp>
 
-
-#endif //CANTINA_PAN_FLATTONEENVELOPE_HPP
+#endif // CANTINA_PAN_FLATTONEENVELOPE_HPP

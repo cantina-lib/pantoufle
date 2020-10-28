@@ -10,36 +10,22 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    MidiController::
-    MidiController(const size_u numberVoices)
-    : MidiProcessorMemory(numberVoices)
-    {
+MidiController::MidiController(const size_u numberVoices)
+    : MidiProcessorMemory(numberVoices) {}
 
-    }
+void MidiController::process(MidiNoteInternal &internal) {
+  beforeNoteProcess(internal);
+  IMPL_process(internal);
+  updateVoice(internal);
+}
 
-    void
-    MidiController::
-    process(MidiNoteInternal &internal)
-    {
-        beforeNoteProcess(internal);
-        IMPL_process(internal);
-        updateVoice(internal);
-    }
+void MidiController::updateVoice(const MidiNoteInternal &note) {
+  m_memory.setVoice(note);
+}
 
-    void
-    MidiController::
-    updateVoice(const MidiNoteInternal &note)
-    {
-        m_memory.setVoice(note);
-    }
-
-
-    void
-    MidiController::
-    receiveControl(const MidiControlInternal& control)
-    {
-        beforeControlProcess(control);
-        IMPL_receiveControl(control);
-    }
+void MidiController::receiveControl(const MidiControlInternal &control) {
+  beforeControlProcess(control);
+  IMPL_receiveControl(control);
+}
 
 CANTINA_PAN_NAMESPACE_END

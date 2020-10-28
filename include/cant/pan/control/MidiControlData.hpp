@@ -17,29 +17,28 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiControlData : MidiControlCompatible
-    {
-    public:
-        /** -- methods -- **/
-        MidiControlData(id_u8 channel, id_u8 controllerId, id_u8 value);
+class MidiControlData : MidiControlCompatible {
+public:
+  /** -- methods -- **/
+  MidiControlData(id_u8 channel, id_u8 controllerId, id_u8 value);
 
-        CANT_CONSTEXPR MidiControlData();
-        CANT_CONSTEXPR MidiControlData(const MidiControlData&) = default;
+  CANT_CONSTEXPR MidiControlData();
+  CANT_CONSTEXPR MidiControlData(const MidiControlData &) = default;
 
-        CANT_NODISCARD id_u8 getChannel() const override;
-        CANT_NODISCARD id_u8 getId() const override;
-        CANT_NODISCARD id_u8 getValue() const override;
-    private:
-        /** -- fields -- **/
-        id_u8 m_channel;
-        id_u8 m_controllerId;
-        id_u8 m_value;
+  CANT_NODISCARD id_u8 getChannel() const override;
+  CANT_NODISCARD id_u8 getId() const override;
+  CANT_NODISCARD id_u8 getValue() const override;
 
-    };
+private:
+  /** -- fields -- **/
+  id_u8 m_channel;
+  id_u8 m_controllerId;
+  id_u8 m_value;
+};
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #include <cant/pan/control/MidiControlData.inl>
 
-#endif //CANTINA_MIDICONTROLDATA_HPP
+#endif // CANTINA_MIDICONTROLDATA_HPP

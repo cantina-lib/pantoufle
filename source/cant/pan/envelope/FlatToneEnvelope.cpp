@@ -7,19 +7,12 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    UPtr<ToneEnvelope>
-    FlatToneEnvelope::
-    make()
-    {
-        return UPtr<ToneEnvelope>(new FlatToneEnvelope());
-    }
+UPtr<ToneEnvelope> FlatToneEnvelope::make() {
+  return UPtr<ToneEnvelope>(new FlatToneEnvelope());
+}
 
-
-    void
-    FlatToneEnvelope::
-    process(CANT_MAYBEUNUSED MidiNoteInternal &note)
-    {
-        /* nothing to doooo */
-    }
+void FlatToneEnvelope::process(CANT_MAYBEUNUSED MidiNoteInternal &note) {
+  /* nothing to doooo */
+}
 
 CANTINA_PAN_NAMESPACE_END

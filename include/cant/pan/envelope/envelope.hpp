@@ -12,5 +12,4 @@
 #include "ADSREnvelope.hpp"
 #include "FlatToneEnvelope.hpp"
 
-
-#endif //CANTINA_MIDIENVELOPE_HPP
+#endif // CANTINA_MIDIENVELOPE_HPP

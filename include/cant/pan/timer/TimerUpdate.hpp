@@ -13,18 +13,17 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
 typedef patterns::EventListener<time_d> TimeListener;
 
-typedef patterns::EventListener<void*> TickListener;
+typedef patterns::EventListener<void *> TickListener;
 
 class MidiTimer;
 
-class TimerSubscribable
-{
+class TimerSubscribable {
 public:
   /** -- methods -- **/
   virtual ~TimerSubscribable() = 0;
 
-  virtual void subscribe(UPtr<MidiTimer>& timer) = 0;
-  virtual void unsubscribe(UPtr<MidiTimer>& timer) = 0;
+  virtual void subscribe(UPtr<MidiTimer> &timer) = 0;
+  virtual void unsubscribe(UPtr<MidiTimer> &timer) = 0;
 };
 
 class DeltaTimeUpdatable {

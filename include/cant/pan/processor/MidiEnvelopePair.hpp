@@ -14,28 +14,23 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiTimer;
+class MidiTimer;
 
-    class MidiEnvelopePair: public MidiProcessor
-    {
-    public:
-        /** -- methods -- **/
-        MidiEnvelopePair
-        (
-                size_u numberVoices,
-                id_u8 channel,
-                       UPtr<MidiTimer> &timer
-        );
+class MidiEnvelopePair : public MidiProcessor {
+public:
+  /** -- methods -- **/
+  MidiEnvelopePair(size_u numberVoices, id_u8 channel, UPtr<MidiTimer> &timer);
 
-        void process(MidiNoteInternal& note) override;
-    private:
-        /** -- fields -- **/
-        UPtr<ToneEnvelope> m_toneEnvelope;
-        UPtr<VelocityEnvelope> m_velocityEnvelope;
-        id_u8 m_channel;
-    };
+  void process(MidiNoteInternal &note) override;
+
+private:
+  /** -- fields -- **/
+  UPtr<ToneEnvelope> m_toneEnvelope;
+  UPtr<VelocityEnvelope> m_velocityEnvelope;
+  id_u8 m_channel;
+};
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif //CANTINA_MIDIENVELOPELAYER_HPP
+#endif // CANTINA_MIDIENVELOPELAYER_HPP

@@ -16,46 +16,42 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiTimer;
+class MidiTimer;
 
-    class MidiNoteInput :
-            public MidiNote<MidiNoteInputData>,
-            public MidiNoteInputCompatible,
-            public TimerTickUpdatable,
-            public TimerSubscribable
-    {
-    public:
-        /** -- methods -- **/
-        CANT_EXPLICIT MidiNoteInput(size_u voice);
+class MidiNoteInput : public MidiNote<MidiNoteInputData>,
+                      public MidiNoteInputCompatible,
+                      public TimerTickUpdatable,
+                      public TimerSubscribable {
+public:
+  /** -- methods -- **/
+  CANT_EXPLICIT MidiNoteInput(size_u voice);
 
-        void set(time_d tCurrent, const MidiNoteInputData& data);
+  void set(time_d tCurrent, const MidiNoteInputData &data);
 
+  CANT_NODISCARD bool isPlaying() const override;
+  CANT_NODISCARD bool justChangedPlaying() const override;
 
-        CANT_NODISCARD bool isPlaying() const override;
-        CANT_NODISCARD bool justChangedPlaying() const override;
+  CANT_NODISCARD tone_i8 getToneNative() const;
+  CANT_NODISCARD vel_i8 getVelocityNative() const;
 
-        CANT_NODISCARD tone_i8 getToneNative() const;
-        CANT_NODISCARD vel_i8  getVelocityNative() const;
+  void subscribe(UPtr<MidiTimer> &timer) override;
+  void unsubscribe(UPtr<MidiTimer> &timer) override;
 
-        void subscribe(UPtr<MidiTimer>& timer) override;
-        void unsubscribe(UPtr<MidiTimer>& timer) override;
+private:
+  /** -- methods -- **/
+  void onTimerTick(void *) override;
 
-    private:
-        /** -- methods -- **/
-        void onTimerTick(void *) override;
+  /** -- fields -- **/
+  bool m_isPressed;
 
-        /** -- fields -- **/
-        bool m_isPressed;
+  bool m_justChangedPlaying;
 
-        bool m_justChangedPlaying;
-
-        ShPtr<TickListener> m_tickListener;
-
-    };
+  ShPtr<TickListener> m_tickListener;
+};
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
 #include <cant/pan/note/MidiNoteInput.inl>
 
-#endif //CANTINA_PAN_MIDINOTEINPUT_HPP
+#endif // CANTINA_PAN_MIDINOTEINPUT_HPP

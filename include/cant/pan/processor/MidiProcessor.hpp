@@ -7,23 +7,20 @@
 
 #pragma once
 
-
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-    class MidiNoteInternal;
+class MidiNoteInternal;
 
-    class MidiProcessor
-    {
-    public:
-        /** -- methods -- **/
-        virtual ~MidiProcessor() = default;
+class MidiProcessor {
+public:
+  /** -- methods -- **/
+  virtual ~MidiProcessor() = default;
 
-        virtual void process(MidiNoteInternal& in) = 0;
-    };
+  virtual void process(MidiNoteInternal &in) = 0;
+};
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-
-#endif //CANTINA_MIDIPROCESSOR_HPP
+#endif // CANTINA_MIDIPROCESSOR_HPP

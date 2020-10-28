@@ -73,17 +73,16 @@ void MidiTimer::removeOnTimeUpdateCurrentListener(
   }
 }
 void MidiTimer::addOnTickListener(ShPtr<TickListener> &listener) {
-    bool success = m_tickEvent.addListener(listener);
-    if (!success) {
-      // todo: handle error.
-    }
-
+  bool success = m_tickEvent.addListener(listener);
+  if (!success) {
+    // todo: handle error.
+  }
 }
 void MidiTimer::removeOnTickListener(ShPtr<TickListener> &listener) {
-    bool success = m_tickEvent.removeListener(listener);
-    if (!success) {
-      // todo: handle error.
-    }
+  bool success = m_tickEvent.removeListener(listener);
+  if (!success) {
+    // todo: handle error.
+  }
 }
 
 CANTINA_PAN_NAMESPACE_END
