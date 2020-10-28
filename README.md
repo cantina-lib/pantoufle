@@ -9,7 +9,7 @@
 
 ##### Dependencies:
 
-* Cantina common (included)
+* Cantina common (submodule)
 
 ### Todo:
 
