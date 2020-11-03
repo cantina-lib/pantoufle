@@ -25,6 +25,7 @@ Pantoufle::Pantoufle(size_u numberVoices, id_u8 channel)
           std::make_unique<MidiNoteInternalLayer>(numberVoices)),
       m_processedNoteOutput(
           std::make_unique<MidiNoteOutputLayer>(numberVoices)) {
+  // todo: move this to a Pantoufle::start function.
   m_timer->start();
 }
 
