@@ -28,13 +28,15 @@ CANTINA_TIME_NAMESPACE_END
 CANTINA_PAN_NAMESPACE_BEGIN
 class MidiTimer {
 public:
+  /** -- typedefs -- **/
+
   /** -- methods -- **/
   /**
    * @brief Construct a MidiTimer from a type of ExternalClock.
    * @tparam ExternalClock_T : A child class of time::ExternalClock.
    */
   CANT_EXPLICIT MidiTimer(UPtr<time::InternalClock> clock);
-  CANT_EXPLICIT MidiTimer();
+  MidiTimer();
 
   CANT_NODISCARD time_d getCurrentTime() const;
   CANT_NODISCARD time_d getDeltaTime() const;
@@ -60,10 +62,10 @@ private:
   /** -- fields -- **/
   UPtr<time::InternalClock> m_internalClock;
 
-  // event
-  patterns::Event<time_d> m_deltaTimeUpdateEvent;
-  patterns::Event<time_d> m_currentTimeUpdateEvent;
-  patterns::Event<void *> m_tickEvent;
+  // events (should be stored in shared pointers).
+  ShPtr<TimeEvent> m_deltaTimeUpdateEvent;
+  ShPtr<TimeEvent> m_currentTimeUpdateEvent;
+  ShPtr<TickEvent> m_tickEvent;
 };
 
 CANTINA_PAN_NAMESPACE_END

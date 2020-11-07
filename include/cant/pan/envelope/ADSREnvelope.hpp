@@ -45,10 +45,6 @@ private:
   ADSREnvelope(size_u numberVoices, const adsr::ArrayLengths &lengths,
                const adsr::ArrayVelocityRatios &ratios);
 
-  CANT_NODISCARD static adsr::ArraySpeeds
-  computeSpeeds(const adsr::ArrayLengths &lengths,
-                const adsr::ArrayVelocityRatios &ratios);
-
   // Event functions
   void onTimeUpdateDelta(time_d tDelta) override;
   void onTimerTick(void *) override;
@@ -60,7 +56,6 @@ private:
   /** -- fields -- **/
   adsr::ArrayLengths m_lengths;
   adsr::ArrayVelocityRatios m_ratios;
-  adsr::ArraySpeeds m_speeds;
 
   ShPtr<TimeListener> m_timeListener;
   ShPtr<TickListener> m_tickListener;

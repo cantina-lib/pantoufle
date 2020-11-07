@@ -7,22 +7,6 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-CANT_INLINE
-void ADSRState::setType(const ADSREnvelope *env,
-                        ADSRState::ADSRStateType type) {
-  const bool wasPlaying = isPlaying();
-  const bool justChanged = type != m_type;
-  const bool justChangedPlaying = wasPlaying != isPlaying();
-
-  m_type = type;
-
-  if (justChangedPlaying) {
-    raiseFlagChangedPlaying();
-  }
-  if (justChanged) {
-    resetTarget(env);
-  }
-}
 
 CANT_INLINE
 bool ADSRState::justChangedPlaying() const { return m_flagJustChangedPlaying; }
@@ -31,8 +15,11 @@ CANT_INLINE
 void ADSRState::raiseFlagChangedPlaying() { m_flagJustChangedPlaying = true; }
 
 CANT_INLINE
+void ADSRState::discardFlagChangedPlaying() { m_flagJustChangedPlaying = false; }
+
+CANT_INLINE
 type_d ADSRState::getVelocityRatio() const {
-  return m_object->getPosition().get<0>();
+  return m_velocitySlider.getValue();
 }
 
 CANT_INLINE

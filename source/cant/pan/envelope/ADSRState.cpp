@@ -7,59 +7,17 @@
 
 #include <cant/pan/note/MidiNoteInternalOutput.hpp>
 
-#include <cant/physics/CustomForceField.hpp>
-#include <cant/physics/IsotropicPullField.hpp>
+#include <cant/maths/approx.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
 ADSRState::ADSRState()
-    : m_type(ADSRStateType::eNotPlaying), m_length(), m_currentTargetVelocity(),
-      m_flagJustChangedPlaying(false), m_tickListener(),
-      m_physicsSimulation(std::make_unique<Simulation>()),
-      m_object(std::make_unique<VelocityObject>(
-          std::make_unique<VelocityState>(c_weight),
-          std::make_unique<Shape>(0., c_radius))),
-      m_target(std::make_unique<TargetObject>(
-          std::make_unique<TargetState>(),
-          std::make_unique<Shape>(0., c_radius))) {
-
-  m_physicsSimulation->addRigidObject(m_object, static_cast<type_i>(0));
-  m_physicsSimulation->addStaticObject(m_target, static_cast<type_i>(0));
-
-  // gravity.
-  m_physicsSimulation->addForceField(
-      static_cast<UPtr<physics::PhysicalForceField<type_d, type_d, time_d, 1>>>(
-          std::make_unique<
-              physics::IsotropicPullField<type_d, type_d, time_d, 1>>(
-              [](type_d dist) { return c_strength / (dist * dist); },
-              m_target)));
-
-  // resistance.
-  /*
-  m_physicsSimulation->addForceField
-  (
-         static_cast<UPtr<physics::PhysicalForceField<type_d, type_d, time_d,
-  1>>>
-         (
-                 std::make_unique<physics::CustomForceField<type_d, type_d,
-  time_d, 1>>
-                         (
-                                 [](const auto& state, CANT_MAYBEUNUSED time_d
-  tDelta)
-                                 {
-                                     return - state->getVelocity()
-                                     // * (c_resistance / (tDelta *
-  state->getInverseMass()));
-                                     * c_resistance;
-                                 }
-                         )
-         )
-  );
-   */
-}
-
-void ADSRState::onTimerTick(void *) { m_flagJustChangedPlaying = false; }
+    : m_type(ADSRStateType::eNotPlaying),
+      m_length(),
+      m_velocitySlider(maths::approx<vel_d>::barycentre<type_d>),
+      m_flagJustChangedPlaying(false)
+{ }
 
 void ADSRState::updateTypeLengthManual(const ADSREnvelope *env,
                                        const MidiNoteInternal &note) {
@@ -74,7 +32,7 @@ void ADSRState::updateTypeLengthManual(const ADSREnvelope *env,
 
 void ADSRState::setTypeLengthManual(const ADSREnvelope *env,
                                     ADSRStateType type) {
-  setTypeLength(env, type, static_cast<time_d>(0.));
+  setType(env, type, 0.);
 }
 
 void ADSRState::updateTypeLength(const ADSREnvelope *env, time_d tDelta) {
@@ -84,33 +42,29 @@ void ADSRState::updateTypeLength(const ADSREnvelope *env, time_d tDelta) {
 
   // recursively computing updated type and length.
   computeTypeLengthRecursive(type, length, env->m_lengths);
-  setTypeLength(env, type, length);
+  setType(env, type, length);
 
-  updateSimulation(tDelta);
+  m_velocitySlider.updateDelta(tDelta);
 }
 
-void ADSRState::updateSimulation(time_d tDelta) {
-  m_physicsSimulation->stepDelta(tDelta);
-  type_d ratio = getVelocityRatio();
-  if (ratio > static_cast<type_d>(1.) || ratio < static_cast<type_d>(0.)) {
-    ratio = std::clamp<type_d>(ratio, static_cast<type_d>(0),
-                               static_cast<type_d>(1));
-    m_object->setPosition(ratio);
-  }
-}
+void ADSRState::setType(const ADSREnvelope *env, ADSRStateType type,
+                        time_d length) {
+  const bool wasPlaying = isPlaying();
+  const bool justChangedType = type != getType();
+  const bool justChangedPlaying = wasPlaying != isPlaying();
 
-void ADSRState::setTypeLength(const ADSREnvelope *env, ADSRStateType type,
-                              time_d length) {
+  m_type = type;
   m_length = length;
-  setType(env, type);
-}
 
-void ADSRState::resetTarget(const ADSREnvelope *env) {
-  type_d targetRatio = getTypeTargetVelocityRatio(env->m_ratios);
-  // set position of target so that the collider can 'support' the physical
-  // object.
-  targetRatio += targetRatio > getVelocityRatio() ? c_radius : -c_radius;
-  m_target->setPosition(targetRatio);
+  if (justChangedPlaying) {
+    raiseFlagChangedPlaying();
+  }
+  if (justChangedType) {
+    m_velocitySlider.setTarget(
+        getTypeTargetVelocityRatio(env->m_ratios),
+        getTypeTargetSlidingTime(env->m_lengths)
+    );
+  }
 }
 
 void ADSRState::computeTypeLengthRecursive(ADSRStateType &type, time_d &length,
@@ -177,23 +131,13 @@ type_d ADSRState::getTypeTargetVelocityRatio(
   return ratio;
 }
 
-type_d ADSRState::getTypeTargetSpeed(const adsr::ArraySpeeds &speeds) const {
-  auto speed = static_cast<type_d>(0.);
-  switch (getType()) {
-  case ADSRStateType::eAttack:
-    speed = speeds.at(ADSRStateType::eAttack);
-    break;
-  case ADSRStateType::eDecay:
-    speed = speeds.at(ADSRStateType::eDecay);
-    break;
-  case ADSRStateType::eRelease:
-    speed = speeds.at(ADSRStateType::eRelease);
-    break;
-  case ADSRStateType::eSustain:
-  case ADSRStateType::eNotPlaying:
-    speed = static_cast<type_d>(0);
-  }
-  return speed;
+type_d
+ADSRState::getTypeTargetSlidingTime(adsr::ArrayLengths const & lengths) const {
+  ADSRStateType const refType = getType() == ADSRStateType::eNotPlaying
+      ? ADSRStateType::eDecay
+      : getType();
+  return lengths.at(refType);
 }
+
 
 CANTINA_PAN_NAMESPACE_END

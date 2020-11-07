@@ -15,12 +15,15 @@ typedef patterns::EventListener<time_d> TimeListener;
 
 typedef patterns::EventListener<void *> TickListener;
 
+typedef patterns::Event<time_d> TimeEvent;
+typedef patterns::Event<void *> TickEvent;
+
 class MidiTimer;
 
 class TimerSubscribable {
 public:
   /** -- methods -- **/
-  virtual ~TimerSubscribable() = 0;
+  virtual ~TimerSubscribable() = default;
 
   virtual void subscribe(UPtr<MidiTimer> &timer) = 0;
   virtual void unsubscribe(UPtr<MidiTimer> &timer) = 0;
