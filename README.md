@@ -15,9 +15,9 @@
 
 #### Features 
 
-- [ ] Move ownership of MIDI controllers to the envelopes, make a controller manager to dispatch input commands.
-- [ ] Change handling of ADSR State velocity from Physics (too unstable) to a simple slider. (obvious in retrospect,
+- [x] Change handling of ADSR State velocity from Physics (too unstable) to a simple slider. (obvious in retrospect,
 but hey I got to learn some stuff before it turned into a nightmare.)
+- [ ] Move ownership of MIDI controllers to the envelopes, make a controller manager to dispatch input commands.
 - [ ] Apply changes to Cantina.
 
 
