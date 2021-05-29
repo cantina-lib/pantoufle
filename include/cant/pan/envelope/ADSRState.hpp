@@ -67,7 +67,6 @@ private:
   void discardFlagChangedPlaying();
 
   CANT_NODISCARD bool isPlaying() const;
-  CANT_NODISCARD bool isVarying() const;
 
   // static methods
   static void computeTypeLengthRecursive(ADSRStateType &type, time_d &length,

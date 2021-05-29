@@ -14,27 +14,27 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-UPtr<MidiEnvelope> ADSREnvelope::make(const size_u numberVoices,
+UPtr<ADSREnvelope> ADSREnvelope::make(const size_u numberVoices,
                                       const adsr::ArrayLengths &lengths,
                                       const adsr::ArrayVelocityRatios &ratios) {
-  return static_cast<UPtr<MidiEnvelope>>(
-      std::make_unique<ADSREnvelope>(numberVoices, lengths, ratios));
+  return UPtr<ADSREnvelope>(new ADSREnvelope(numberVoices, lengths, ratios));
 }
 
 ADSREnvelope::ADSREnvelope(const size_u numberVoices,
                            const adsr::ArrayLengths &lengths,
                            const adsr::ArrayVelocityRatios &ratios)
-    : m_lengths(lengths), m_ratios(ratios),
-      m_states(numberVoices) {
+    : ControlledMidiEnvelope<MidiDamper>(), m_lengths(lengths),
+      m_ratios(ratios), m_states(numberVoices) {
   checkLengths(m_lengths);
 
   m_controlListener = std::make_shared<
-      patterns::SelfEventListener<ADSREnvelope, MidiControlInternal const &>>(
-      this, &ADSREnvelope::) m_timeListener =
-      std::make_shared<patterns::SelfEventListener<ADSREnvelope, time_d>>(
+      pattern::SelfEventListener<ADSREnvelope, MidiControlInternal const &>>(
+      this, &ADSREnvelope::onControlReceived);
+  m_timeListener =
+      std::make_shared<pattern::SelfEventListener<ADSREnvelope, time_d>>(
           this, &ADSREnvelope::onTimeUpdateDelta);
   m_tickListener =
-      std::make_shared<patterns::SelfEventListener<ADSREnvelope, void *>>(
+      std::make_shared<pattern::SelfEventListener<ADSREnvelope, void *>>(
           this, &ADSREnvelope::onTimerTick);
 }
 
@@ -42,7 +42,7 @@ void ADSREnvelope::checkLengths(const adsr::ArrayLengths &lengths) {
   if ((lengths.at(ADSRState::eAttack) < static_cast<time_d>(0.)) ||
       (lengths.at(ADSRState::eDecay) < static_cast<time_d>(0.)) ||
       (lengths.at(ADSRState::eRelease) < static_cast<time_d>(0.))) {
-    /* todo: better message */
+    // todo: better error message.
     throw PANTOUFLE_EXCEPTION("NOooo");
   }
 }
@@ -88,8 +88,18 @@ void ADSREnvelope::onTimerTick(void *) {
     state.discardFlagChangedPlaying();
   }
 }
-void ADSREnvelope::subscribe(ShPtr<MidiController> &controller) {}
-void ADSREnvelope::unsubscribe(ShPtr<MidiController> &timer) {}
-void ADSREnvelope::onControlReceived(MidiControlInternal const &) {}
+
+void ADSREnvelope::onControlReceived(MidiControlInternal const &control) {
+  for (auto &state : m_states) {
+    state.updateFromControl(this, control);
+  }
+}
+
+void ADSREnvelope::subscribe(ShPtr<MidiController> &controller) {
+  controller->addOnControlReceivedListener(m_controlListener);
+}
+void ADSREnvelope::unsubscribe(ShPtr<MidiController> &controller) {
+  controller->removeOnControlReceivedListener(m_controlListener);
+}
 
 CANTINA_PAN_NAMESPACE_END

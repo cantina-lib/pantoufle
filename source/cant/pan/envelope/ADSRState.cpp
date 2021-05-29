@@ -23,7 +23,7 @@ void ADSRState::updateFromNote(ADSREnvelope const *env,
                                MidiNoteInternal const &note) {
   if (note.justChangedPlaying()) {
     // Damper override the playing state of the note if on.
-    if (note.isPlaying() || env->getController()->isOn()) {
+    if (note.isPlaying() || env->getControllerInternal()->isOn()) {
       setTypeLengthManual(env, ADSRStateType::eAttack);
     } else {
       setTypeLengthManual(env, ADSRStateType::eRelease);
@@ -34,7 +34,7 @@ void ADSRState::updateFromNote(ADSREnvelope const *env,
 void ADSRState::updateFromControl(
     ADSREnvelope const *env,
     CANT_MAYBEUNUSED MidiControlInternal const &control) {
-  if (!env->getController()->isOn() && isPlaying()) {
+  if (!env->getControllerInternal()->isOn() && isPlaying()) {
     // Damper is released, resuming normal envelope.
     setTypeLengthManual(env, ADSRStateType::eRelease);
   }

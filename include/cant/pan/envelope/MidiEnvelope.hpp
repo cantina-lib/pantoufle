@@ -23,6 +23,12 @@ class MidiEnvelope : public MidiProcessor, public TimerSubscribable {
 public:
   /** -- methods -- **/
   void process(MidiNoteInternal &note) override = 0;
+
+  // TimerSubscribable
+  void subscribe(UPtr<MidiTimer> &) override;
+  void unsubscribe(UPtr<MidiTimer> &) override;
+
+  CANT_NODISCARD virtual ShPtr<MidiController> getController();
 };
 
 /**
@@ -31,12 +37,21 @@ public:
  */
 template <class Controller_T>
 class ControlledMidiEnvelope : public MidiEnvelope {
+  /** -- constraints -- **/
+  static_assert(std::is_convertible_v<Controller_T *, MidiController *>);
+
+public:
+  /** -- methods -- **/
+  CANT_NODISCARD CANT_INLINE ShPtr<MidiController> getController() final;
+  CANT_INLINE void setController(UPtr<Controller_T> controller);
+
 protected:
-  CANT_EXPLICIT ControlledMidiEnvelope();
+  ControlledMidiEnvelope();
+  CANT_EXPLICIT ControlledMidiEnvelope(UPtr<Controller_T> controller);
   /**
    * Get read-only access of associated Controller from an envelope.
    */
-  CANT_NODISCARD ShPtr<Controller_T> const &getController() const;
+  CANT_NODISCARD CANT_INLINE ShPtr<Controller_T> getControllerInternal() const;
 
 private:
   // The derived envelope should not be allowed to mutate the controller!

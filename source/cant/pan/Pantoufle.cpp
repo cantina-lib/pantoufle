@@ -4,10 +4,6 @@
 
 #include <cant/pan/Pantoufle.hpp>
 
-#include <cant/pan/note/MidiNoteInput.hpp>
-
-#include <cant/pan/layer/MidiNoteInternalLayer.hpp>
-
 #include <cant/pan/common/PantoufleException.hpp>
 
 // shouldn't have to include this..
@@ -37,11 +33,7 @@ void Pantoufle::update() {
 
 size_u Pantoufle::getNumberVoices() const { return m_poly->getNumberVoices(); }
 
-void Pantoufle::processControllerChainVoice(const size_u voice) {
-  m_controllerChain->process(m_processedNoteInternal->getVoiceMutable(voice));
-}
-
-void Pantoufle::processEnvelopePairVoice(const size_u voice) {
+void Pantoufle::processEnvelopeChainVoice(size_u voice) {
   m_envelopeChain->process(m_processedNoteInternal->getVoiceMutable(voice));
 }
 
@@ -54,11 +46,6 @@ void Pantoufle::setCustomClock(time::AbsoluteTimeGetter absoluteTimeGetter) {
   m_timer->setCustomTimeGetter(std::move(absoluteTimeGetter));
 }
 
-void Pantoufle::addController(ShPtr<MidiController> controller){
-    PANTOUFLE_TRY_RETHROW({
-      m_controllerChain->addController(std::move(controller));
-    })}
-
 Optional<size_u> Pantoufle::receiveInputNoteData(
     MidiNoteInputData const &inputData) {
   /* processing will be done when time comes to updateDelta. */
@@ -70,8 +57,7 @@ void Pantoufle::process(size_u voice) {
   const MidiNoteInternal &internal = m_processedNoteInternal->getVoice(voice);
   m_processedNoteInternal->receive(input);
   /* processing controllers and envelope layer */
-  processControllerChainVoice(voice);
-  processEnvelopePairVoice(voice);
+  processEnvelopeChainVoice(voice);
   /* */
   m_processedNoteOutput->receive(internal);
 }
@@ -95,6 +81,11 @@ void Pantoufle::processAll() {
   }
 }
 void Pantoufle::addEnvelope(UPtr<MidiEnvelope> envelope) {
-  m_envelopeChain->addEnvelope(std::move(envelope));
+  auto &ref = m_envelopeChain->addEnvelope(std::move(envelope), m_timer);
+  // add this envelope's controller to the chain if it has one.
+  auto controller = ref->getController();
+  if (controller) {
+    m_controllerChain->addController(controller);
+  }
 }
 CANTINA_PAN_NAMESPACE_END

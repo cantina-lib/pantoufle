@@ -21,7 +21,8 @@ void MultiMidiController<numberBindings>::impl_receiveControl(
   const id_u8 id = incomingControl.getId();
   auto it = std::find(m_controllerIds.begin(), m_controllerIds.end(), id);
   if (it != m_controllerIds.end()) {
-    m_controls.at(std::distance(m_controllerIds.begin(), it)) = incomingControl;
+    m_controls.at(static_cast<size_u>(
+        std::distance(m_controllerIds.begin(), it))) = incomingControl;
   }
   /* not sure about this, I think the controller ought just to ignore the
    * control. */

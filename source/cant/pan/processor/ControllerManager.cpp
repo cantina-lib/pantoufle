@@ -18,8 +18,14 @@ void ControllerManager::receiveControl(MidiControlInternal const &control) {
     return;
   }
   m_controls.at(controllerId) = control;
-  for (auto &controller : m_controllers) {
-    controller->receiveControl(control);
+  for (auto it = m_controllers.begin(); it < m_controllers.end();) {
+    auto controller = it->lock();
+    if (controller) {
+      controller->receiveControl(control);
+      ++it;
+    } else {
+      m_controllers.erase(it);
+    }
   }
 }
 
@@ -34,9 +40,9 @@ void ControllerManager::allocateControls(Stream<id_u8> const &controllerIds) {
   }
 }
 
-void ControllerManager::addController(UPtr<MidiController> controller) {
+void ControllerManager::addController(ShPtr<MidiController> &controller) {
   allocateControls(controller->getControllerIds());
-  m_controllers.push_back(std::move(controller));
+  m_controllers.push_back(controller);
 }
 
 CANTINA_PAN_NAMESPACE_END

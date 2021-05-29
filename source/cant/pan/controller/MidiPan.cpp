@@ -19,7 +19,7 @@ pan_d MidiPan::getPan() const {
 
 ShPtr<MidiController> MidiPan::make(id_u8 channel, id_u8 controllerId) {
   return static_cast<ShPtr<MidiController>>(
-      std::make_shared<MidiPan>(channel, controllerId));
+      UPtr<MidiController>(new MidiPan(channel, controllerId)));
 }
 
 CANTINA_PAN_NAMESPACE_END

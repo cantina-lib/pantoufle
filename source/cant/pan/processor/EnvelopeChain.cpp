@@ -19,10 +19,11 @@ void EnvelopeChain::process(MidiNoteInternal &note) {
     envelope->process(note);
   }
 }
-void EnvelopeChain::addEnvelope(UPtr<MidiEnvelope> envelope,
-                                UPtr<MidiTimer> &timer) {
+UPtr<MidiEnvelope> &EnvelopeChain::addEnvelope(UPtr<MidiEnvelope> envelope,
+                                               UPtr<MidiTimer> &timer) {
   envelope->subscribe(timer);
   m_envelopes.push_back(std::move(envelope));
+  return m_envelopes.back();
 }
 void EnvelopeChain::removeEnvelope(size_u index) {
   CANTINA_ASSERT(index < m_envelopes.size(), "Nope.");

@@ -8,10 +8,29 @@
 CANTINA_PAN_NAMESPACE_BEGIN
 
 template <class Controller_T>
-ShPtr<Controller_T> const &
-ControlledMidiEnvelope<Controller_T>::getController() const {
-  static_assert(std::is_convertible_v<Controller_T *, MidiController *>);
+ControlledMidiEnvelope<Controller_T>::ControlledMidiEnvelope(
+    UPtr<Controller_T> controller) {
+  setController(std::move(controller));
+}
+template <class Controller_T>
+ControlledMidiEnvelope<Controller_T>::ControlledMidiEnvelope() = default;
+
+template <class Controller_T>
+CANT_INLINE ShPtr<Controller_T>
+ControlledMidiEnvelope<Controller_T>::getControllerInternal() const {
   return m_controller;
+}
+
+template <class Controller_T>
+CANT_INLINE ShPtr<MidiController>
+ControlledMidiEnvelope<Controller_T>::getController() {
+  return m_controller;
+}
+
+template <class Controller_T>
+CANT_INLINE void ControlledMidiEnvelope<Controller_T>::setController(
+    UPtr<Controller_T> controller) {
+  m_controller = std::move(controller);
 }
 
 CANTINA_PAN_NAMESPACE_END

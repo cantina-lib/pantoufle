@@ -8,7 +8,8 @@
 CANTINA_PAN_NAMESPACE_BEGIN
 
 UPtr<MidiEnvelope> FlatToneEnvelope::make() {
-  return static_cast<UPtr<MidiEnvelope>>(std::make_unique<FlatToneEnvelope>());
+  return static_cast<UPtr<MidiEnvelope>>(
+      std::unique_ptr<FlatToneEnvelope>(new FlatToneEnvelope()));
 }
 
 void FlatToneEnvelope::process(CANT_MAYBEUNUSED MidiNoteInternal &note) {

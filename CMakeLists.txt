@@ -13,9 +13,7 @@ add_subdirectory(${CANTINA_COMMON_DIR})
 set(PANTOUFLE_INCLUDE_DIRS
         ${PANTOUFLE_INCLUDE_DIR}
         ${PANTOUFLE_INLINE_DIR}
-        ${CANTINA_COMMON_INCLUDE_DIRS}
         )
-
 
 set(PANTOUFLE_FILES
         ## source
@@ -96,16 +94,13 @@ set(PANTOUFLE_FILES
 
 add_library(${PROJECT_NAME} STATIC ${PANTOUFLE_FILES})
 
-target_compile_options(
-        ${PROJECT_NAME} PRIVATE
-        ${CANTINA_CXX_FLAGS}
-)
+target_compile_options(${PROJECT_NAME} PRIVATE ${CANTINA_CXX_FLAGS})
 
 target_compile_features(${PROJECT_NAME} PUBLIC ${CANTINA_CXX_STANDARD})
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${PANTOUFLE_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${PANTOUFLE_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} ${CANTINA_COMMON_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${CANTINA_COMMON_LIBRARIES})
 
 set(PANTOUFLE_LIBRARIES ${PROJECT_NAME} PARENT_SCOPE)
 

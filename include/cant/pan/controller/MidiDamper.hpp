@@ -17,7 +17,7 @@ public:
   /** -- methods **/
   MidiDamper(id_u8 channel, id_u8 controllerId);
   // factory method
-  static ShPtr<MidiController> make(id_u8 channel, id_u8 controllerId);
+  static UPtr<MidiDamper> make(id_u8 channel, id_u8 controllerId);
 
   /**
    * Checks whether the Damper is currently been pressed.

@@ -16,9 +16,8 @@ bool MidiDamper::isOn(MidiControlInternal const &control) {
   return control.getValue() > c_midiControlMidValue;
 }
 
-ShPtr<MidiController> MidiDamper::make(id_u8 channel, id_u8 controllerId) {
-  return static_cast<ShPtr<MidiController>>(
-      std::make_shared<MidiDamper>(channel, controllerId));
+UPtr<MidiDamper> MidiDamper::make(id_u8 channel, id_u8 controllerId) {
+  return std::make_unique<MidiDamper>(channel, controllerId);
 }
 
 CANTINA_PAN_NAMESPACE_END

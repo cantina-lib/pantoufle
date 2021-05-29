@@ -20,8 +20,7 @@ void MidiWah::onTimeUpdateDelta(CANT_MAYBEUNUSED time_d tDelta) {
   // todo
 }
 ShPtr<MidiController> MidiWah::wah(id_u8 channel, Array<id_u8, 2> wahwah) {
-  return static_cast<ShPtr<MidiController>>(
-      std::make_shared<MidiWah>(channel, wahwah));
+  return ShPtr<MidiController>(new MidiWah(channel, wahwah));
 }
 
 CANTINA_PAN_NAMESPACE_END

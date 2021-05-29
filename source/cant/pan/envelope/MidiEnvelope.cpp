@@ -8,4 +8,10 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
+void cant::pan::MidiEnvelope::subscribe(cant::UPtr<cant::pan::MidiTimer> &) {}
+void MidiEnvelope::unsubscribe(UPtr<MidiTimer> &) {}
+ShPtr<MidiController> MidiEnvelope::getController() {
+  return ShPtr<MidiController>();
+}
+
 CANTINA_PAN_NAMESPACE_END

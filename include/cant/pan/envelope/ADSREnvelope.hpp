@@ -15,16 +15,14 @@
 #include <cant/pan/controller/MidiDamper.hpp>
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
+#include <cant/pan/envelope/ADSRState.hpp>
 #include <cant/pan/envelope/adsr_forward.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-class ADSRState;
-
 class ADSREnvelope : public ControlledMidiEnvelope<MidiDamper>,
                      // Timer listener
-                     public TimerSubscribable,
                      public DeltaTimeUpdatable,
                      public TimerTickUpdatable,
                      // Controller listener
@@ -33,7 +31,7 @@ class ADSREnvelope : public ControlledMidiEnvelope<MidiDamper>,
 public:
   /** -- methods -- **/
   // factory method
-  static UPtr<MidiEnvelope>
+  static UPtr<ADSREnvelope>
   make(size_u numberVoices,
        const adsr::ArrayLengths &lengths = ADSREnvelope::c_defaultADSRLengths,
        const adsr::ArrayVelocityRatios &ratios =

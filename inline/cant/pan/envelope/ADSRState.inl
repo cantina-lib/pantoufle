@@ -33,11 +33,6 @@ bool ADSRState::isPlaying() const {
   return m_type != ADSRStateType::eNotPlaying;
 }
 
-CANT_INLINE
-bool ADSRState::isVarying() const {
-  return isPlaying() && m_type != ADSRStateType::eSustain;
-}
-
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 

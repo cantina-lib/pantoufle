@@ -8,11 +8,10 @@
 
 CANTINA_PAN_NAMESPACE_BEGIN
 
-class ADSREnvelope;
 class MidiNoteInternal;
 
-class ADSREnvelope;
 class ADSRState;
+class ADSREnvelope;
 
 // Array
 namespace adsr {

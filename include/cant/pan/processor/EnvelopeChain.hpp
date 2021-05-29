@@ -9,6 +9,7 @@
 #include <cant/pan/common/types.hpp>
 
 #include <cant/pan/envelope/MidiEnvelope.hpp>
+#include <cant/pan/processor/ControllerManager.hpp>
 #include <cant/pan/processor/MidiProcessor.hpp>
 
 #include <cant/common/macro.hpp>
@@ -23,7 +24,8 @@ public:
 
   void process(MidiNoteInternal &note) override;
 
-  void addEnvelope(UPtr<MidiEnvelope> envelope, UPtr<MidiTimer> &timer);
+  UPtr<MidiEnvelope> &addEnvelope(UPtr<MidiEnvelope> envelope,
+                                  UPtr<MidiTimer> &timer);
   void removeEnvelope(size_u index);
 
 private:

@@ -13,11 +13,14 @@
 
 #include <cant/pan/pan_forward.hpp>
 
-// shouldn't have to include these....
 #include <cant/pan/layer/MidiNoteInputPoly.hpp>
+#include <cant/pan/layer/MidiNoteInternalLayer.hpp>
 #include <cant/pan/layer/MidiNoteOutputLayer.hpp>
+#include <cant/pan/note/MidiNoteInput.hpp>
 #include <cant/pan/processor/ControllerManager.hpp>
 #include <cant/pan/processor/EnvelopeChain.hpp>
+
+#include <cant/pan/envelope/MidiEnvelope.hpp>
 
 #include <cant/pan/timer/MidiTimer.hpp>
 
@@ -34,7 +37,6 @@ public:
   CANT_NODISCARD Stream<MidiNoteOutput> const &getProcessedNoteOutput() const;
   CANT_NODISCARD MidiNoteOutput const &getProcessedVoice(size_u voice) const;
 
-  void addController(ShPtr<MidiController> controller);
   void addEnvelope(UPtr<MidiEnvelope> envelope);
 
   void setCustomClock(time::AbsoluteTimeGetter absoluteTimeGetter);
@@ -48,8 +50,7 @@ private:
   /** -- methods -- **/
 
   void process(size_u voice);
-  void processControllerChainVoice(size_u voice);
-  void processEnvelopePairVoice(size_u voice);
+  void processEnvelopeChainVoice(size_u voice);
   void processAll();
 
   /** -- fields -- **/

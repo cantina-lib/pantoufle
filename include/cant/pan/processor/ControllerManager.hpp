@@ -24,18 +24,18 @@ public:
   /** -- methods -- **/
   CANT_EXPLICIT ControllerManager(size_u numberVoices);
 
-  void addController(UPtr<MidiController> controller);
+  void addController(ShPtr<MidiController> &controller);
 
-  void receiveControl(const MidiControlInternal &control);
+  void receiveControl(MidiControlInternal const &control);
 
 private:
   /** -- methods -- **/
-  void allocateControls(const Stream<id_u8> &controllerIds);
+  void allocateControls(Stream<id_u8> const &controllerIds);
 
   /** -- fields -- **/
   size_u m_numberVoices;
   // todo: use weak pointers, controllers should be owned by envelopes.
-  Stream<ShPtr<MidiController>> m_controllers;
+  Stream<WPtr<MidiController>> m_controllers;
 
   Map<id_u8, MidiControlInternal> m_controls;
 
