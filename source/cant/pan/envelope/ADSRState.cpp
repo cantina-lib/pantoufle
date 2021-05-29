@@ -19,10 +19,11 @@ ADSRState::ADSRState()
       m_flagJustChangedPlaying(false)
 { }
 
-void ADSRState::updateTypeLengthManual(const ADSREnvelope *env,
-                                       const MidiNoteInternal &note) {
+void ADSRState::updateFromNote(ADSREnvelope const *env,
+                               MidiNoteInternal const &note) {
   if (note.justChangedPlaying()) {
-    if (note.isPlaying()) {
+    // Damper override the playing state of the note if on.
+    if (note.isPlaying() || env->getController()->isOn()) {
       setTypeLengthManual(env, ADSRStateType::eAttack);
     } else {
       setTypeLengthManual(env, ADSRStateType::eRelease);
@@ -30,12 +31,21 @@ void ADSRState::updateTypeLengthManual(const ADSREnvelope *env,
   }
 }
 
-void ADSRState::setTypeLengthManual(const ADSREnvelope *env,
+void ADSRState::updateFromControl(
+    ADSREnvelope const *env,
+    CANT_MAYBEUNUSED MidiControlInternal const &control) {
+  if (!env->getController()->isOn() && isPlaying()) {
+    // Damper is released, resuming normal envelope.
+    setTypeLengthManual(env, ADSRStateType::eRelease);
+  }
+}
+
+void ADSRState::setTypeLengthManual(ADSREnvelope const *env,
                                     ADSRStateType type) {
   setType(env, type, 0.);
 }
 
-void ADSRState::updateTypeLength(const ADSREnvelope *env, time_d tDelta) {
+void ADSRState::updateTypeLength(ADSREnvelope const *env, time_d tDelta) {
   // starting values.
   ADSRStateType type = m_type;
   time_d length = getLength() + tDelta;

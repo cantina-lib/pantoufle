@@ -1,8 +1,8 @@
 //
 // Created by piptouque on 28/04/2020.
 //
-#ifndef CANTINA_MIDIENVELOPELAYER_HPP
-#define CANTINA_MIDIENVELOPELAYER_HPP
+#ifndef CANTINA_PAN_ENVELOPECHAIN_HPP
+#define CANTINA_PAN_ENVELOPECHAIN_HPP
 
 #pragma once
 
@@ -16,21 +16,23 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
 class MidiTimer;
 
-class MidiEnvelopePair : public MidiProcessor {
+class EnvelopeChain : public MidiProcessor {
 public:
   /** -- methods -- **/
-  MidiEnvelopePair(size_u numberVoices, id_u8 channel, UPtr<MidiTimer> &timer);
+  CANT_EXPLICIT EnvelopeChain(id_u8 channel);
 
   void process(MidiNoteInternal &note) override;
 
+  void addEnvelope(UPtr<MidiEnvelope> envelope, UPtr<MidiTimer> &timer);
+  void removeEnvelope(size_u index);
+
 private:
   /** -- fields -- **/
-  UPtr<ToneEnvelope> m_toneEnvelope;
-  UPtr<VelocityEnvelope> m_velocityEnvelope;
+  UStream<MidiEnvelope> m_envelopes;
   id_u8 m_channel;
 };
 
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif // CANTINA_MIDIENVELOPELAYER_HPP
+#endif // CANTINA_PAN_ENVELOPECHAIN_HPP

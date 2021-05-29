@@ -7,8 +7,8 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-UPtr<ToneEnvelope> FlatToneEnvelope::make() {
-  return UPtr<ToneEnvelope>(new FlatToneEnvelope());
+UPtr<MidiEnvelope> FlatToneEnvelope::make() {
+  return static_cast<UPtr<MidiEnvelope>>(std::make_unique<FlatToneEnvelope>());
 }
 
 void FlatToneEnvelope::process(CANT_MAYBEUNUSED MidiNoteInternal &note) {

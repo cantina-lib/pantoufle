@@ -7,16 +7,18 @@
 
 #include <cant/pan/note/MidiNoteInternalOutput.hpp>
 
+#include <cant/pan/timer/MidiTimer.hpp>
+
 #include <cant/pan/common/PantoufleException.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-UPtr<VelocityEnvelope>
-ADSREnvelope::make(const size_u numberVoices, const adsr::ArrayLengths &lengths,
-                   const adsr::ArrayVelocityRatios &ratios) {
-  return UPtr<VelocityEnvelope>(
-      new ADSREnvelope(numberVoices, lengths, ratios));
+UPtr<MidiEnvelope> ADSREnvelope::make(const size_u numberVoices,
+                                      const adsr::ArrayLengths &lengths,
+                                      const adsr::ArrayVelocityRatios &ratios) {
+  return static_cast<UPtr<MidiEnvelope>>(
+      std::make_unique<ADSREnvelope>(numberVoices, lengths, ratios));
 }
 
 ADSREnvelope::ADSREnvelope(const size_u numberVoices,
@@ -26,7 +28,9 @@ ADSREnvelope::ADSREnvelope(const size_u numberVoices,
       m_states(numberVoices) {
   checkLengths(m_lengths);
 
-  m_timeListener =
+  m_controlListener = std::make_shared<
+      patterns::SelfEventListener<ADSREnvelope, MidiControlInternal const &>>(
+      this, &ADSREnvelope::) m_timeListener =
       std::make_shared<patterns::SelfEventListener<ADSREnvelope, time_d>>(
           this, &ADSREnvelope::onTimeUpdateDelta);
   m_tickListener =
@@ -65,7 +69,7 @@ void ADSREnvelope::process(MidiNoteInternal &note) {
    * now assuming every note is extendable.
    */
   ADSRState &state = m_states.at(note.getVoice());
-  state.updateTypeLengthManual(this, note);
+  state.updateFromNote(this, note);
   state.apply(note);
 }
 
@@ -84,5 +88,8 @@ void ADSREnvelope::onTimerTick(void *) {
     state.discardFlagChangedPlaying();
   }
 }
+void ADSREnvelope::subscribe(ShPtr<MidiController> &controller) {}
+void ADSREnvelope::unsubscribe(ShPtr<MidiController> &timer) {}
+void ADSREnvelope::onControlReceived(MidiControlInternal const &) {}
 
 CANTINA_PAN_NAMESPACE_END

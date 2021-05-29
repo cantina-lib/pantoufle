@@ -6,28 +6,21 @@
 
 #include <cant/common/types.hpp>
 
-#include <cant/patterns/Event.hpp>
+#include <cant/pattern/Event.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-typedef patterns::EventListener<time_d> TimeListener;
+typedef pattern::EventListener<time_d> TimeListener;
 
-typedef patterns::EventListener<void *> TickListener;
+typedef pattern::EventListener<void *> TickListener;
 
-typedef patterns::Event<time_d> TimeEvent;
-typedef patterns::Event<void *> TickEvent;
+typedef pattern::Event<time_d> TimeEvent;
+typedef pattern::Event<void *> TickEvent;
 
 class MidiTimer;
 
-class TimerSubscribable {
-public:
-  /** -- methods -- **/
-  virtual ~TimerSubscribable() = default;
-
-  virtual void subscribe(UPtr<MidiTimer> &timer) = 0;
-  virtual void unsubscribe(UPtr<MidiTimer> &timer) = 0;
-};
+typedef pattern::EventSubscriber<UPtr<MidiTimer>> TimerSubscribable;
 
 class DeltaTimeUpdatable {
 public:
@@ -65,6 +58,39 @@ private:
    * @remark: void* argument is not used. Placeholder for template class.
    */
   virtual void onTimerTick(void *) = 0;
+};
+
+class DeltaTimeUpdater {
+public:
+  /** -- methods -- **/
+  virtual ~DeltaTimeUpdater() = default;
+
+  virtual void addOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener) = 0;
+
+  virtual void
+  removeOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener) = 0;
+};
+
+class CurrentTimeUpdater {
+public:
+  /** -- methods -- **/
+  virtual ~CurrentTimeUpdater() = default;
+
+  virtual void
+  addOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener) = 0;
+
+  virtual void
+  removeOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener) = 0;
+};
+
+class TimerTickUpdater {
+public:
+  /** -- methods -- **/
+  virtual ~TimerTickUpdater() = default;
+
+  virtual void addOnTickListener(ShPtr<TickListener> &listener) = 0;
+
+  virtual void removeOnTickListener(ShPtr<TickListener> &listener) = 0;
 };
 
 CANTINA_PAN_NAMESPACE_END

@@ -22,21 +22,13 @@ class MidiWah : public MultiMidiController<2>, public DeltaTimeUpdatable {
 public:
   /** -- methods -- **/
   // factory method
-  static UPtr<MidiController> wah(size_u numberVoices, id_u8 channel,
-                                  Array<id_u8, 2> wahwah);
+  static ShPtr<MidiController> wah(id_u8 channel, Array<id_u8, 2> wahwah);
 
   void onTimeUpdateDelta(time_d tDelta) override;
 
 private:
   /** -- methods -- **/
-  MidiWah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah);
-
-  // event functions
-  void
-  beforeControlProcess(const MidiControlInternal &incomingControl) override;
-  void beforeNoteProcess(const MidiNoteInternal &incomingNote) override;
-  // private inheritance
-  void IMPL_process(MidiNoteInternal &note) const override;
+  MidiWah(id_u8 channel, Array<id_u8, 2> wahwah);
 
   /** -- fields -- **/
   ShPtr<TimeListener> m_timeListener;

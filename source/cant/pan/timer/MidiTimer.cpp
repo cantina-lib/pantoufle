@@ -23,14 +23,13 @@ MidiTimer::MidiTimer()
 void MidiTimer::update() {
   m_internalClock->update();
   if (this->isRunning()) {
-    m_deltaTimeUpdateEvent->notify(getDeltaTime());
-    m_currentTimeUpdateEvent->notify(getCurrentTime());
-    m_tickEvent->notify(nullptr);
+    m_deltaTimeUpdateEvent->invoke(getDeltaTime());
+    m_currentTimeUpdateEvent->invoke(getCurrentTime());
+    m_tickEvent->invoke(nullptr);
   }
 }
 
-void MidiTimer::setCustomTimeGetter(
-    time::AbsoluteTimeGetter absoluteTimeGetter) {
+void MidiTimer::setCustomTimeGetter(TimeGetter absoluteTimeGetter) {
   m_internalClock->setCustomTimeGetter(std::move(absoluteTimeGetter));
 }
 

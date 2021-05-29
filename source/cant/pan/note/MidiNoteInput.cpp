@@ -5,6 +5,7 @@
 #include <cant/pan/note/MidiNoteInput.hpp>
 
 #include <cant/pan/timer/MidiTimer.hpp>
+#include <cant/pattern/Event.hpp>
 
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
@@ -13,7 +14,7 @@ MidiNoteInput::MidiNoteInput(const size_u voice)
     : MidiNote<MidiNoteInputData>(voice), m_isPressed(false),
       m_justChangedPlaying(false), m_tickListener() {
   m_tickListener =
-      std::make_shared<patterns::SelfEventListener<MidiNoteInput, void *>>(
+      std::make_shared<pattern::SelfEventListener<MidiNoteInput, void *>>(
           this, &MidiNoteInput::onTimerTick);
 }
 

@@ -2,8 +2,8 @@
 // Created by piptouque on 29/04/2020.
 //
 
-#ifndef CANTINA_MIDICONTROLPROCESSOR_HPP
-#define CANTINA_MIDICONTROLPROCESSOR_HPP
+#ifndef CANTINA_PAN_CONTROLLERMANAGER_HPP
+#define CANTINA_PAN_CONTROLLERMANAGER_HPP
 
 #pragma once
 
@@ -18,16 +18,14 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-class Clock;
-
-class MidiControllerChain final : public MidiProcessor {
+// todo: make a singleton instead?
+class ControllerManager {
 public:
   /** -- methods -- **/
-  CANT_EXPLICIT MidiControllerChain(size_u numberVoices);
-
-  void process(MidiNoteInternal &in) override;
+  CANT_EXPLICIT ControllerManager(size_u numberVoices);
 
   void addController(UPtr<MidiController> controller);
+
   void receiveControl(const MidiControlInternal &control);
 
 private:
@@ -36,7 +34,8 @@ private:
 
   /** -- fields -- **/
   size_u m_numberVoices;
-  UStream<MidiController> m_controllers;
+  // todo: use weak pointers, controllers should be owned by envelopes.
+  Stream<ShPtr<MidiController>> m_controllers;
 
   Map<id_u8, MidiControlInternal> m_controls;
 
@@ -47,4 +46,4 @@ private:
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif // CANTINA_MIDICONTROLPROCESSOR_HPP
+#endif // CANTINA_PAN_CONTROLLERMANAGER_HPP

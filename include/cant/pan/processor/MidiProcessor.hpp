@@ -2,8 +2,8 @@
 // Created by piptouque on 29/04/2020.
 //
 
-#ifndef CANTINA_MIDIPROCESSOR_HPP
-#define CANTINA_MIDIPROCESSOR_HPP
+#ifndef CANTINA_PAN_MIDIPROCESSOR_HPP
+#define CANTINA_PAN_MIDIPROCESSOR_HPP
 
 #pragma once
 
@@ -23,4 +23,4 @@ public:
 CANTINA_PAN_NAMESPACE_END
 #include <cant/common/undef_macro.hpp>
 
-#endif // CANTINA_MIDIPROCESSOR_HPP
+#endif // CANTINA_PAN_MIDIPROCESSOR_HPP

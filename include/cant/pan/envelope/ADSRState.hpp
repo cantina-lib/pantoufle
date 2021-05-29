@@ -6,7 +6,9 @@
 
 #include <cant/pan/common/types.hpp>
 
-#include <cant/patterns/Slider.hpp>
+#include <cant/pattern/Slider.hpp>
+
+#include <cant/pan/control/MidiControlData.hpp>
 
 #include <cant/pan/envelope/adsr_forward.hpp>
 
@@ -16,6 +18,7 @@ CANTINA_PAN_NAMESPACE_BEGIN
 class ADSRState {
 public:
   /** -- typedefs -- **/
+  typedef pattern::Slider<vel_d, time_d> VelSlider;
 
   /** -- internal structures -- **/
   enum ADSRStateType {
@@ -31,9 +34,20 @@ public:
   // should obviously only constructed by the envelope it is owned by.
   ADSRState();
 
-  void updateTypeLength(const ADSREnvelope *env, time_d tDelta);
-  void updateTypeLengthManual(const ADSREnvelope *env,
-                              const MidiNoteInternal &note);
+  void updateTypeLength(ADSREnvelope const *env, time_d tDelta);
+  /**
+   * Update the state from a received note.
+   * @param env
+   * @param note
+   */
+  void updateFromNote(ADSREnvelope const *env, MidiNoteInternal const &note);
+  /**
+   * Update the state from a received control.
+   * @param env
+   * @param control
+   */
+  void updateFromControl(ADSREnvelope const *env,
+                         MidiControlInternal const &control);
 
   void apply(MidiNoteInternal &note) const;
 
@@ -77,8 +91,7 @@ private:
   ADSRStateType m_type;
   time_d m_length;
 
-  patterns::Slider<vel_d, time_d> m_velocitySlider;
-
+  VelSlider m_velocitySlider;
 
   bool m_flagJustChangedPlaying;
 

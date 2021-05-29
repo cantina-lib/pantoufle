@@ -28,20 +28,15 @@ public:
   CANT_NODISCARD Stream<id_u8> getControllerIds() const override;
 
 protected:
-  CANT_EXPLICIT MultiMidiController(size_u numberVoices, id_u8 channel,
+  CANT_EXPLICIT MultiMidiController(id_u8 channel,
                                     Array<id_u8, numberBindings> controllerIds);
 
-  CANT_NODISCARD const MidiNoteInternal &getMemory(size_u voice) const;
   CANT_NODISCARD const MidiControlInternal &getControl(size_u iControl) const;
 
 private:
   /** -- methods -- **/
-  // event functions
-  void beforeControlProcess(const MidiControlInternal &control) override = 0;
-  void beforeNoteProcess(const MidiNoteInternal &note) override = 0;
   // private inheritance
-  void IMPL_receiveControl(const MidiControlInternal &incomingControl) final;
-  void IMPL_process(MidiNoteInternal &note) const override = 0;
+  void impl_receiveControl(const MidiControlInternal &incomingControl) final;
 
   /** -- fields -- **/
   id_u8 m_channel;

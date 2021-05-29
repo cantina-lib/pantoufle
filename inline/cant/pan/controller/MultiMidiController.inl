@@ -16,14 +16,12 @@
 CANTINA_PAN_NAMESPACE_BEGIN
 
 template <size_u numberBindings>
-void MultiMidiController<numberBindings>::IMPL_receiveControl(
+void MultiMidiController<numberBindings>::impl_receiveControl(
     const MidiControlInternal &incomingControl) {
   const id_u8 id = incomingControl.getId();
-  const auto &controllerIdsBegin = m_controllerIds.begin();
-  const auto &controllerIdsEnd = m_controllerIds.end();
-  auto it = std::find(controllerIdsBegin, controllerIdsEnd, id);
-  if (it != controllerIdsEnd) {
-    m_controls.at(it - controllerIdsBegin) = incomingControl;
+  auto it = std::find(m_controllerIds.begin(), m_controllerIds.end(), id);
+  if (it != m_controllerIds.end()) {
+    m_controls.at(std::distance(m_controllerIds.begin(), it)) = incomingControl;
   }
   /* not sure about this, I think the controller ought just to ignore the
    * control. */
@@ -32,16 +30,9 @@ void MultiMidiController<numberBindings>::IMPL_receiveControl(
 
 template <size_u numberBindings>
 MultiMidiController<numberBindings>::MultiMidiController(
-    size_u numberVoices, id_u8 channel,
-    Array<id_u8, numberBindings> controllerIds)
-    : MidiController(numberVoices), m_channel(channel),
-      m_controllerIds(std::move(controllerIds)), m_controls() {}
-
-template <size_u numberBindings>
-CANT_NODISCARD CANT_INLINE const MidiNoteInternal &
-MultiMidiController<numberBindings>::getMemory(size_u voice) const {
-  return m_memory.getVoice(voice);
-}
+    id_u8 channel, Array<id_u8, numberBindings> controllerIds)
+    : m_channel(channel), m_controllerIds(std::move(controllerIds)),
+      m_controls() {}
 
 template <size_u numberBindings>
 CANT_NODISCARD CANT_INLINE const MidiControlInternal &

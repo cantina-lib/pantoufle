@@ -9,26 +9,19 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-void MidiWah::beforeControlProcess(const MidiControlInternal &) {}
-
-void MidiWah::beforeNoteProcess(const MidiNoteInternal &) {}
-
-MidiWah::MidiWah(size_u numberVoices, id_u8 channel, Array<id_u8, 2> wahwah)
-    : MultiMidiController(numberVoices, channel, wahwah), m_timeListener() {
+MidiWah::MidiWah(id_u8 channel, Array<id_u8, 2> wahwah)
+    : MultiMidiController(channel, wahwah) {
   m_timeListener =
-      std::make_shared<patterns::SelfEventListener<MidiWah, time_d>>(
+      std::make_shared<pattern::SelfEventListener<MidiWah, time_d>>(
           this, &MidiWah::onTimeUpdateDelta);
 }
 
-void MidiWah::IMPL_process(MidiNoteInternal &) const {}
-
-void MidiWah::onTimeUpdateDelta(CANT_MAYBEUNUSED time_d tDelta) { /* todo */
+void MidiWah::onTimeUpdateDelta(CANT_MAYBEUNUSED time_d tDelta) {
+  // todo
 }
-
-UPtr<MidiController> MidiWah::wah(size_u numberVoices, id_u8 channel,
-                                  Array<id_u8, 2> wahwah) {
-  return static_cast<UPtr<MidiController>>(
-      UPtr<MidiWah>(new MidiWah(numberVoices, channel, wahwah)));
+ShPtr<MidiController> MidiWah::wah(id_u8 channel, Array<id_u8, 2> wahwah) {
+  return static_cast<ShPtr<MidiController>>(
+      std::make_shared<MidiWah>(channel, wahwah));
 }
 
 CANTINA_PAN_NAMESPACE_END

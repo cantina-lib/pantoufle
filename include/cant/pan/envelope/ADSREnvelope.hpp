@@ -12,6 +12,7 @@
 
 #include <cant/pan/timer/TimerUpdate.hpp>
 
+#include <cant/pan/controller/MidiDamper.hpp>
 #include <cant/pan/envelope/MidiEnvelope.hpp>
 
 #include <cant/pan/envelope/adsr_forward.hpp>
@@ -21,24 +22,30 @@ CANTINA_PAN_NAMESPACE_BEGIN
 
 class ADSRState;
 
-class ADSREnvelope : private VelocityEnvelope,
+class ADSREnvelope : public ControlledMidiEnvelope<MidiDamper>,
+                     // Timer listener
                      public TimerSubscribable,
                      public DeltaTimeUpdatable,
-                     public TimerTickUpdatable {
+                     public TimerTickUpdatable,
+                     // Controller listener
+                     public ControllerSubscribable,
+                     public ControlUpdatable {
 public:
   /** -- methods -- **/
   // factory method
-  static UPtr<VelocityEnvelope>
+  static UPtr<MidiEnvelope>
   make(size_u numberVoices,
        const adsr::ArrayLengths &lengths = ADSREnvelope::c_defaultADSRLengths,
        const adsr::ArrayVelocityRatios &ratios =
            ADSREnvelope::c_defaultADSRVelocitiesRatios);
   void process(MidiNoteInternal &note) override;
 
-  // implementation of Listener interface
-  // mentioned in MidiEnvelopeModule
+  // implementation of Subscriber interface for MidiTimer
   void subscribe(UPtr<MidiTimer> &timer) final;
   void unsubscribe(UPtr<MidiTimer> &timer) final;
+  // implementation of Subscriber interface for MidiController
+  void subscribe(ShPtr<MidiController> &) final;
+  void unsubscribe(ShPtr<MidiController> &timer) final;
 
 private:
   /** -- methods -- **/
@@ -46,6 +53,7 @@ private:
                const adsr::ArrayVelocityRatios &ratios);
 
   // Event functions
+  void onControlReceived(MidiControlInternal const &control) override;
   void onTimeUpdateDelta(time_d tDelta) override;
   void onTimerTick(void *) override;
 
@@ -57,6 +65,7 @@ private:
   adsr::ArrayLengths m_lengths;
   adsr::ArrayVelocityRatios m_ratios;
 
+  ShPtr<ControlListener> m_controlListener;
   ShPtr<TimeListener> m_timeListener;
   ShPtr<TickListener> m_tickListener;
 

@@ -21,6 +21,4 @@
 
 #include "layer/layer.hpp"
 
-#include "processor/processor.hpp"
-
 #endif // CANTINA_MIDI_HPP

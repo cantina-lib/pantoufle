@@ -7,12 +7,8 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-MidiPan::MidiPan(size_u numberVoices, id_u8 channel, id_u8 controllerId)
-    : MultiMidiController<1>(numberVoices, channel, {controllerId}) {}
-
-void MidiPan::beforeControlProcess(const MidiControlInternal &) {}
-
-void MidiPan::beforeNoteProcess(const MidiNoteInternal &) {}
+MidiPan::MidiPan(id_u8 channel, id_u8 controllerId)
+    : MultiMidiController<1>(channel, {controllerId}) {}
 
 pan_d MidiPan::getPan() const {
   return (getControl(0).getValue() /
@@ -21,14 +17,9 @@ pan_d MidiPan::getPan() const {
          1;
 }
 
-void MidiPan::IMPL_process(MidiNoteInternal &note) const {
-  note.setPan(getPan());
-}
-
-UPtr<MidiController> MidiPan::make(size_u numberVoices, id_u8 channel,
-                                   id_u8 controllerId) {
-  return cant::UPtr<MidiController>(
-      new MidiPan(numberVoices, channel, controllerId));
+ShPtr<MidiController> MidiPan::make(id_u8 channel, id_u8 controllerId) {
+  return static_cast<ShPtr<MidiController>>(
+      std::make_shared<MidiPan>(channel, controllerId));
 }
 
 CANTINA_PAN_NAMESPACE_END

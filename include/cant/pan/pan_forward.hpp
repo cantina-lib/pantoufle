@@ -17,8 +17,8 @@ class MidiControlData;
 
 class MidiController;
 
-class MidiControllerChain;
-class MidiEnvelopePair;
+class ControllerManager;
+class EnvelopeChain;
 
 class MidiNoteInputPoly;
 class MidiNoteInternalLayer;

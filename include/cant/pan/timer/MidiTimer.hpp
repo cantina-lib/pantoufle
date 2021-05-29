@@ -6,8 +6,6 @@
 
 #include <cant/time/common/types.hpp>
 
-#include <cant/patterns/Event.hpp>
-
 #include <cant/pan/timer/TimerUpdate.hpp>
 
 #include <cant/time/InternalClock.hpp>
@@ -26,9 +24,12 @@ CANTINA_TIME_NAMESPACE_END
  */
 
 CANTINA_PAN_NAMESPACE_BEGIN
-class MidiTimer {
+class MidiTimer : public DeltaTimeUpdater,
+                  public CurrentTimeUpdater,
+                  public TimerTickUpdater {
 public:
   /** -- typedefs -- **/
+  typedef ::cant::time::AbsoluteTimeGetter TimeGetter;
 
   /** -- methods -- **/
   /**
@@ -41,7 +42,7 @@ public:
   CANT_NODISCARD time_d getCurrentTime() const;
   CANT_NODISCARD time_d getDeltaTime() const;
 
-  void setCustomTimeGetter(time::AbsoluteTimeGetter absoluteTimeGetter);
+  void setCustomTimeGetter(TimeGetter absoluteTimeGetter);
 
   void start();
   void stop();
@@ -50,13 +51,13 @@ public:
 
   CANT_NODISCARD bool isRunning() const;
 
-  void addOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener);
-  void addOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener);
-  void addOnTickListener(ShPtr<TickListener> &listener);
+  void addOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener) final;
+  void addOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener) final;
+  void addOnTickListener(ShPtr<TickListener> &listener) final;
 
-  void removeOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener);
-  void removeOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener);
-  void removeOnTickListener(ShPtr<TickListener> &listener);
+  void removeOnTimeUpdateDeltaListener(ShPtr<TimeListener> &listener) final;
+  void removeOnTimeUpdateCurrentListener(ShPtr<TimeListener> &listener) final;
+  void removeOnTickListener(ShPtr<TickListener> &listener) final;
 
 private:
   /** -- fields -- **/

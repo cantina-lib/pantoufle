@@ -11,11 +11,11 @@
 
 #include <cant/common/macro.hpp>
 namespace cant::pan {
-class FlatToneEnvelope final : protected ToneEnvelope {
+class FlatToneEnvelope final : public MidiEnvelope {
 public:
   /** -- methods -- **/
   // factory method
-  static UPtr<ToneEnvelope> make();
+  static UPtr<MidiEnvelope> make();
 
   void process(MidiNoteInternal &note) override;
 };

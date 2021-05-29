@@ -39,8 +39,6 @@ protected:
   Vel_T m_velocity;
 };
 
-typedef Array<vel_d, 2> ArrayPan;
-
 class MidiNoteInputData : public MidiNoteData<tone_i8, vel_i8> {
 public:
   /** -- methods -- **/
