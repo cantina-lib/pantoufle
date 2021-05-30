@@ -28,7 +28,6 @@ set(PANTOUFLE_FILES
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteOutputLayer.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/layer/MidiNoteInputPoly.cpp
         ### env
-        ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/MidiEnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSREnvelope.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/ADSRState.cpp
         ${PANTOUFLE_SOURCE_DIR}/cant/pan/envelope/FlatToneEnvelope.cpp
@@ -95,11 +94,9 @@ set(PANTOUFLE_FILES
 add_library(${PROJECT_NAME} STATIC ${PANTOUFLE_FILES})
 
 target_compile_options(${PROJECT_NAME} PRIVATE ${CANTINA_CXX_FLAGS})
-
-target_compile_features(${PROJECT_NAME} PUBLIC ${CANTINA_CXX_STANDARD})
+target_compile_features(${PROJECT_NAME} PRIVATE ${CANTINA_CXX_STANDARD})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PANTOUFLE_INCLUDE_DIRS})
-
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CANTINA_COMMON_LIBRARIES})
 
 set(PANTOUFLE_LIBRARIES ${PROJECT_NAME} PARENT_SCOPE)

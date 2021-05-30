@@ -22,7 +22,7 @@ class MidiController;
  * involve updating from Control events.
  * Basically these classes will aggregate ControlUpdatable etc.
  */
-typedef pattern::EventSubscriber<ShPtr<MidiController>> ControllerSubscribable;
+typedef pattern::EventSubscriber<MidiController &> ControllerSubscribable;
 
 /**
  * An interface for classes that are directly updated by a Control Received

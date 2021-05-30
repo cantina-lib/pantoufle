@@ -12,29 +12,25 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-ADSRState::ADSRState()
-    : m_type(ADSRStateType::eNotPlaying),
-      m_length(),
+ADSRState::ADSRState(size_u voice)
+    : m_type(ADSRStateType::eNotPlaying), m_length(),
       m_velocitySlider(maths::approx<vel_d>::barycentre<type_d>),
-      m_flagJustChangedPlaying(false)
-{ }
+      m_flagJustChangedPlaying(false), m_noteCached(voice) {}
 
-void ADSRState::updateFromNote(ADSREnvelope const *env,
-                               MidiNoteInternal const &note) {
+void ADSRState::update(ADSREnvelope const *env, MidiNoteInternal const &note) {
   if (note.justChangedPlaying()) {
     // Damper override the playing state of the note if on.
-    if (note.isPlaying() || env->getControllerInternal()->isOn()) {
+    if (note.isPlaying()) {
       setTypeLengthManual(env, ADSRStateType::eAttack);
-    } else {
+    } else if (!env->getInternalController()->isOn()) {
       setTypeLengthManual(env, ADSRStateType::eRelease);
     }
   }
+  m_noteCached = note;
 }
 
-void ADSRState::updateFromControl(
-    ADSREnvelope const *env,
-    CANT_MAYBEUNUSED MidiControlInternal const &control) {
-  if (!env->getControllerInternal()->isOn() && isPlaying()) {
+void ADSRState::onControllerChange(ADSREnvelope const *env) {
+  if (!env->getInternalController()->isOn() && !m_noteCached.isPlaying()) {
     // Damper is released, resuming normal envelope.
     setTypeLengthManual(env, ADSRStateType::eRelease);
   }
@@ -61,19 +57,18 @@ void ADSRState::setType(const ADSREnvelope *env, ADSRStateType type,
                         time_d length) {
   const bool wasPlaying = isPlaying();
   const bool justChangedType = type != getType();
-  const bool justChangedPlaying = wasPlaying != isPlaying();
 
   m_type = type;
   m_length = length;
+
+  const bool justChangedPlaying = wasPlaying != isPlaying();
 
   if (justChangedPlaying) {
     raiseFlagChangedPlaying();
   }
   if (justChangedType) {
-    m_velocitySlider.setTarget(
-        getTypeTargetVelocityRatio(env->m_ratios),
-        getTypeTargetSlidingTime(env->m_lengths)
-    );
+    m_velocitySlider.setTarget(getTypeTargetVelocityRatio(env->m_ratios),
+                               getTypeTargetSlidingTime(env->m_lengths));
   }
 }
 
@@ -110,7 +105,7 @@ void ADSRState::computeTypeLengthRecursive(ADSRStateType &type, time_d &length,
     }
     return;
   case ADSRStateType::eNotPlaying:
-    /* nothing to do */
+    // nothing to do.
     return;
   }
   computeTypeLengthRecursive(type, length, lengths);

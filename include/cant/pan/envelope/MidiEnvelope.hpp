@@ -24,9 +24,8 @@ public:
   /** -- methods -- **/
   void process(MidiNoteInternal &note) override = 0;
 
-  // TimerSubscribable
-  void subscribe(UPtr<MidiTimer> &) override;
-  void unsubscribe(UPtr<MidiTimer> &) override;
+  void subscribe(MidiTimer &) override{};
+  void unsubscribe(MidiTimer &) override{};
 
   CANT_NODISCARD virtual ShPtr<MidiController> getController();
 };
@@ -36,7 +35,8 @@ public:
  * @tparam Controller_T Class of the MidiController used by the envelope.
  */
 template <class Controller_T>
-class ControlledMidiEnvelope : public MidiEnvelope {
+class ControlledMidiEnvelope : public MidiEnvelope,
+                               public ControllerSubscribable {
   /** -- constraints -- **/
   static_assert(std::is_convertible_v<Controller_T *, MidiController *>);
 
@@ -46,14 +46,26 @@ public:
   CANT_INLINE void setController(UPtr<Controller_T> controller);
 
 protected:
+  /** -- methods -- **/
   ControlledMidiEnvelope();
   CANT_EXPLICIT ControlledMidiEnvelope(UPtr<Controller_T> controller);
   /**
    * Get read-only access of associated Controller from an envelope.
    */
-  CANT_NODISCARD CANT_INLINE ShPtr<Controller_T> getControllerInternal() const;
+  CANT_NODISCARD CANT_INLINE ShPtr<Controller_T> getInternalController() const;
 
 private:
+  /** -- methods -- **/
+  // fixme: I redefine a subscribe function here,
+  // otherwise I can't refer to the implementation of
+  // ControllerSubscribable::suscribe of a derived class.
+  CANT_INLINE void subscribe(MidiController &controller) final;
+  CANT_INLINE void unsubscribe(MidiController &controller) final;
+  CANT_INLINE virtual void subscribeController(MidiController &controller) = 0;
+  CANT_INLINE virtual void
+  unsubscribeController(MidiController &controller) = 0;
+
+  /** -- fields -- **/
   // The derived envelope should not be allowed to mutate the controller!
   ShPtr<Controller_T> m_controller;
 };

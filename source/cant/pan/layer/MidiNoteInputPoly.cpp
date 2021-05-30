@@ -14,7 +14,7 @@ MidiNoteInputPoly::MidiNoteInputPoly(size_u numberVoices, id_u8 channel,
                                      UPtr<MidiTimer> &timer)
     : MidiNoteInputLayer(numberVoices), m_channel(channel) {
   for (auto &note : this->m_inputNotes) {
-    note.subscribe(timer);
+    note.subscribe(*timer);
   }
 }
 
@@ -70,8 +70,7 @@ MidiNoteInputPoly::chooseVoice(const MidiNoteInputData &data) const {
    * regardless of whether it is pressed.
    * -- no stealing -> take next voice which is not playing. If all notes are
    * playing, no note is updated.
-   */
-  /*
+   *
    * We could go for a mix of both. I think favouring stealing a note with the
    * same tone.
    * -- If not, steal the note with the tone that's closest to input.
@@ -84,8 +83,8 @@ MidiNoteInputPoly::chooseVoice(const MidiNoteInputData &data) const {
    * by integer in InputData, but then go to floating-point in InternalData
    */
 
-  // First pass, todo explain!!! and check if necessery (for released notes,
-  // specifically.)
+  // First pass, todo explain!!! and check if necessery (for released
+  // notes,specifically.)
   {
     size_u i = 0;
     for (const auto &note : m_inputNotes) {

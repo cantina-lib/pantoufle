@@ -9,6 +9,7 @@
 #include <cant/pattern/Slider.hpp>
 
 #include <cant/pan/control/MidiControlData.hpp>
+#include <cant/pan/note/MidiNoteInternalOutput.hpp>
 
 #include <cant/pan/envelope/adsr_forward.hpp>
 
@@ -31,8 +32,10 @@ public:
   };
 
   /** -- methods -- **/
-  // should obviously only constructed by the envelope it is owned by.
-  ADSRState();
+  /**
+   * Should only be constructed by the envelope it is owned by.
+   */
+  CANT_EXPLICIT ADSRState(size_u voice);
 
   void updateTypeLength(ADSREnvelope const *env, time_d tDelta);
   /**
@@ -40,14 +43,13 @@ public:
    * @param env
    * @param note
    */
-  void updateFromNote(ADSREnvelope const *env, MidiNoteInternal const &note);
+  void update(ADSREnvelope const *env, MidiNoteInternal const &note);
   /**
    * Update the state from a received control.
    * @param env
    * @param control
    */
-  void updateFromControl(ADSREnvelope const *env,
-                         MidiControlInternal const &control);
+  void onControllerChange(ADSREnvelope const *env);
 
   void apply(MidiNoteInternal &note) const;
 
@@ -94,6 +96,7 @@ private:
 
   bool m_flagJustChangedPlaying;
 
+  MidiNoteInternal m_noteCached;
 
   /** -- constants -- **/
   static CANT_CONSTEXPR time_d c_slidingTime = 100; // in milliseconds.

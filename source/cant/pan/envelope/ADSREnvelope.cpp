@@ -14,19 +14,22 @@
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
-UPtr<ADSREnvelope> ADSREnvelope::make(const size_u numberVoices,
-                                      const adsr::ArrayLengths &lengths,
-                                      const adsr::ArrayVelocityRatios &ratios) {
+UPtr<ADSREnvelope> ADSREnvelope::make(size_u numberVoices,
+                                      adsr::ArrayLengths const &lengths,
+                                      adsr::ArrayVelocityRatios const &ratios) {
   return UPtr<ADSREnvelope>(new ADSREnvelope(numberVoices, lengths, ratios));
 }
 
-ADSREnvelope::ADSREnvelope(const size_u numberVoices,
-                           const adsr::ArrayLengths &lengths,
-                           const adsr::ArrayVelocityRatios &ratios)
+ADSREnvelope::ADSREnvelope(size_u numberVoices,
+                           adsr::ArrayLengths const &lengths,
+                           adsr::ArrayVelocityRatios const &ratios)
     : ControlledMidiEnvelope<MidiDamper>(), m_lengths(lengths),
-      m_ratios(ratios), m_states(numberVoices) {
+      m_ratios(ratios), m_states() {
   checkLengths(m_lengths);
-
+  m_states.reserve(numberVoices);
+  for (size_u voice = 0; voice < numberVoices; ++voice) {
+    m_states.emplace_back(voice);
+  }
   m_controlListener = std::make_shared<
       pattern::SelfEventListener<ADSREnvelope, MidiControlInternal const &>>(
       this, &ADSREnvelope::onControlReceived);
@@ -43,7 +46,7 @@ void ADSREnvelope::checkLengths(const adsr::ArrayLengths &lengths) {
       (lengths.at(ADSRState::eDecay) < static_cast<time_d>(0.)) ||
       (lengths.at(ADSRState::eRelease) < static_cast<time_d>(0.))) {
     // todo: better error message.
-    throw PANTOUFLE_EXCEPTION("NOooo");
+    throw PANTOUFLE_EXCEPTION("noooooo");
   }
 }
 
@@ -58,8 +61,6 @@ void ADSREnvelope::onTimeUpdateDelta(time_d tDelta) {
   for (auto &state : m_states) {
     state.updateTypeLength(this, tDelta);
   }
-  // update the simulation with regards to the changes
-  // the simulation will itself update the velocity ratio.
 }
 
 void ADSREnvelope::process(MidiNoteInternal &note) {
@@ -69,18 +70,18 @@ void ADSREnvelope::process(MidiNoteInternal &note) {
    * now assuming every note is extendable.
    */
   ADSRState &state = m_states.at(note.getVoice());
-  state.updateFromNote(this, note);
+  state.update(this, note);
   state.apply(note);
 }
 
-void ADSREnvelope::subscribe(UPtr<MidiTimer> &timer) {
-  timer->addOnTimeUpdateDeltaListener(m_timeListener);
-  timer->addOnTickListener(m_tickListener);
+void ADSREnvelope::subscribe(MidiTimer &timer) {
+  timer.addOnTimeUpdateDeltaListener(m_timeListener);
+  timer.addOnTickListener(m_tickListener);
 }
 
-void ADSREnvelope::unsubscribe(UPtr<MidiTimer> &timer) {
-  timer->removeOnTimeUpdateDeltaListener(m_timeListener);
-  timer->removeOnTickListener(m_tickListener);
+void ADSREnvelope::unsubscribe(MidiTimer &timer) {
+  timer.removeOnTimeUpdateDeltaListener(m_timeListener);
+  timer.removeOnTickListener(m_tickListener);
 }
 
 void ADSREnvelope::onTimerTick(void *) {
@@ -89,17 +90,20 @@ void ADSREnvelope::onTimerTick(void *) {
   }
 }
 
-void ADSREnvelope::onControlReceived(MidiControlInternal const &control) {
+void ADSREnvelope::onControlReceived(
+    CANT_MAYBEUNUSED MidiControlInternal const &control) {
+  // we don't actually update from the control, but from the internal
+  // controller.
   for (auto &state : m_states) {
-    state.updateFromControl(this, control);
+    state.onControllerChange(this);
   }
 }
 
-void ADSREnvelope::subscribe(ShPtr<MidiController> &controller) {
-  controller->addOnControlReceivedListener(m_controlListener);
+void ADSREnvelope::subscribeController(MidiController &controller) {
+  controller.addOnControlReceivedListener(m_controlListener);
 }
-void ADSREnvelope::unsubscribe(ShPtr<MidiController> &controller) {
-  controller->removeOnControlReceivedListener(m_controlListener);
+void ADSREnvelope::unsubscribeController(MidiController &controller) {
+  controller.removeOnControlReceivedListener(m_controlListener);
 }
 
 CANTINA_PAN_NAMESPACE_END

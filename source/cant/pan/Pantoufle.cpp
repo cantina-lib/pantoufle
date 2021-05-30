@@ -6,7 +6,6 @@
 
 #include <cant/pan/common/PantoufleException.hpp>
 
-// shouldn't have to include this..
 #include <cant/time/InternalClock.hpp>
 
 #include <cant/common/macro.hpp>
@@ -27,8 +26,10 @@ Pantoufle::Pantoufle(size_u numberVoices, id_u8 channel)
 }
 
 void Pantoufle::update() {
-  m_timer->update();
   processAll();
+  // update the timer AFTER processing the note!
+  // because it resets the 'changed' flags of MidiNotes.
+  m_timer->update();
 }
 
 size_u Pantoufle::getNumberVoices() const { return m_poly->getNumberVoices(); }
@@ -48,7 +49,7 @@ void Pantoufle::setCustomClock(time::AbsoluteTimeGetter absoluteTimeGetter) {
 
 Optional<size_u> Pantoufle::receiveInputNoteData(
     MidiNoteInputData const &inputData) {
-  /* processing will be done when time comes to updateDelta. */
+  // processing will be done when time comes to updateDelta.
   return m_poly->receive(m_timer->getCurrentTime(), inputData);
 }
 
@@ -56,9 +57,9 @@ void Pantoufle::process(size_u voice) {
   const MidiNoteInput &input = m_poly->getVoice(voice);
   const MidiNoteInternal &internal = m_processedNoteInternal->getVoice(voice);
   m_processedNoteInternal->receive(input);
-  /* processing controllers and envelope layer */
+  // processing controllers and envelope layer.
   processEnvelopeChainVoice(voice);
-  /* */
+  //
   m_processedNoteOutput->receive(internal);
 }
 
@@ -76,6 +77,7 @@ void Pantoufle::processAll() {
    * each time we updateDelta, so no need to process them individually
    * when they are received.
    */
+  // todo: multithread.
   for (size_u i = 0; i < getNumberVoices(); ++i) {
     process(i);
   }

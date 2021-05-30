@@ -21,7 +21,7 @@ void EnvelopeChain::process(MidiNoteInternal &note) {
 }
 UPtr<MidiEnvelope> &EnvelopeChain::addEnvelope(UPtr<MidiEnvelope> envelope,
                                                UPtr<MidiTimer> &timer) {
-  envelope->subscribe(timer);
+  envelope->subscribe(*timer);
   m_envelopes.push_back(std::move(envelope));
   return m_envelopes.back();
 }
@@ -30,7 +30,6 @@ void EnvelopeChain::removeEnvelope(size_u index) {
   if (index > m_envelopes.size()) {
     throw PANTOUFLE_EXCEPTION("Envelope index out of range.");
   }
-  // envelope will unsubscribe on its own.
   m_envelopes.erase(m_envelopes.cbegin() + static_cast<long>(index));
 }
 

@@ -20,7 +20,7 @@ typedef pattern::Event<void *> TickEvent;
 
 class MidiTimer;
 
-typedef pattern::EventSubscriber<UPtr<MidiTimer>> TimerSubscribable;
+typedef pattern::EventSubscriber<MidiTimer &> TimerSubscribable;
 
 class DeltaTimeUpdatable {
 public:

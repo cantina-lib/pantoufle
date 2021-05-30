@@ -7,6 +7,8 @@
 #include <cant/pan/timer/MidiTimer.hpp>
 #include <cant/pattern/Event.hpp>
 
+#include <iostream>
+
 #include <cant/common/macro.hpp>
 CANTINA_PAN_NAMESPACE_BEGIN
 
@@ -25,7 +27,6 @@ void MidiNoteInput::set(const time_d tCurrent, const MidiNoteInputData &data) {
 
   if (data.isPressed()) {
     if (!wasPlaying) {
-      // a note is born!
       m_tStart = tCurrent;
     }
     m_data = data;
@@ -35,16 +36,15 @@ void MidiNoteInput::set(const time_d tCurrent, const MidiNoteInputData &data) {
   }
 }
 
-void MidiNoteInput::subscribe(UPtr<MidiTimer> &timer) {
-  timer->addOnTickListener(m_tickListener);
+void MidiNoteInput::subscribe(MidiTimer &timer) {
+  timer.addOnTickListener(m_tickListener);
 }
 
-void MidiNoteInput::unsubscribe(UPtr<MidiTimer> &timer) {
-  timer->removeOnTickListener(m_tickListener);
+void MidiNoteInput::unsubscribe(MidiTimer &timer) {
+  timer.removeOnTickListener(m_tickListener);
 }
 
 void MidiNoteInput::onTimerTick(void *) {
-  // reset flag changed!
   m_justChangedPlaying = false;
 }
 

@@ -25,8 +25,6 @@ class ADSREnvelope : public ControlledMidiEnvelope<MidiDamper>,
                      // Timer listener
                      public DeltaTimeUpdatable,
                      public TimerTickUpdatable,
-                     // Controller listener
-                     public ControllerSubscribable,
                      public ControlUpdatable {
 public:
   /** -- methods -- **/
@@ -39,11 +37,11 @@ public:
   void process(MidiNoteInternal &note) override;
 
   // implementation of Subscriber interface for MidiTimer
-  void subscribe(UPtr<MidiTimer> &timer) final;
-  void unsubscribe(UPtr<MidiTimer> &timer) final;
+  void subscribe(MidiTimer &timer) final;
+  void unsubscribe(MidiTimer &timer) final;
   // implementation of Subscriber interface for MidiController
-  void subscribe(ShPtr<MidiController> &) final;
-  void unsubscribe(ShPtr<MidiController> &timer) final;
+  void subscribeController(MidiController &controller) final;
+  void unsubscribeController(MidiController &controller) final;
 
 private:
   /** -- methods -- **/

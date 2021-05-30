@@ -34,8 +34,8 @@ public:
   CANT_NODISCARD tone_i8 getToneNative() const;
   CANT_NODISCARD vel_i8 getVelocityNative() const;
 
-  void subscribe(UPtr<MidiTimer> &timer) override;
-  void unsubscribe(UPtr<MidiTimer> &timer) override;
+  void subscribe(MidiTimer &timer) override;
+  void unsubscribe(MidiTimer &timer) override;
 
 private:
   /** -- methods -- **/
