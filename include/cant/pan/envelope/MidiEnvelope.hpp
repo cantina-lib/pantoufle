@@ -61,9 +61,8 @@ private:
   // ControllerSubscribable::suscribe of a derived class.
   CANT_INLINE void subscribe(MidiController &controller) final;
   CANT_INLINE void unsubscribe(MidiController &controller) final;
-  CANT_INLINE virtual void subscribeController(MidiController &controller) = 0;
-  CANT_INLINE virtual void
-  unsubscribeController(MidiController &controller) = 0;
+  virtual void subscribeController(MidiController &controller) = 0;
+  virtual void unsubscribeController(MidiController &controller) = 0;
 
   /** -- fields -- **/
   // The derived envelope should not be allowed to mutate the controller!
