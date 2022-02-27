@@ -1,5 +1,0 @@
-[submodule "submodules/cantina_common"]
-	path = cantina_common
-	url = https://github.com/cantina-lib/cantina_common.git
-
-
